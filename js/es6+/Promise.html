@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Promise | Notebook</title>
+    <meta name="generator" content="VuePress 1.8.0">
+    <link rel="icon" href="/favicon.ico">
+    <meta name="description" content="个人学习记录，资料收集备忘">
+    
+    <link rel="preload" href="/assets/css/0.styles.6905d551.css" as="style"><link rel="preload" href="/assets/js/app.377ebb8d.js" as="script"><link rel="preload" href="/assets/js/2.3ff17b28.js" as="script"><link rel="preload" href="/assets/js/28.3ad7fe69.js" as="script"><link rel="prefetch" href="/assets/js/10.e0665bde.js"><link rel="prefetch" href="/assets/js/11.75b0e6df.js"><link rel="prefetch" href="/assets/js/12.3b062665.js"><link rel="prefetch" href="/assets/js/13.49d0da8a.js"><link rel="prefetch" href="/assets/js/14.f17b3ad7.js"><link rel="prefetch" href="/assets/js/15.920a5ec9.js"><link rel="prefetch" href="/assets/js/16.0f08803f.js"><link rel="prefetch" href="/assets/js/17.f9597354.js"><link rel="prefetch" href="/assets/js/18.a6cf6487.js"><link rel="prefetch" href="/assets/js/19.2134f4eb.js"><link rel="prefetch" href="/assets/js/20.31170820.js"><link rel="prefetch" href="/assets/js/21.b655d938.js"><link rel="prefetch" href="/assets/js/22.1fd5d38a.js"><link rel="prefetch" href="/assets/js/23.2d643e1a.js"><link rel="prefetch" href="/assets/js/24.8a6aa69e.js"><link rel="prefetch" href="/assets/js/25.8a3964a7.js"><link rel="prefetch" href="/assets/js/26.b8c3d73c.js"><link rel="prefetch" href="/assets/js/27.b8ffb725.js"><link rel="prefetch" href="/assets/js/29.91f82f4b.js"><link rel="prefetch" href="/assets/js/3.ab59f89e.js"><link rel="prefetch" href="/assets/js/30.5cd81caf.js"><link rel="prefetch" href="/assets/js/31.d60c8a8c.js"><link rel="prefetch" href="/assets/js/32.32390379.js"><link rel="prefetch" href="/assets/js/33.a5be0262.js"><link rel="prefetch" href="/assets/js/34.f133cbe1.js"><link rel="prefetch" href="/assets/js/35.43c62a92.js"><link rel="prefetch" href="/assets/js/36.801f2d43.js"><link rel="prefetch" href="/assets/js/37.26eed37a.js"><link rel="prefetch" href="/assets/js/38.6fbf7986.js"><link rel="prefetch" href="/assets/js/39.87b5ff8c.js"><link rel="prefetch" href="/assets/js/4.8519368b.js"><link rel="prefetch" href="/assets/js/40.14747b79.js"><link rel="prefetch" href="/assets/js/41.9231be58.js"><link rel="prefetch" href="/assets/js/42.7712b544.js"><link rel="prefetch" href="/assets/js/43.42a10ddc.js"><link rel="prefetch" href="/assets/js/44.78086a47.js"><link rel="prefetch" href="/assets/js/45.dee7a6e3.js"><link rel="prefetch" href="/assets/js/46.8da62188.js"><link rel="prefetch" href="/assets/js/47.c5598733.js"><link rel="prefetch" href="/assets/js/48.593f6527.js"><link rel="prefetch" href="/assets/js/49.76d7cc0b.js"><link rel="prefetch" href="/assets/js/5.1bc6cf05.js"><link rel="prefetch" href="/assets/js/50.4a35efe5.js"><link rel="prefetch" href="/assets/js/51.6dd65d75.js"><link rel="prefetch" href="/assets/js/52.a89314e2.js"><link rel="prefetch" href="/assets/js/53.2c6b85c4.js"><link rel="prefetch" href="/assets/js/54.73e04800.js"><link rel="prefetch" href="/assets/js/55.189a12ce.js"><link rel="prefetch" href="/assets/js/56.583e3029.js"><link rel="prefetch" href="/assets/js/57.458cfa8a.js"><link rel="prefetch" href="/assets/js/58.146e1aaa.js"><link rel="prefetch" href="/assets/js/59.60f3c481.js"><link rel="prefetch" href="/assets/js/6.3e742d53.js"><link rel="prefetch" href="/assets/js/60.4c8a7df2.js"><link rel="prefetch" href="/assets/js/61.7e814d91.js"><link rel="prefetch" href="/assets/js/62.7f089076.js"><link rel="prefetch" href="/assets/js/63.c930cbaf.js"><link rel="prefetch" href="/assets/js/64.78e10c4c.js"><link rel="prefetch" href="/assets/js/7.dceefd90.js"><link rel="prefetch" href="/assets/js/8.2918149c.js"><link rel="prefetch" href="/assets/js/9.2e4a03b2.js">
+    <link rel="stylesheet" href="/assets/css/0.styles.6905d551.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><img src="/logo.png" alt="Notebook" class="logo"> <span class="site-name can-hide">Notebook</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="笔记分类" class="dropdown-title"><span class="title">笔记分类</span> <span class="arrow down"></span></button> <button type="button" aria-label="笔记分类" class="mobile-dropdown-title"><span class="title">笔记分类</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/js/" class="nav-link router-link-active">
+  JavaScript
+</a></li><li class="dropdown-item"><!----> <a href="/html/" class="nav-link">
+  HTML
+</a></li><li class="dropdown-item"><!----> <a href="/css/" class="nav-link">
+  CSS
+</a></li></ul></div></div><div class="nav-item"><a href="http://wanje.gitee.io/learning_notes/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  更多
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="笔记分类" class="dropdown-title"><span class="title">笔记分类</span> <span class="arrow down"></span></button> <button type="button" aria-label="笔记分类" class="mobile-dropdown-title"><span class="title">笔记分类</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/js/" class="nav-link router-link-active">
+  JavaScript
+</a></li><li class="dropdown-item"><!----> <a href="/html/" class="nav-link">
+  HTML
+</a></li><li class="dropdown-item"><!----> <a href="/css/" class="nav-link">
+  CSS
+</a></li></ul></div></div><div class="nav-item"><a href="http://wanje.gitee.io/learning_notes/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  更多
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav>  <ul class="sidebar-links"><li><section class="sidebar-group depth-0"><p class="sidebar-heading"><span>HTML</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/html/a标签的各种用途.html" class="sidebar-link">a标签的各种用途</a></li></ul></section></li><li><section class="sidebar-group depth-0"><p class="sidebar-heading open"><span>JavaScript</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/js/JS零散集.html" class="sidebar-link">JS零散集</a></li><li><a href="/js/数据类型概览.html" class="sidebar-link">JS数据类型概览</a></li><li><section class="sidebar-group is-sub-group depth-1"><p class="sidebar-heading open"><span>ES6+</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/js/es6+/Class.html" class="sidebar-link">Class</a></li><li><a href="/js/es6+/Promise.html" aria-current="page" class="active sidebar-link">Promise</a></li><li><a href="/js/es6+/async-await.html" class="sidebar-link">async/await</a></li></ul></section></li></ul></section></li><li><section class="sidebar-group depth-0"><p class="sidebar-heading"><span>CSS</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/css/scss语法.html" class="sidebar-link">SCSS基础语法</a></li><li><a href="/css/flex弹性布局.html" class="sidebar-link">flex弹性布局</a></li><li><a href="/css/CSS选择器世界.html" class="sidebar-link">CSS选择器世界</a></li><li><section class="sidebar-group is-sub-group depth-1"><p class="sidebar-heading"><span>CSS世界</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/css/CSS世界/层叠规则.html" class="sidebar-link">层叠规则</a></li></ul></section></li></ul></section></li><li><section class="sidebar-group depth-0"><p class="sidebar-heading"><span>绘图&amp;动画</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/draw-animation/D3js.html" class="sidebar-link">D3.js</a></li><li><section class="sidebar-group collapsable is-sub-group depth-1"><p class="sidebar-heading"><span>Threejs开发指南</span> <span class="arrow right"></span></p> <!----></section></li></ul></section></li><li><section class="sidebar-group depth-0"><p class="sidebar-heading"><span>Vue</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/vue/vue工程配置.html" class="sidebar-link">Vue工程创建及配置</a></li><li><a href="/vue/vue基础语法.html" class="sidebar-link">Vue基础语法</a></li></ul></section></li><li><section class="sidebar-group depth-0"><p class="sidebar-heading"><span>React</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/react/react工程配置.html" class="sidebar-link">React工程创建及配置</a></li><li><a href="/react/react基础语法.html" class="sidebar-link">React基础语法</a></li></ul></section></li><li><section class="sidebar-group depth-0"><p class="sidebar-heading"><span>TypeScript</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/typescript/类型/为什么需要类型.html" class="sidebar-link">为什么需要类型</a></li><li><section class="sidebar-group collapsable is-sub-group depth-1"><p class="sidebar-heading"><span>类型</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable is-sub-group depth-1"><p class="sidebar-heading"><span>泛型</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable is-sub-group depth-1"><p class="sidebar-heading"><span>类型转换</span> <span class="arrow right"></span></p> <!----></section></li><li><a href="/typescript/模块/CommonJS兼容模块.html" class="sidebar-link">CommonJS兼容模块</a></li><li><section class="sidebar-group collapsable is-sub-group depth-1"><p class="sidebar-heading"><span>命名空间</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable is-sub-group depth-1"><p class="sidebar-heading"><span>理解声明</span> <span class="arrow right"></span></p> <!----></section></li></ul></section></li><li><section class="sidebar-group depth-0"><p class="sidebar-heading"><span>Node</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/node/Node模块机制.html" class="sidebar-link">Node模块机制与NPM包</a></li></ul></section></li><li><section class="sidebar-group depth-0"><p class="sidebar-heading"><span>Webpack</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/webpack/webpack4.x笔记.html" class="sidebar-link">webpack4.x笔记</a></li></ul></section></li><li><section class="sidebar-group depth-0"><p class="sidebar-heading"><span>Python</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/python/python基础语法.html" class="sidebar-link">Python基础语法</a></li></ul></section></li><li><section class="sidebar-group depth-0"><p class="sidebar-heading"><span>其他</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/others/Markdown语法.html" class="sidebar-link">Markdown语法</a></li><li><a href="/others/Git使用.html" class="sidebar-link">Git使用</a></li><li><a href="/others/Gulp使用.html" class="sidebar-link">Gulp使用</a></li><li><a href="/others/环境&amp;软件安装.html" class="sidebar-link">环境&amp;软件安装</a></li></ul></section></li></ul> </aside> <main class="page"> <div class="theme-default-content content__default"><h1 id="promise"><a href="#promise" class="header-anchor">#</a> Promise</h1> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">//1、Promise对象代表一个异步操作，有3种状态：Pending(进行中)、Resolved(已完成，又称Fulfilled)、Rejected(已失败)</span>
+<span class="token comment">//2、状态改变只有两种可能：Pending到Resolved、Pending到Rejected，只要其中之一发生，状态就固定不再改变，就算改变已发生，你再对Promise对象添加回调函数也会立即得到相同的结果</span>
+<span class="token comment">//3、Promise无法取消，一旦创建就会立即执行，无法中途取消；若不设置回调函数，Promise内部抛出的错误不会反应到外部；当处于Pending状态时，无法得知目前进展到哪个阶段(刚开始还是即将完成)</span>
+
+<span class="token keyword">let</span> onePromise <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Promise</span> <span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">resolve<span class="token punctuation">,</span> reject</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">/**
+   * Promise 构造函数接受一个函数作为参数，该函数有两个内置函数参数resolve和reject，由JS引擎提供，不用自己部署，而后通过实例的then()方法定义实际的相应回调函数
+   * resolve 函数的作用是将Promise对象状态由Pending变为Resolved，在异步操作成功时调用，并可将异步操作的结果作为参数传递出去（自定义要传的数据）
+   * reject 函数的作用是将Promise对象状态由Pending变为Rejected，在异步操作失败时调用，并可将异步操作报出的错误作为参数传递出去（自定义要传的数据）
+   * */</span>
+  <span class="token comment">//...some code</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token string">'异步操作成功'</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+    <span class="token comment">/**
+     * resolve函数的参数除了正常的数据值外，还可以是另一个Promise实例，表示异步操作的结果也可以是另一个异步操作
+     * 当参数是另一Promise实例时，内部实例的状态就会传递给外部，也就是内部实例状态决定外部实例状态，
+     * 若内部实例状态是Pending，那么外部实例的回调函数就会等待内部实例的状态改变；若内部状态已经是Resolved或Rejected，那么外部实例的回调函数就会立即执行
+     * */</span>
+    <span class="token function">resolve</span><span class="token punctuation">(</span><span class="token string">'value'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token punctuation">}</span><span class="token keyword">else</span> <span class="token punctuation">{</span>
+    <span class="token comment">/** reject函数的参数通常是Error对象的实例，表示抛出的错误 */</span>
+    <span class="token function">reject</span><span class="token punctuation">(</span><span class="token string">'error'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">//这里以异步加载图片为例</span>
+<span class="token keyword">function</span> <span class="token function">loadImageAsync</span><span class="token punctuation">(</span><span class="token parameter">url</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">Promise</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">resolve<span class="token punctuation">,</span> reject</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">let</span> image <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Image</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    image<span class="token punctuation">.</span><span class="token function-variable function">onload</span> <span class="token operator">=</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token function">resolve</span><span class="token punctuation">(</span>image<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//图片加载成功就执行成功回调，并将image实例作为成功数据传递给回调函数</span>
+    <span class="token punctuation">}</span><span class="token punctuation">;</span>
+    image<span class="token punctuation">.</span><span class="token function-variable function">onerror</span> <span class="token operator">=</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token function">reject</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Error</span><span class="token punctuation">(</span><span class="token string">'Could not load image at '</span> <span class="token operator">+</span> url<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//图片加载失败就执行失败回调，传递一个自定义错误对象过去，也可以将错误事件本身产生的错误对象传递过去</span>
+    <span class="token punctuation">}</span><span class="token punctuation">;</span>
+    image<span class="token punctuation">.</span>src <span class="token operator">=</span> url<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">/**
+ * then()
+ * 通过Promise实例的then()方法定义实际的状态改变时的相应回调函数，其第一个参数为Resolved状态的回调函数，第二个参数为Rejected状态的回调函数(该参数可选)
+ * then()方法是定义在原型对象Promise.prototype上的，且then方法返回的是一个新的Promise实例(注意不是原来那个Promise实例)，因此可以使用链式调用，在then方法后面再调用then方法
+ * 链式调用多个then方法时，前面的回调函数执行完后，会将返回的结果作为参数传入下一个then方法中的回调函数，
+ * 若前面的回调函数返回的还是一个Promise对象(即有异步操作)，那后一个then中的回调函数就会等待该Promise对象的状态发生变化后再被调用执行。
+ * */</span>
+onePromise<span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">value</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">//resolve回调函数体</span>
+
+<span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">error</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">//该第二个回调函数可选，reject回调函数体</span>
+
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">//链式调用then方法，前面的回调执行完了才会再执行这里的回调，且其接受前面回调的返回值作为参数</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">/**
+ * catch()
+ * 通过Promise实例的catch()方法可单独只指定Promise实例中发生错误时的回调函数，其也是定义在原型对象Promise.prototype上的
+ * catch方法其实是then(null, rejection)的别名，即不指定成功回调，只指定错误回调，作用类似then方法指定一个回调函数时只表示成功回调，而catch用于指定错误回调
+ * 因为其本就是then(null, rejection)的别名，所以除了表示捕获Promise中的错误(不是所有错误都能捕获到，见下一条说明)，其他方面都同then方法一样
+ * 若Promise状态已变成Resolved后再抛出的错误是无效的[不管是主动throw的还是语法层面的出错]，此时不会被catch捕获到，但Resolved后的代码还是会执行到出现开始出现错误的位置(尽管此时的错误无法捕获也不会传递到外层)
+ * Promise对象的错误具有“冒泡”性质，会一直向后传递，直到被捕获为止，也就是说Promise中的错误(包括最初的实例和前面所有then和catch返回的实例中的错误)总是会被下一个catch语句捕获
+ * 因为Promise的链式调用是依次执行的，所以catch捕获的是在它之前出现的错误，在其之后定义的回调出现错误是不会被捕获到的，只能让更后面的catch去捕获，其并不像事件监听一次定义任何时候都能响应
+ * 通常我们都不在then中指定第二个参数去定义Rejected状态的回调函数，而总是使用catch方法去捕获所有错误，且尽量将catch设置在后面
+ * */</span>
+<span class="token keyword">new</span> <span class="token class-name">Promise</span> <span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">resolve<span class="token punctuation">,</span> reject</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token function">resolve</span><span class="token punctuation">(</span><span class="token string">'ok'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">//这里使得Promise状态变为Resolved</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'resolve0'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">//会执行，但其实际会比‘ok’先输出，因为这里是立即执行的，而resolve是这里的函数体内容执行完才执行的回调，除非这里也是异步操作才会比resolve晚执行</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'resolve'</span><span class="token operator">+</span>x<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//语法错误，x未定义，但因是Resolved后抛出的错误所以不会被捕获也不会传递到外界，实际从这里开始下面的代码都不会再执行</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'resolve2'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">//不会执行，实际上状态变为Resolved后从出现错误的第一条语句开始之后的所有语句都不会再执行</span>
+  <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">Error</span><span class="token punctuation">(</span><span class="token string">'test error'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">//主动抛出错误，与上一条一样因是Resolved后抛出的错误所以不会被捕获也不会传递到外界，throw的作用同return一样在同级作用域中只能作为程序结束语句</span>
+  <span class="token comment">//这里不能再放代码，因为与throw处于同一级作用域，throw之后的代码无意义，就像return之后的代码无意义一样</span>
+
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">value</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">//指定成功回调</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">//这里例子中将输出'ok'</span>
+  <span class="token comment">//若这里显式return一个数据，将会作为参数被传给下一个then方法中的函数，默认为undefined</span>
+
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">catch</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">error</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">//指定错误回调</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>error<span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">//这里例子中将不会有输出，因为Resolved后的错误无法被捕获</span>
+
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">value</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">//这里的回调若出现错误是不会被前面的catch捕获的，只能在更后面去设置catch捕获</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">//这里例子中将输出 undefined，因为前面的方法未return数据过来</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">/**
+ * Promise.all()
+ * Promise.all()方法用于将多个Promise实例包装成一个新的Promise实例(理解成合并)
+ * all()方法可接受一个数组作为参数，数组项都是Promise对象的实例，若不是，就会先调用Promise.resolve()方法将其转为Promise实例，再进一步处理
+ * 须注意，Promise.all方法的参数不一定是数组，但必须是具有Iterator接口的数据类型，且返回的每个成员都要是Promise实例
+ * 包装后的新Promise实例的状态由参数项中的所有Promise实例的状态共同决定，有以下两种情况：
+ * 1、只有参数项中所有Promise实例的状态变为Resolved时，合并后的新实例状态才会变为Resolved，此时参数项中所有实例的返回值组成的数组将作为参数传递给合并后新实例的回调函数
+ * 2、只要参数项内Promise实例中有一个的状态变为了Rejected，那合并后的新实例状态就会也变为Rejected，此时参数项中第一个变为Rejected的实例的返回值将作为参数传递给新实例的回调函数
+ * */</span>
+<span class="token comment">//例如创建一个全是Promise实例的数组</span>
+<span class="token keyword">let</span> ps <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">,</span><span class="token number">5</span><span class="token punctuation">,</span><span class="token number">7</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">id</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">Promise</span> <span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">resolve<span class="token punctuation">,</span> reject</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    axios<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">'api/news/'</span> <span class="token operator">+</span> id<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">//more</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">//将上面的Promise实例的数组通过Promise.all()方法合并为一个新的Promise实例</span>
+Promise<span class="token punctuation">.</span><span class="token function">all</span><span class="token punctuation">(</span>ps<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">data</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">//指定成功回调，只有ps中的所有实例都成功时才代表这个新实例也成功了</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">//data是个数组，包含ps中每个实例返回的成功数据</span>
+
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">catch</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">error</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">//指定错误回调，只要ps中有一个实例出错就代表这个新实例也出错了</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>error<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//error是ps中最先出错的那个实例返回的错误信息</span>
+
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">/**
+ * Promise.race()
+ * Promise.race()方法类似all方法同样是将多个Promise实例包装成一个新的Promise实例(理解成合并)，且其与all方法可接受的参数一样
+ * race()方法与all方法的不同之处在于：
+ * 用race()方法包装的的新实例只要其参数实例中有一个实例的状态改变了，那么新实例的状态就跟着改变了，那个最先改变状态的Promise实例的返回值就将作为参数传递给合并后的新实例的回调函数
+ * 注意，这里说的是参数中只要有一个实例的状态改变了新实例的状态就跟着改变，不管状态是变为Resolved还是Rejected
+ * */</span>
+<span class="token comment">//将上面的Promise实例的数组通过Promise.all()方法合并为一个新的Promise实例</span>
+Promise<span class="token punctuation">.</span><span class="token function">race</span><span class="token punctuation">(</span>ps<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">data</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">//指定成功回调，只要ps中有一个实例成功了就代表这个新实例也成功了</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">//data是ps中最先成功那个实例返回的成功数据</span>
+
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">catch</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">error</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">//指定错误回调，只要ps中有一个实例出错就代表这个新实例也出错了</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>error<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//error是ps中最先出错的那个实例返回的错误信息</span>
+
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">/**
+ * Promise.resolve()
+ * Promise.resolve()方法的作用是将传入的参数转换为一个Promise对象
+ * 该方法的参数有以下4种情况：
+ * 1、参数是一个Promise实例：此时Promise.resolve(onePromise)方法将不做任何修改，原封不动地返回这个实例
+ * 2、参数是一个具有then方法的对象：此时Promise.resolve(obj)方法会将该对象转换为Promise对象返回，并立即执行原obj对象的then()方法
+ * 3、参数是不具有then方法的对象或根本就不是对象：此时Promise.resolve(var)方法会返回一个新的Promise对象，且状态为Resolved，其参数也会直接传递给回调函数
+ *    Promise.resolve('foo') 等价于 new Promise(resolve =&gt; resolve('foo'))，可看出是一个立即变为Resolved状态的Promise对象，且将参数直接传递给了resolve回调
+ * 4、不带任何参数：此时Promise.resolve()方法会直接返回一个Resolved状态的Promise对象，其类似上面第3条，只是没传参的区别
+ *    需要注意的是，立即resolve的Promise对象是在本轮‘事件循环’(event loop)的结束时，而不是下一轮‘事件循环’的开始时，即其是放在当前所有同步代码的最后执行
+ * */</span>
+Promise<span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span>onePromise<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">//直接返回onePromise对象</span>
+Promise<span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span><span class="token punctuation">{</span>   <span class="token comment">//将该对象转换为一个Promise对象返回，并立即调用下面的原始对象的then方法</span>
+  <span class="token function-variable function">then</span><span class="token operator">:</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">resolve<span class="token punctuation">,</span> reject</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function">resolve</span><span class="token punctuation">(</span><span class="token number">7</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">value</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//输出7，因为调用了上面原始对象的then方法，而其then方法里执行了resolve回调，所以这里输出7</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+Promise<span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span><span class="token string">'foo'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">value</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//在本轮事件循环最后输出foo</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+Promise<span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token number">7</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//在本轮事件循环最后输出7</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">/**
+ * Promise.reject()
+ * Promise.reject()方法返回一个状态为Rejected的Promise实例，所以也会立即触发回调(本轮事件循环结束时)，Promise.reject('出错了') 等价于 new Promise((resolve, reject) =&gt; reject('出错了'))
+ * 该方法的参数不像resolve方法分几种情况处理，其所有类型参数都只有一种处理方法：将参数原封不动地作为reject回调的reason参数传递给后面的回调函数
+ * */</span>
+Promise<span class="token punctuation">.</span><span class="token function">reject</span><span class="token punctuation">(</span><span class="token punctuation">{</span>   <span class="token comment">//返回一个状态为Rejected的Promise实例，这里带then方法的对象只会原封不动地传给后面的回调函数，而不是像resolve()那样处理先执行对象内的then方法</span>
+  <span class="token function-variable function">then</span><span class="token operator">:</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">resolve<span class="token punctuation">,</span> reject</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function">resolve</span><span class="token punctuation">(</span><span class="token number">7</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">catch</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">reason</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>reason<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//不会输出7，这里的reason是接受的上面reject()的完整参数，所以是输出上面整个参数对象</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">/*====================================================================================================================*/</span>
+<span class="token comment">/*================================== 有用的附加方法(用已有方法自定义封装的，不在ES6标准中) ==================================*/</span>
+<span class="token comment">/*====================================================================================================================*/</span>
+
+<span class="token comment">/**
+ * done()
+ * done()方法的主要目的是解决Promise对象链式调用中最后一个方法抛出的错误无法捕获的问题，使得即使最后一个catch方法中抛出的错误也能被捕获到并将其暴露到全局
+ * */</span>
+<span class="token comment">//实现</span>
+<span class="token class-name">Promise</span><span class="token punctuation">.</span>prototype<span class="token punctuation">.</span><span class="token function-variable function">done</span> <span class="token operator">=</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">resolvedCall<span class="token punctuation">,</span> rejectedCall</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>  <span class="token comment">//可以跟then方法一样传入成功和失败回调，也可以只传入成功回调或是不传参</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span>resolvedCall<span class="token punctuation">,</span> rejectedCall<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">catch</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">reason</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>   <span class="token comment">//这里的catch将始终能捕获到前面业务代码中可能出现的错误，并将其抛向全局（因为这里的catch中回调是一条不会出错的语句所以可以作为结尾）</span>
+    <span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span><span class="token keyword">throw</span> reason<span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">//抛出一个全局错误，这里通过定时器将错误信息暴露到全局中去</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token comment">//使用</span>
+onePromise<span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span>f1<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">catch</span><span class="token punctuation">(</span>f2<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">done</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">//将done方法放在最后，也与then方法一样使用，也可以不传入参数，其都会捕获到任何一个错误并向全局抛出</span>
+
+<span class="token comment">/**
+ * finally()
+ * finally()方法用于指定不管Promise对象最后的状态变为成功还是失败都会执行的操作
+ * */</span>
+<span class="token comment">//实现</span>
+<span class="token class-name">Promise</span><span class="token punctuation">.</span>prototype<span class="token punctuation">.</span><span class="token function-variable function">finally</span> <span class="token operator">=</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">callback</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>  <span class="token comment">//可以跟then方法一样传入成功和失败回调，也可以只传入成功回调或是不传参</span>
+  <span class="token keyword">let</span> <span class="token constant">P</span> <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>constructor<span class="token punctuation">;</span>
+  <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span>
+      <span class="token parameter">value</span> <span class="token operator">=&gt;</span> <span class="token constant">P</span><span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span><span class="token function">callback</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> value<span class="token punctuation">)</span><span class="token punctuation">,</span>
+      <span class="token parameter">reason</span> <span class="token operator">=&gt;</span> <span class="token constant">P</span><span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span><span class="token function">callback</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span><span class="token keyword">throw</span> reason<span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token comment">//使用</span>
+onePromise<span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span>f1<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">catch</span><span class="token punctuation">(</span>f2<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">finally</span><span class="token punctuation">(</span>f3<span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">//f3始终会在最后执行</span>
+</code></pre></div></div> <footer class="page-edit"><!----> <!----></footer> <div class="page-nav"><p class="inner"><span class="prev">
+      ←
+      <a href="/js/es6+/Class.html" class="prev">
+        Class
+      </a></span> <span class="next"><a href="/js/es6+/async-await.html">
+        async/await
+      </a>
+      →
+    </span></p></div> </main></div><div class="global-ui"><!----></div></div>
+    <script src="/assets/js/app.377ebb8d.js" defer></script><script src="/assets/js/2.3ff17b28.js" defer></script><script src="/assets/js/28.3ad7fe69.js" defer></script>
+  </body>
+</html>
