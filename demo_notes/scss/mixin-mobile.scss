@@ -1,0 +1,76 @@
+@mixin border-box {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+@mixin display-flex {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+}
+@mixin display-inline-flex {
+  display: -webkit-inline-flex;
+  display: inline-flex;
+}
+@mixin clearfix {
+  &:before,
+  &:after {
+    content: "";
+    display: table;
+  }
+  &:after {
+    clear: both;
+    font-size:0;
+    line-height:0;
+    visibility:hidden;
+    height:0;
+  }
+}
+@mixin keyframes($name) {
+  @-webkit-keyframes #{$name} {
+    @content;
+  }
+  @keyframes #{$name} {
+    @content;
+  }
+}
+@mixin gradient2top($startColor, $endColor) {
+  background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0%, $startColor), color-stop(100%, $endColor));
+  background-image: -webkit-linear-gradient(bottom, $startColor, $endColor);
+  background-image: linear-gradient(to top, $startColor, $endColor);
+}
+@mixin gradient2right($startColor, $endColor) {
+  background-image: -webkit-gradient(linear, left top, right top, color-stop(0%, $startColor), color-stop(100%, $endColor));
+  background-image: -webkit-linear-gradient(left, $startColor, $endColor);
+  background-image: linear-gradient(to right, $startColor, $endColor);
+}
+@mixin gradientRadial($color...) {
+  background-image:-webkit-radial-gradient($color);
+  background-image:radial-gradient($color);
+}
+@mixin boxShadow($shadow...) {
+  -webkit-box-shadow: $shadow;
+  box-shadow: $shadow;
+}
+@mixin ellipsis($num) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: $num;
+  -webkit-box-orient: vertical;
+  text-align: justify;
+  word-break: break-all;
+}
+@mixin transition($value...) {
+  -webkit-transition: $value;
+  transition: $value;
+}
+@mixin transform($value...) {
+  -webkit-transform: $value;
+  transform: $value;
+}
+@mixin select-none() {
+  -webkit-user-select: none;
+  user-select: none;
+}

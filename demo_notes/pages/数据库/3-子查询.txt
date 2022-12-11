@@ -1,0 +1,112 @@
+-- 一、什么是子查询
+-- 查询中所包含的查询，称为子查询。类似于JS中的IF的嵌套。
+-- 显示出学生的姓名、成绩、班级名称
+-- 1）select 中实现子查询：
+-- 1。确定投影字段的列表及字段来源于哪些表？
+SELECT DISTINCT s_name,s_c_id
+ FROM t_student WHERE s_c_id IS NOT NULL
+ 
+SELECT DISTINCT s_name,(SELECT C_NAME FROM t_class WHERE s.s_c_id=c_id)
+ FROM t_student AS s WHERE s_c_id IS NOT NULL
+-- select 中的子查询，返回的是单行，单列的数据；往往都是相关子查询。
+-- 可能需要使用别名。
+-- 2）FROM子查询：
+-- select * from (子查询) as 表别名
+
+SELECT * FROM (SELECT * FROM t_student WHERE s_name='张飞') AS zf
+WHERE S_COURSES='C语言'
+
+-- 返回多行，多列的数据
+
+
+-- 3）。where中实现子查询：
+-- select * from 表名 where (子查询)[ and  条件表达式]
+-- 显示出比张飞的计算机基础成绩高的学生信息
+
+-- 1. 张飞的计算机基础成绩
+SELECT  S_SCORE FROM t_student WHERE s_name='张飞' AND S_COURSES='计算机基础'
+-- 2. 比张飞的计算机基础成绩高的人
+SELECT * FROM t_student WHERE s_score>(SELECT  S_SCORE FROM t_student WHERE s_name='张飞'
+ AND S_COURSES='计算机基础') 
+-- 3. 排除张飞（自己）
+SELECT * FROM t_student WHERE s_score>(SELECT  S_SCORE FROM t_student WHERE s_name='张飞'
+ AND S_COURSES='计算机基础') AND s_name!='张飞'
+ 
+ -- 查询与张飞考相同分数的学生信息
+ 
+-- 1. 查出张飞取得了哪个成绩 
+SELECT s_score FROM t_student WHERE s_name='张飞'
+-- 2. 比较，成绩相同的学生，给显示出来
+SELECT * FROM t_student WHERE s_score IN (SELECT s_score FROM t_student WHERE s_name='张飞') 
+-- 3. 排除张飞
+SELECT * FROM t_student WHERE s_score IN (SELECT s_score FROM t_student WHERE s_name='张飞') 
+ AND  s_name!='张飞'
+ 
+ -- 思考： 查询与张飞同科成绩相等（大于、小于）的学生信息。（相关子查询来实现）
+SELECT * FROM t_student s1 WHERE s_score = (SELECT s_score FROM t_student s2 WHERE s_name='张飞' AND 
+s1.s_courses=s2.s_courses) AND s_name!='张飞'
+-- 重点要理解，在查询过程中，必须把主查询中每人每个课程与子查询中张飞的课程进行关链。以表示是同一个科目。
+
+-- 与张飞成绩不相等的学生信息
+-- 1. 查出张飞取得了哪个成绩 
+SELECT s_score FROM t_student WHERE s_name='张飞'
+-- 2. 比较，成绩不相等的学生，给显示出来
+SELECT * FROM t_student WHERE s_score NOT IN (SELECT s_score FROM t_student WHERE s_name='张飞') 
+
+
+-- 子查询返回的数据，是多行，单列
+
+-- 1.查询已经报名的学生的班级名称
+ SELECT s_name,(SELECT c_name FROM t_class WHERE c_id=t_student.S_C_ID) AS 班级名称 FROM t_student
+ -- 2. 哪个班级有学生报到 ，显示出班级的名称
+ -- 步骤1： 找到已经报到的班级的编号
+ SELECT DISTINCT s_c_id FROM t_student WHERE s_c_id IS NOT NULL
+ -- 步骤2：在班级表中，判断班级ID是否在（上面的查询返回的多行数据中）
+ SELECT c_name FROM t_class WHERE c_id IN (SELECT DISTINCT s_c_id FROM t_student WHERE s_c_id IS NOT NULL)
+ 
+ 
+ -- 哪些班级还没有学生报到？
+ 
+ SELECT c_name FROM t_class WHERE c_id NOT IN (SELECT DISTINCT s_c_id FROM t_student WHERE s_c_id IS NOT NULL)
+ 
+ -- ALL\ANY运算符：
+ -- 查询比李白所有成绩都高的学的信息
+ SELECT MAX(S_SCORE) FROM t_student
+ WHERE s_name='李白'
+ 
+ -- 比最高分还高的成绩，显示对应的学生信息
+ 
+ SELECT * FROM t_student WHERE S_SCORE>(SELECT MAX(S_SCORE) FROM t_student WHERE s_name='李白')
+ 
+ -- all的方法：
+ SELECT * FROM t_student WHERE s_score>ALL(SELECT s_score FROM t_student WHERE s_name='李白')
+ --  where 字段名 >[|<|=|...]all(子查询)
+ 
+ -- 比李白任意一门成绩都高的学生信息
+ 
+ SELECT * FROM t_student WHERE s_score>ANY(SELECT s_score FROM t_student WHERE s_name='李白') AND s_name!='李白'
+ ORDER BY s_id
+ 
+ -- exists \not exists
+ -- 1.查询已经报名的学生的班级名称
+ -- 使用in方法：
+ SELECT c_name FROM t_class WHERE c_id IN 
+ (SELECT DISTINCT s_c_id FROM t_student WHERE s_c_id IS NOT NULL)
+ -- 使用exists方法：
+ SELECT c_name FROM t_class WHERE EXISTS
+ (SELECT DISTINCT s_c_id FROM t_student WHERE s_c_id IS NOT NULL AND t_class.C_ID=t_student.S_C_ID )
+ 
+ 
+ -- 2.哪些班级还没有学生报到？
+-- 使用 not in方法：
+ SELECT c_name FROM t_class WHERE c_id NOT IN 
+ (SELECT DISTINCT s_c_id FROM t_student WHERE s_c_id IS NOT NULL)
+ 
+ -- 使用not exists方法：
+ SELECT c_name FROM t_class WHERE NOT EXISTS
+ (SELECT DISTINCT s_c_id FROM t_student WHERE t_class.C_ID=t_student.S_C_ID )
+ 
+-- 查询出每个科目的最高分、科目名称、学生姓名 
+ SELECT S_NAME,S_COURSES,S_SCORE FROM t_student s1
+WHERE S_SCORE = 
+(SELECT MAX(S_SCORE) 分数 FROM t_student s2 WHERE s1.S_COURSES=s2.S_COURSES)

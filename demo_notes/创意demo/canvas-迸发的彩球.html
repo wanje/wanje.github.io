@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>迸发的彩球</title>
+    <style>
+
+        html,body{width:100%;min-height:100%;position:relative;color:#fff;}
+        body {
+            margin: 0;
+            text-align:center;
+            background: #45484d; /* Old browsers */
+            background: -moz-radial-gradient(center, ellipse cover,  #45484d 0%, #000000 100%); /* FF3.6+ */
+            background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,#45484d), color-stop(100%,#000000)); /* Chrome,Safari4+ */
+            background: -webkit-radial-gradient(center, ellipse cover,  #45484d 0%,#000000 100%); /* Chrome10+,Safari5.1+ */
+            background: -o-radial-gradient(center, ellipse cover,  #45484d 0%,#000000 100%); /* Opera 12+ */
+            background: -ms-radial-gradient(center, ellipse cover,  #45484d 0%,#000000 100%); /* IE10+ */
+            background: radial-gradient(ellipse at center,  #45484d 0%,#000000 100%); /* W3C */
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#45484d', endColorstr='#000000',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+        }
+        .btn {
+            display: inline-block;
+            width:300px;
+            height:100px;
+            line-height: 100px;
+            margin: 20px 50px;
+            padding:0;
+            border: none;
+            border-radius:6px;
+            overflow: hidden;
+            background:transparent;
+            cursor: pointer;
+            color: #ffffff;
+            z-index: 10;
+            -webkit-box-shadow: 0 0 2px 5px gray;
+            -moz-box-shadow: 0 0 2px 5px gray;
+            box-shadow: 0 0 2px 5px gray;
+            position: relative;
+        }
+        .btn i{
+            position:absolute;
+            top: 0;z-index:5;width:100%;height:100%;left:-100%; transition: all 0.2s ease-out;
+            background: -moz-linear-gradient(45deg, rgba(255,255,255,0) 0%, rgba(135,135,135,0.38) 50%, rgba(255,255,255,0) 100%); /* FF3.6+ */
+            background: -webkit-gradient(linear, left bottom, right top, color-stop(0%,rgba(255,255,255,0)), color-stop(50%,rgba(135,135,135,0.38)), color-stop(100%,rgba(255,255,255,0))); /* Chrome,Safari4+ */
+            background: -webkit-linear-gradient(45deg,  rgba(255,255,255,0) 0%,rgba(135,135,135,0.38) 50%,rgba(255,255,255,0) 100%); /* Chrome10+,Safari5.1+ */
+            background: -o-linear-gradient(45deg,  rgba(255,255,255,0) 0%,rgba(135,135,135,0.38) 50%,rgba(255,255,255,0) 100%); /* Opera 11.10+ */
+            background: -ms-linear-gradient(45deg,  rgba(255,255,255,0) 0%,rgba(135,135,135,0.38) 50%,rgba(255,255,255,0) 100%); /* IE10+ */
+            background: linear-gradient(45deg,  rgba(255,255,255,0) 0%,rgba(135,135,135,0.38) 50%,rgba(255,255,255,0) 100%); /* W3C */
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#00ffffff',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+        }
+        .btn:hover i{ left:100%;}
+        .btn span{ position: relative; z-index: 3;}
+        .btn canvas{ padding: 0;position:absolute;top: 0;left: 0;}
+
+    </style>
+</head>
+<body>
+
+    <button id="button" class="btn">
+        <canvas id="canvas" width="300" height="100"></canvas>
+        <i></i>
+        <span>迸发的彩球</span>
+    </button>
+
+    <button id="button2" class="btn">
+        <canvas id="canvas2" width="300" height="100"></canvas>
+        <span>迸发的彩球2</span>
+    </button>
+
+    <!--<div><canvas id="big-canvas" width="1000" height="700"></canvas></div>-->
+
+
+<!--<script src="../js/jquery-1.11.3.min.js"></script>-->
+
+<!-- html -->
+<canvas id="myCanvas" width="1000" height="700"></canvas>
+<!-- js -->
+<script>
+    var myCanvas = document.getElementById('myCanvas');     //获取canvas元素
+    var ctx = myCanvas.getContext('2d');    //保存上下文环境
+
+    /**@param opt 参数对象
+     * {
+     *    canvas:     canvas元素，
+     *    ctx:        绘图2d上下文，
+     *    circleNum:  创建随机小球的数量，默认500个，
+     *    center:     一组坐标[x,y]，表示小球初始放置在画布中的位置，默认为画布中心
+     * }
+     */
+    function createAnimate(opt) {
+        var w = opt.canvas.width,
+            h = opt.canvas.height;
+
+        opt.circleNum = opt.circleNum || 500;
+        opt.center = opt.center || [w/2,h/2];
+
+        //创建n个随机颜色、大小、移动速度的圆
+        function RandomCircle() {
+            //创建的圆起始放置位置
+            this.x = opt.center[0];
+            this.y = opt.center[1];
+
+            this.radius = 2 + Math.random()*3;  //半径控制在 2 - 5 像素之间
+
+            var v = Math.random()*10;
+            var deg = Math.random() * Math.PI * 2;
+            this.vx = v * Math.cos(deg);
+            this.vy = v * Math.sin(deg);
+
+            this.r = Math.round(Math.random())*255;
+            this.g = Math.round(Math.random())*255;
+            this.b = Math.round(Math.random())*255;
+        }
+
+        function createCircle(n) {
+            var crl = [];
+            if(n<2 || n===undefined){
+                crl = new RandomCircle();
+            }else {
+                for (var i = 0; i < n; i++) {
+                    crl.push(new RandomCircle());
+                }
+            }
+            return crl;
+        }
+
+        var circles = createCircle(opt.circleNum);
+
+        // 开始动画
+        var reqID = [];
+        reqID[0] = requestAnimationFrame(animate);
+
+        function animate() {
+            if(circles.length<1) return;    //若界面已无小球则停止调用
+            reqID.push(requestAnimationFrame(animate));
+
+            //添加蒙层制造余辉
+            opt.ctx.fillStyle = "rgba(0,0,0,0.1)";
+            opt.ctx.fillRect(0, 0, w, h);
+
+            for(var i = 0; i < circles.length; i++) {
+                var c = circles[i];
+
+                //将半径小于0，或已跑到可视区外面的小球删除
+                if(c.radius<0 || c.x<-3 || c.x>opt.canvas.width || c.y<-3 || c.y>opt.canvas.height){
+                    circles.splice(i,1);
+                    continue;
+                }
+
+                opt.ctx.beginPath();
+                opt.ctx.arc(c.x, c.y, c.radius, 0, Math.PI * 2, false);
+                opt.ctx.fillStyle = "rgb(" + c.r + ", " + c.g + ", " + c.b + ")";
+                opt.ctx.fill();
+
+                c.x += c.vx;
+                c.y += c.vy;
+                c.radius -= .02;
+            }
+        }
+
+        return reqID;
+    }
+
+    //添加点击事件
+    myCanvas.addEventListener('click', function(e) {
+        createAnimate({
+            canvas: this,
+            ctx: ctx,
+            circleNum: 600,
+            center: [e.pageX-myCanvas.offsetLeft, e.pageY-myCanvas.offsetTop]
+        });
+    },false);
+
+</script>
+
+<!--
+<script>
+
+    /*初始化requestAnimationFrame方法*/
+    function initReqAniFra() {
+        var lastTime = 0;
+        var vendors = ['ms', 'moz', 'webkit', 'o'];
+        for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+            window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
+            window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame']     //webkit内核中取消方法名字变了
+                || window[vendors[x]+'CancelRequestAnimationFrame'];
+        }
+
+        if (!window.requestAnimationFrame)
+            window.requestAnimationFrame = function(callback, element) {
+                var currTime = new Date().getTime();
+                var timeToCall = Math.max(0, 16.7 - (currTime - lastTime));
+                var id = window.setTimeout(function() { callback(currTime + timeToCall); }, timeToCall);
+                lastTime = currTime + timeToCall;
+                return id;
+            };
+
+        if (!window.cancelAnimationFrame)
+            window.cancelAnimationFrame = function(id) {
+                clearTimeout(id);
+            };
+    }
+    initReqAniFra();
+
+    (function() {
+
+        // 获取按钮
+        var btn1 = document.getElementById('button');
+        var btn2 = document.getElementById('button2');
+        /*var resetBtn = document.getElementById('resetBtn');*/
+        // 获取canvas元素
+        var canvas = document.getElementById('canvas');
+        var canvas2 = document.getElementById('canvas2');
+        var bigCanvas = document.getElementById('big-canvas');
+        // 保存canvas下的2d绘图模式上面下文
+        var ctx1 = canvas.getContext('2d');
+        var ctx2 = canvas2.getContext('2d');
+        var ctx3 = bigCanvas.getContext('2d');
+
+        /**
+         * 创建绘图动画，该函数返回requestAnimationFrame方法返回的ID，该ID可用于传入cancelAnimationFrame方法取消相应位置的回调函数
+         * @param opt 参数对象
+         * {
+         *      canvas:     canvas元素，
+         *      ctx:        绘图2d上下文，
+         *      circleNum:  创建随机小球的数量，不传则默认500个，
+         *      center:     一组坐标[x,y]，表示小球初始放置在画布中的位置，默认为画布中心，
+         *      restart:    布尔值，小球减小消失后是否重新生成，默认否，
+         *      fire:       是否以烟花形式发射，默认否
+         * }
+         */
+        function createAnimate(opt) {
+
+            opt.circleNum = opt.circleNum || 500;
+            opt.center = opt.center || [];
+
+            var w = opt.canvas.width,
+                h = opt.canvas.height;
+
+            //创建n个随机颜色、大小、移动速度的圆
+            function createCircle(n) {
+                var crl = [];
+
+                function RandomCircle() {
+
+                    //创建的圆起始放置位置
+                    this.x = opt.center[0] || w/2;
+                    this.y = opt.center[1] || h/2;
+
+
+                    //圆的随机半径控制在 2 - 5 像素之间
+                    this.radius = 2 + Math.random()*3;
+
+                    //随机小球的运动速度
+                    //方式1：该方式随机出的速度，小球在扩散时整体来看是方形的
+//                    this.vx = -5 + Math.random()*10;
+//                    this.vy = -5 + Math.random()*10;
+                    //方式2：该方式随机出的速度，小球在扩散时整体来看是圆形的
+                    var v = Math.random()*6;
+                    var deg = Math.random() * Math.PI * 2;
+                    this.vx = v * Math.cos(deg);      // cos、sin方法的参数为弧度
+                    this.vy = v * Math.sin(deg);
+
+                    //随机颜色
+                    this.r = Math.round(Math.random())*255;
+                    this.g = Math.round(Math.random())*255;
+                    this.b = Math.round(Math.random())*255;
+
+                }
+
+                if(n<2 || n===undefined){
+                    crl = new RandomCircle();
+                }else {
+                    for (var i = 0; i < n; i++) {
+                        crl.push(new RandomCircle());
+                    }
+                }
+
+                return crl;
+            }
+
+            var circles = createCircle(opt.circleNum);
+
+            // 开始动画
+            var requestID = requestAnimationFrame(animate);
+
+            //调用requestAnimationFrame方法在浏览器重绘时执行的回调函数(即每次刷新时执行的绘制)
+            function animate() {
+
+                requestID[opt.id] = requestAnimationFrame(animate);
+                //使用半透明黑色覆盖画布(这样可让小球运动时留下残影)
+                //ctx.globalCompositeOperation = "source-over";     //globalCompositeOperation属性定义图像重叠是的层级顺序，默认值是source-over，就是后者在前者之上
+                opt.ctx.fillStyle = "rgba(0,0,0,0.15)";
+                opt.ctx.fillRect(0, 0, w, h);
+
+                //绘制彩球填充画布
+                var bomb = circles[0];
+                if(opt.fire){
+
+                    if(bomb.radius<0 || bomb.y<100){
+                        opt.fire = false;
+
+                        for(var i = 0; i < circles.length; i++) {
+                            circles[i].y = bomb.y;
+                        }
+
+                    }
+
+                    opt.ctx.beginPath();
+                    opt.ctx.arc(bomb.x, bomb.y, bomb.radius, 0, Math.PI * 2, false);
+                    opt.ctx.fillStyle = "rgb(255, 255, 0)";
+                    opt.ctx.fill();
+
+                    bomb.y -= 7;
+                    bomb.radius -= .01;  //小球逐渐变小
+
+                }else {
+
+                    for(var j = 0; j < circles.length; j++) {
+                        var c = circles[j];
+
+                        if(c.radius < 0){
+                            if(opt.restart){
+                                c = circles[j] = createCircle();    //半径小于0时有重新随机一个，就不断有新的小球蹦出
+                            }else {
+                                continue;
+                            }
+                        }
+
+                        opt.ctx.beginPath();
+                        opt.ctx.arc(c.x, c.y, c.radius, 0, Math.PI * 2, false);
+                        opt.ctx.fillStyle = "rgba(" + c.r + ", " + c.g + ", " + c.b + ", 0.5)";
+                        opt.ctx.fill();
+
+                        c.x += c.vx;
+                        c.y += c.vy;
+                        c.radius -= .02;  //小球逐渐变小
+
+                    }
+                }
+
+            }
+
+            return requestID;
+
+        }
+
+        var requestID1;
+        btn1.addEventListener('mouseover', function(e) {
+            e.preventDefault();
+
+            requestID1 = createAnimate({
+                canvas: canvas,
+                ctx: ctx1,
+                restart: true
+            });
+        });
+
+        btn1.addEventListener('mouseout', function(e) {
+            e.preventDefault();
+
+            // 停止动画
+            cancelAnimationFrame(requestID1);
+
+            // 擦除画布
+            ctx1.clearRect(0, 0, canvas.width, canvas.height);
+
+        });
+
+
+        var requestID2;
+        btn2.addEventListener('mouseover', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            requestID2 = createAnimate({
+                canvas: canvas2,
+                ctx: ctx2,
+                restart: true
+            });
+        },false);
+
+        btn2.addEventListener('mouseout', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            // 停止动画
+            cancelAnimationFrame(requestID2);
+
+            // 擦除画布
+            ctx2.clearRect(0, 0, canvas2.width, canvas2.height);
+
+        },false);
+
+
+        var requestID3 = [];
+        bigCanvas.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            var idx = createAnimate({
+                canvas: this,
+                ctx: ctx3,
+                circleNum: 600,
+                center: [e.pageX-bigCanvas.offsetLeft, e.pageY-bigCanvas.offsetTop],
+                fire: true
+            });
+            requestID3.push(idx);
+
+        },false);
+
+        bigCanvas.addEventListener('mouseout', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            // 停止动画
+            for(var i=0;i<requestID3.length;i++){
+                cancelAnimationFrame(requestID3[i]);
+            }
+
+            // 擦除画布
+            ctx3.fillStyle = "transparent";
+            ctx3.clearRect(0, 0, bigCanvas.width, bigCanvas.height);
+
+        },false);
+
+
+    }());
+
+</script>
+-->
+</body>
+</html>

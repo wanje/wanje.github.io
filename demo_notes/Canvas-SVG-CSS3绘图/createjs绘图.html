@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1">
+    <title>CreateJS</title>
+    <link rel="stylesheet" href="../plugins/highlight/styles/androidstudio.css">
+    <script src="../plugins/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <style type="text/css">
+        pre,
+        body {margin: 0;}
+        ul {list-style: none;padding: 0;margin: 0;}
+    </style>
+</head>
+<body>
+<ul>
+    <li><canvas id="gameView" style="background: #eeeeee;"></canvas></li>
+</ul>
+
+<pre><code id="show-script"></code></pre>
+<script src="../plugins/createjs/easeljs.min.js"></script>
+<script id="script">
+
+    let canvas = document.getElementById('gameView');
+    canvas.height = 400;
+    canvas.width = canvas.parentNode.clientWidth;
+
+    //CreateJs提供了两种渲染模式，一种是用setTimeout，一种是用requestAnimationFrame，默认是setTimeout，默认的帧数是20
+    //设置成requestAnimationFrame模式的话，动画表现更加流畅
+    createjs.Ticker.timingMode = createjs.Ticker.RAF;
+
+    /** Stage类创建舞台 */
+//    let stage = new createjs.Stage('gameView');     //实例化舞台，参数为页面某canvas的id，或者一个canvas的DOM对象
+    let stage = new createjs.Stage(canvas);     //实例化舞台，参数为页面某canvas的id，或者一个canvas的DOM对象
+
+    //一般不对舞台做直接样式上的操作，因为其是最大的容器，将影响所有后续操作，可使用container容器单独设置，相当于一个小舞台，也即分组
+    let cont = new createjs.Container();    //创建一个container容器
+    stage.addChild(cont);   //将容器添加到舞台中，所有的东西都要添加到舞台中
+
+    /** 帧监听 */
+    createjs.Ticker.addEventListener("tick", function () {
+        //每一帧执行的代码
+        stage.update(); //每帧都更新舞台，这样就不用每次手动更新
+    });
+
+    /** Shape类创建形状 */
+    let rect = new createjs.Shape();            //创建形状
+
+    /** 形状下 graphics 类绘制图形 */
+    rect.graphics.beginFill('#f00');    //填充设置
+    rect.graphics.drawRect(5,5,50,50);  //定义矩形，可像jQuery一样链式调用
+    stage.addChild(rect);   //添加到舞台，也可以将其添加到container中cont.addChild(rect);因为container已添加到stage中，所以加入容器也就加入了舞台
+//    stage.update();     //更新舞台绘制，但因添加了帧监听事件，每次自动更新舞台，所以后面就可以不再手动更新
+
+    let cmd = rect.graphics.beginFill('#00f').command;  //command属性可保存当前指令，以用于后面修改
+    rect.graphics.drawCircle(30,100,30);
+    cont.addChild(rect);
+
+    //Bitmap类用于绘制图片，注意需等图片加载完成才能绘制出来
+
+    rect.addEventListener('click',function (e) {
+        cmd.style = cmd.style==='#00f' ? '#0f0' : '#00f';
+    });
+
+
+    /**===============================================================================================================*/
+    /**=================================================== 样式设置 ===================================================*/
+    /**===============================================================================================================*/
+
+    !function () {
+
+        /** 线条 */
+        //Shape()类可传入一个Graphics()类设定的绘图状态参数，可以不传入，后面通过直接调用实例的graphics属性设置相关参数
+        let shape = new createjs.Shape(new createjs.Graphics().beginStroke('red').moveTo(5,150).lineTo(25,140).lineTo(50,150)); // closePath()方法可用于闭合路径
+        stage.addChild(shape);
+
+    }();
+    !function () {
+
+        /** setStrokeStyle 线条样式设置 */
+        let shape = new createjs.Shape();
+        /* setStrokeStyle()方法参数（线宽lineWidth，线冒lineCap，拐点lineJoin，拐点截断miterLimit，最后有个参数暂不理解），除了第一个线宽，其他参数都是可选的 */
+        shape.graphics.setStrokeStyle(8, "round", "round").beginStroke('blue').moveTo(5,160).lineTo(30, 200).lineTo(50, 170);
+        shape.x = 5;    //可通过x、y属性设置图形的位置偏移，即translate变换
+        shape.y = 20;
+        stage.addChild(shape);
+
+    }();
+    !function () {
+
+        /** setStrokeDash 设置虚线重复段 */
+        let shape = new createjs.Shape();
+        /* setStrokeDash()方法参数（虚线间断数组，最初重复段偏移长度），效果类似于css中背景图repeat模式，参数类似于SVG中的stroke-dasharray和stroke-dashoffset属性
+         * 第一个参数数组[线段长，间断长，线段长，间断长，...]，设置一个虚线重复单元；第二个参数可选，默认值就像background-position默认从0开始
+          * */
+        shape.graphics.setStrokeDash([5,5,10,8]).beginStroke('blue').moveTo(5,50).lineTo(70, 50);
+        shape.y = 260;
+        stage.addChild(shape);
+
+    }();
+    !function () {
+
+        /** beginLinearGradientStroke 线性渐变描边样式，相应还有填充线性渐变beginLinearGradientFill */
+        let shape = new createjs.Shape();
+        /* beginLinearGradientStroke()方法设置描边渐变色样式，参数（颜色数组，比例数组，后4个为确定渐变方向的两点） */
+        shape.graphics.setStrokeStyle(10).beginLinearGradientStroke(['red','blue'], [0, 1], 5, 250, 60, 300).moveTo(5,250).lineTo(60, 300);
+        stage.addChild(shape);
+
+    }();
+    !function () {
+
+        /** beginLinearGradientFill 设置线性渐变填充样式 */
+        let shape = new createjs.Shape();
+        shape.graphics.beginLinearGradientFill(['red','blue'], [0, 1], 70, 5, 130, 5).drawRect(75,5,50,50); // beginLinearGradientFill()方法beginLinearGradientStroke方法一样，只是用于填充样式
+        shape.y = 200;
+        stage.addChild(shape);
+
+    }();
+    !function () {
+
+        /** beginRadialGradientFill 设置径向渐变填充样式，相应还有描边径向渐变beginRadialGradientStroke，参数也一样 */
+        let shape = new createjs.Shape();
+        /* beginRadialGradientFill()方法设置填充径向渐变样式，参数（颜色数组，比例数组，后6个为确定渐变区间的两个圆），后6个参数与原生径向渐变一样，两个圆间的环形部分为渐变区间 */
+        shape.graphics.beginRadialGradientFill(['blue', 'red'], [0, 1], 100, 0, 0, 100, 0, 25).drawCircle(100,0,25); //参数（colorArr，ratioArr，cx0，cy0，r0，cx1，cy1，r1）
+        shape.y = 120;
+        stage.addChild(shape);
+
+    }();
+    !function () {
+
+        /** beginBitmapFill 设置背景图/画布/音视频填充，相应还有描边背景图/画布/音视频beginBitmapStroke(imgObj,repetition)无第三个参数
+         *  须注意的是必须要在图片/画布/音视频加载完成后才能进行相关操作，无法设置大小
+         * */
+        let img = new Image();
+        img.src = '../images/arc-dot.png';
+        img.onload = function () {
+
+            let shape = new createjs.Shape();
+            /* beginBitmapFill(imgObj,repetition,matrix)方法，参数（图片//画布/音视频对象，重复模式默认repeat，变换矩阵matrix） */
+            let crl = shape.graphics.beginStroke("blue").beginBitmapFill(img).drawCircle(0,0,30).command;
+            shape.x = 160;
+            shape.y = 240;
+            stage.addChild(shape);
+
+            stage.enableMouseOver(20);  //启用 mouseover/mouseout/rollover/rollout等事件
+
+            shape.addEventListener('mousedown',function (event) {
+                let x0 = event.stageX,
+                    y0 = event.stageY,
+                    cx = crl.x,
+                    cy = crl.y;
+
+                shape.addEventListener('pressmove',function (e) {
+                    let x1 = e.stageX,
+                        y1 = e.stageY;
+                    crl.x = cx + (x1-x0);
+                    crl.y = cy + (y1-y0);
+                });
+            });
+
+        };
+    }();
+
+    /**===============================================================================================================*/
+    /**=================================================== 图形定义 ===================================================*/
+    /**===============================================================================================================*/
+
+    !function () {
+
+        /** rect 绘制矩形 */
+        let shape = new createjs.Shape();
+        shape.graphics.beginFill('pink').rect(5,5,50,50); // rect()方法的参数与原生rect API一样，(x,y,w,h)，其与drawRect的区别就好比原生API中rect与fillRect或strokeRect
+        shape.y = 320;
+        stage.addChild(shape);
+
+    }();
+    !function () {
+
+        /** drawRoundRect 绘制统一圆角矩形 */
+        let shape = new createjs.Shape();
+        shape.graphics.beginFill('pink').drawRoundRect(75,5,50,50,10); // drawRoundRect()方法的参数(x,y,w,h,radius)
+        shape.y = 320;
+        stage.addChild(shape);
+
+    }();
+    !function () {
+
+        /** drawRoundRectComplex 绘制多圆角矩形 */
+        let shape = new createjs.Shape();
+        shape.graphics.beginFill('pink').drawRoundRectComplex(75,5,50,50,10,5,15,5); // drawRoundRectComplex()方法的参数(x,y,w,h,radius1,radius2,radius3,radius4)，注意4个圆角值都必须设置
+        shape.y = 260;
+        stage.addChild(shape);
+
+    }();
+    !function () {
+
+        /** drawCircle 绘制圆 */
+        let shape = new createjs.Shape();
+        shape.graphics.beginFill('red').drawCircle(100,0,25); // drawCircle()方法绘制圆，参数（cx，cy，r）
+        shape.y = 175;
+        stage.addChild(shape);
+
+    }();
+    !function () {
+
+        /** drawEllipse 绘制椭圆 */
+        let shape = new createjs.Shape();
+        shape.graphics.beginFill('blue').drawEllipse(75,10,50,80); //参数（x，y，w，h），注意（x，y）不是椭圆几何中心，而是与其同样尺寸的矩形的左上角位置
+        stage.addChild(shape);
+
+    }();
+    !function () {
+
+        /** drawPolyStar 绘制星星/正多边形 */
+        let shape = new createjs.Shape();
+        //参数（cx，cy，r，sides/points，depth，angle），（圆心x，圆心y，半径，边或顶点数，凹陷或凸起深度比例，旋转角度）
+        //参数中depth凹陷或凸起深度比例，指顶点连线的中点(即边的中点)向内凹陷或向外凸起的深度比例，以形成星星的尖角，负值向外凸，正值向内凹，0则是一个一般正多边形，该比例参照圆心到边的距离，所以值为1时将看不到图形
+        //形象的比喻就是：将一条橡皮筋由几个顶点固定成一个正多边形，用力将几条边的中点向内或外拉扯形成的形状，如果向内拉扯的比例超过1就将在对边(或对角)出现尖角(从而可能出现两倍数量的尖角，拉伸比例不为2时就会是大尖角间夹着小尖角)
+        shape.graphics.beginFill('orange').drawPolyStar(0,0,30,6,0,90).drawPolyStar(0,60,30,5,0.6,-90).drawPolyStar(0,110,30,6,1.7,-90);
+        shape.x = 160;
+        shape.y = 70;
+        stage.addChild(shape);
+
+    }();
+    !function () {
+
+        /** arcTo 切线弧 */
+        let shape = new createjs.Shape();
+        shape.graphics.beginStroke('red').moveTo(5,160).arcTo(50, 150, 60, 180, 30); // arcTo()方法的参数与原生arcTo API一样，(x1,y1,x2,y2,r)
+        stage.addChild(shape);
+
+    }();
+    !function () {
+
+        /** quadraticCurveTo 二次贝塞尔曲线 */
+        let shape = new createjs.Shape();
+        shape.graphics.beginStroke('red').moveTo(5,200).quadraticCurveTo(30, 220, 60, 200); // quadraticCurveTo()方法的参数与原生quadraticCurveTo API一样，(cpx,cpy,x1,y1)
+        shape.y = 20;
+        stage.addChild(shape);
+
+    }();
+    !function () {
+
+        /** bezierCurveTo 三次贝塞尔曲线 */
+        let shape = new createjs.Shape();
+        shape.graphics.beginStroke('red').moveTo(5,230).bezierCurveTo(20, 250, 50, 240, 60, 270); // bezierCurveTo()方法的参数与原生bezierCurveTo API一样，(cpx1,cpy1,cpx2,cpy2,x1,y1)
+        stage.addChild(shape);
+
+    }();
+
+    /**===============================================================================================================*/
+    /**=================================================== 文本绘制 ===================================================*/
+    /**===============================================================================================================*/
+
+    !function () {
+
+        /** Text类创建文本 */
+        let text = new createjs.Text('Hello CreateJS!','20px Arial','#f00');   //创建文本，参数为（文本内容，字体设置同css中font简写，文字颜色）
+        text.lineWidth = 100;   // 可使用 lineWidth 属性规定文本宽度，文字将自动换行(以单词边界为准，不会从单词中间断开)
+        text.x = 140;
+        text.y = 10;
+        stage.addChild(text);
+
+    }();
+
+
+
+
+</script>
+<script>
+    document.getElementById('show-script').innerHTML = document.getElementById('script').innerHTML;
+</script>
+</body>
+</html>

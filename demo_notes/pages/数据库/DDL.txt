@@ -1,0 +1,191 @@
+-- 1. 创建数据库：
+CREATE DATABASE baijie94
+-- 2. 连接数据库：
+USE baijie94
+-- 3. 删除数据库：
+DROP DATABASE baijie94
+-- 数据库名的命名：
+/*
+首字符只能是英文的大小写字母， _， @，#
+后面可以跟上，数字，字母,@,#
+不能与RDBMS中的保留字同名。也不能与SQL语言中的关键字同名。
+
+表名:
+与数据库的首字符开始，加下划线，加表名
+库名：baijie94
+表名：b_student
+列名：s_name
+*/
+
+-- 1. 创建表：
+-- 语法：
+-- CREATE TABLE 表名（字段名1 数据类型（长度） 约束,字段名2 数据类型（长度） 约束,字段名3 数据类型（长度） 约束）
+CREATE TABLE b_student(
+s_name CHAR(50),
+s_age DECIMAL(5,2),
+s_birthday DATE
+)
+-- char ，固定长度；
+-- varchar, 不固定长度。即使不输入数据，长度也是1，如果输入了数据，就在数据长度上加1.
+-- text,大文本。
+
+-- 备份表数据
+CREATE TABLE class_bak SELECT * FROM class
+
+
+--  数据完整性的分类
+/*1.实体完整性
+保证一行数据是有效的
+2.域完整性
+保证一列数据是有效的
+3.引用完整性
+保证引用的编号是有效的
+4.用户自定义完整性
+保证自定义规则
+*/
+/*
+主键约束：  非空、唯一性
+唯一约束： 不能重复，但允许NULL值，NULL值仅能出现一次。
+
+*/
+CREATE TABLE b_student(
+s_id INT PRIMARY KEY,-- 定义主键约束：primary key
+s_name CHAR(50) UNIQUE,-- 定义唯一约束： unique
+s_age DECIMAL(5,2),
+s_birthday DATE
+)
+
+CREATE TABLE b_student(
+s_id INT,-- 定义主键约束：primary key
+s_name CHAR(50) UNIQUE,-- 定义唯一约束： unique
+s_age DECIMAL(5,2),
+s_birthday DATE,
+ PRIMARY KEY(s_id)
+)
+
+-- 2.域完整性
+-- 非空约束： NOT NULL
+-- 默认约束: DEFAULT
+-- 检查约束: CHECK
+
+CREATE TABLE b_student(
+s_id INT,
+s_name CHAR(50) UNIQUE,
+s_age TINYINT NOT NULL CHECK s_age>12 AND s_age<60,
+s_sex CHAR(2) DEFAULT '男',
+ PRIMARY KEY(s_id)
+)ENGINE = INNODB
+-- MYSQL中，它总是分析CHECK约束，但是忽略CHECK约束。
+
+-- 3. 引用完整性
+CREATE	TABLE b_score(
+s_s_id INT,
+s_score INT,
+CONSTRAINT FOREIGN KEY(s_s_id) REFERENCES b_student(s_id)
+)ENGINE = INNODB
+
+/*
+注意：1. 从表必须设置engine = innodb;;
+2. 必须先创建主表，再创建从表；
+3. 外键名，必须用括号括起来。
+4. 从表外键中插入的数据，必须是主表主键列中已经存在的数据；
+5. 在删除主表主键列值的时候，必须先删除从表外键的记录；
+6. 如果要修改主表主键列值，必须先删除从表外键的记录；
+*/
+--  删除表
+DROP TABLE b_score
+
+-- 自动增加列
+ CREATE TABLE b_student(
+s_id INT AUTO_INCREMENT,
+s_name CHAR(50) UNIQUE,
+s_age TINYINT NOT NULL CHECK s_age>12 AND s_age<60,
+s_sex CHAR(2) DEFAULT '男',
+ PRIMARY KEY(s_id)
+)ENGINE = INNODB AUTO_INCREMENT=10000
+
+-- 自动 增长列，不受删除行的影响，只管增长。
+-- 必须是INT类型的数据。
+
+-- 也可以通过修改表的方式来设置：
+ALTER TABLE b_student AUTO_INCREMENT=100000
+
+-- 只复制结构
+CREATE TABLE test SELECT * FROM b_student WHERE 1=0
+-- 复制结构和数据
+CREATE TABLE test1 SELECT * FROM b_student
+
+-- 都 不会复制约束（索引）。
+-- 添加字段列
+ALTER TABLE test ADD COLUMN height DECIMAL(5,2)
+-- 删除字段列
+ALTER TABLE test DROP COLUMN height
+-- 修改字段列
+ALTER TABLE test CHANGE s_sex
+s_sex CHAR(2) DEFAULT '女'
+
+-- 在项目中，数据表一但创建并录入数据 ，是不允许修改结构的。
+
+
+-- -------DML-------
+
+-- 数据的插入
+-- insert into 表名(要插入的字段列表名)values(值1，值2，....)
+-- 自动增长列，不添加此列
+-- 默认值列
+-- 单条数据的插入
+-- 多条数据的插入
+
+
+-- 1. 单条数据的全字段的插入
+INSERT INTO b_student(s_id,s_name,s_age,s_sex) VALUES(10005,'张飞',12,'男')
+
+INSERT INTO b_student(s_id,s_name,s_age,s_sex) VALUES(1005,'张飞2',17,'男')
+-- 2. 单条数据的指定列的插入：
+INSERT INTO b_student(s_name,s_age,s_sex) VALUES('张飞3',17,'男')
+INSERT INTO b_student(s_name,s_age) VALUES('刘备',17)
+
+-- 3. 如果表中的列，允许为NULL值，则在插入数据时，可以不指定数据列。
+INSERT INTO test(s_name)VALUES('诸葛亮')
+
+-- 4. 多条记录的插入：
+INSERT INTO test(s_name)VALUES('赵云'),('李广'),('岳飞'),('曹操') -- 只能在MYSQL中这样使用。
+-- 只能有一个values。
+
+-- 5. 通过查询来插入多条数据：
+INSERT INTO test1  SELECT * FROM test  -- 不要加values.
+
+--  -------------UPDATE 修改、更新数据列---------------
+-- 基本语法：UPDATE  表名 set 字段名1 = 值1，字段名2 = 值2，... WHERE  条件表达式
+UPDATE b_student SET s_sex = '女' -- 如果没有加条件判断，则修改所有行。
+-- 把ID = 10001的性别改为男
+UPDATE b_student SET s_sex = '男' WHERE s_id=10001
+
+
+-- 把所有人的年龄+1岁
+UPDATE b_student SET s_age=s_age+1
+
+-- 修改s_id为10006的学生姓名为张某某,年龄=69,性别=男
+UPDATE b_student SET s_name='张某某' ,s_age=69,s_sex='男' WHERE s_id=10006
+-- 删除test表中，叫赵云这个学生的性别数据
+UPDATE test SET sex = NULL WHERE s_name='赵云' -- 要修改的字段列，允许为NULL。
+
+-- ----------DELETE FROM 删除表-----------
+DELETE FROM test1 -- 只删除了行的数据，表的结构还在。
+-- 删除test表的中叫诸葛亮的行
+DELETE FROM test WHERE s_name='诸葛亮'
+
+-- TRUNCATE TABLE 表名
+/*
+DELETE会记录日志，意味着删除后的数据还可以恢复，但是效率低。
+TRUNCATE不会记录日志，删除后的数据不能恢复，但是效率高。
+TRUNCATE不能用于有外键约束引用的表。
+它们只是删除数据行。
+表的结构没有被删除。
+drop table是把结构与数据行一起删除。
+*/
+TRUNCATE TABLE test -- 一次性删除所有行，不可恢复。
+
+
+
+

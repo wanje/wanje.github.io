@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1">
+    <title>Mockjs使用</title>
+    <link rel="stylesheet" href="../../plugins/highlight/styles/androidstudio.css">
+    <script src="../../plugins/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <style type="text/css">
+        * { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;}
+        body,pre,fieldset {margin: 0; padding: 0;}
+        fieldset {border: none;}
+        fieldset legend {padding: 0 10px; cursor: pointer; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; background: #333333; color: #ffffff;}
+        fieldset legend:after { content: ''; display: inline-block; border: 7px solid transparent; border-top-width: 0; border-bottom-color: #EEEEEE; margin-left: 3px; vertical-align: 3px;}
+        fieldset.close legend:after { border-width: 7px 7px 0; border-top-color: #EEEEEE; vertical-align: 1px;}
+        fieldset {max-height: 5000px; overflow: auto; -webkit-transition: max-height 0.5s cubic-bezier(1,-0.1, 0, 1.14); transition: max-height 0.3s cubic-bezier(1,-0.1, 0, 1.14);}
+        fieldset.close {max-height: 200px;}
+        img {max-width: 100%;}
+    </style>
+</head>
+<body>
+<a href="https://github.com/nuysoft/Mock/wiki">官方文档地址及GitHub</a>
+<fieldset>
+    <legend>引入方式</legend>
+    <pre><code class="js" id="show-script"></code></pre>
+</fieldset>
+<img src="../../知识点截图/mockjs/Mock.Random提供的随机数据方法.png" />
+<img src="../../知识点截图/mockjs/Random.date可选的日期格式format占位符.png" />
+<script src="../../plugins/mock-min.js"></script>
+<script type="text/javascript" charset="UTF-8" id="script">
+/** 引入方式 */
+/*
+ * 1、直接通过 script 标签静态引入的方式使用，会暴露一个全局对象：Mock
+ * 2、npm安装(分本地与全局)：
+ * $ npm install mockjs --save-dev
+ * 然后：
+ * var Mock = require('mockjs')
+ * */
+
+/**====================================================================================================================*/
+/**============================================= 数据模板、数据占位符语法规范 =============================================*/
+/**====================================================================================================================*/
+
+let tpl = {
+/**================*/
+/** 数据模板语法规范 */
+/**================*/
+    // 数据模板中每个属性值由3部分组成：属性名、生成规则、属性值；
+    // 注意，属性名与规则之间用竖线“|”分隔
+    'name|rule': 'value',   //value中可以含有 @ 占位符，且其指定了初始值，也表明了要生成的数据类型
+
+    //生成规则rule是可选的，包含7种格式设定，且最终生成的数据与value值的类型有关
+    'name|min-max': 1,
+    'name|min-max.dmin-dmax': 2,    //这边表示整数部分在一个范围，小数位数也在一个范围
+    'name|min-max.dcount': 3,       //这里 dcount 相当于 dmin=dmax=dcount，表示固定的小数位数
+    'name|count': 4,
+    'name|count.dmin-dmax': 5,      //这里 count 相当于 min=max=count，表示固定的整数部分
+    'name|count.dcount': 6,         //这边表示整数部分固定，小数位数也固定
+    'name|+step': 7,
+
+    '规则含义依赖属性值类型': {
+        '字符串': {
+            'name|min-max': 'w',  //表示重复value最少min次最多max次来生成一个新字符串，如：name|1-3': 'w' ===> 'w'或'ww'或'www'
+            'name|count': 'w',    //表示重复value值count次来生成一个新字符串，如：name|3': 'w' ===> 'www'
+        },
+        '数字': {
+            'name|min-max': 1,           //表示生成一个>=min、<=max的整数，如：'name|5-8': 1 ===> 5、6、7、8中的一个
+            'name|min-max.dmin-dmax': 1, //表示生成一个浮点数，其整数部分>=min、<=max（min与max相等时可只写一个），小数部分保留 dmin 到 dmax 位（dmin与dmax相等时可只写一个），如：'name|5-8.1-2': 1 ===> 6.2'；name|5.1-2': 1 ===> 5.13；'name|8.2': 1 ===> 8.21
+            'name|+step': 1,             //表示每次自动加step步长，value为初始值(使用同一数据模板时多次调用每次是递增加不是都从初始值加)，如：'name|+2': 3 ===> 5 => 8 =>11...
+        },
+        '布尔值': {
+            'name|min-max': true,   //表示随机生成一个布尔值，该值为value的概率是min/(min+max)，值为!value的概率是max/(min+max)
+            'name|1': false,        //表示随机生成一个布尔值，该值为 true 和 false 的概率各一半
+        },
+        '对象': {
+            'name|min-max': {},     //表示从该对象中随机选择min到max个属性组成新的对象返回
+            'name|count': {},       //表示从该对象中随机选择count个属性组成新的对象返回
+        },
+        '数组': {
+            'name|min-max': [],   //表示重复该数组的值最少min次最多max次而形成一个新的数组返回，如：'name|2-4': [1] ===> [1,1]
+            'name|count': [],     //表示重复该数组的值count次而形成一个新的数组返回，如：'name|4': [1] ===> [1,1,1,1]
+            'name|1': [],         //表示从该数组的值中随机选一个返回，注意此时生成的值已不是数组，而是随机选择到的那个数据，如：'name|1': [1,'2','w',[2]] ===> 可能是数组中任一个值
+            'name|+1': [],        //同上面 'name|1'
+        },
+        '函数': {
+            'name': function () {
+                //此时不需要指明rule
+                //执行此函数，取该函数的返回值作为属性值，函数上下文(this)为'name'所在对象
+                return 'any';
+            }
+        },
+        '正则表达式': {
+            'name': /[a-z][A-Z][0-9]/    //会根据给定的正则表达式反向生成可以匹配它的字符串。用于生成自定义格式的字符串。因为是生成字符串，所以用于字符串的rule也可以用在这里
+        },
+        '通过路径引用数据模板中其他值': {    //@ 符号后的字符表示占位符，路径引用中“/”开头表示绝对路径(指向模板根对象)，“.”开头这表示使用的是相对路径(从当前属性位置开始)
+            'absPath': '@/规则含义依赖属性值类型/正则表达式/name',    //绝对路径引用，引用将直接使用被引用位置生成的数据
+            'relPath': '@../正则表达式/name'                       //相对路径引用，引用将直接使用被引用位置生成的数据
+        }
+
+    }
+
+/**==================*/
+/** 数据占位符定义规范 */
+/**==================*/
+    /** 占位符是 Mock.Random 中提供的方法在数据模板中的称呼，书写格式为 @占位符(参数...) */
+    /*
+    * 占位符只是在属性值字符串中占个位置，并不出现在最终的属性值中
+    * 1、用 @ 来标识其后的字符串是占位符；
+    * 2、占位符引用的是 Mock.Random 中的方法；
+    * 3、通过 Mock.Random.extend() 来扩展自定义占位符；
+    * 4、占位符可以引用且会优先引用“数据模板”中的属性；
+    * 5、占位符支持“相对路径”和“绝对路径”。
+    * */
+    /** 统一放在后面 Mock.Random 介绍中说明 */
+
+},
+url = 'api/goods',
+type = 'get';
+
+
+/**====================================================================================================================*/
+/**================================================= Mock 对象提供的方法 =================================================*/
+/**====================================================================================================================*/
+/* 包括：数据生成、数据校验，请求拦截设置，各种随机数据生成(放后面单独写) */
+
+/**=======================
+ * Mock.mock( url ?, type ?, tpl|function(options) )，根据数据模板生成模拟数据
+ * url      可选，表示需要拦截的url地址，可以是具体的地址字符串，也可以是关于url的正则表达式
+ * type     可选，表示需要拦截的ajax请求类型，如：get、post、put、delete等
+ * tpl      表示数据模板，可以是对象或字符串(数据占位符代替)
+ * function 表示用于生成响应数据的函数，其参数对象options指向对应请求的ajax选项集，含有url、type、body三个属性
+ * ======================*/
+
+//根据数据模板 tpl 生成模拟数据
+Mock.mock(tpl);     //模板tpl可以是对象或字符串(数据占位符代替)
+
+//当拦截到匹配请求地址 url 的ajax请求时，将根据数据模板 tpl 生成模拟数据并作为响应数据返回
+Mock.mock(url, tpl);
+
+Mock.mock(url, function (options) {
+    //当拦截到匹配请求地址 url 的ajax请求时，该函数将被执行，并把执行返回的结果作为响应数据返回
+    //其参数对象options指向对应请求的ajax选项集，含有url、type、body三个属性
+});
+
+//当拦截到匹配请求地址 url 和请求类型 type 的ajax请求时，将根据数据模板 tpl 生成模拟数据并作为响应数据返回
+Mock.mock(url, type, tpl);
+
+Mock.mock(url, type, function (options) {
+    //当拦截到匹配请求地址 url 和请求类型 type 的ajax请求时，该函数将被执行，并把执行返回的结果作为响应数据返回
+    //其参数对象options指向对应请求的ajax选项集，含有url、type、body三个属性
+});
+
+/**=======================
+ * Mock.setup( settings )，配置拦截ajax请求时的行为
+ * settings    为配置项集合对象，支持配置timeout(被拦截ajax请求的响应时间，以毫秒计)
+ * ======================*/
+
+Mock.setup({
+    timeout: 400    //设置请求响应时间为400毫秒
+});
+Mock.setup({
+    timeout: '200-600'      //设置请求响应时间再200到600毫秒之间
+});
+
+/**=======================
+ * Mock.valid( tpl, data )，校验真实数据 data 是否与数据模板 tpl 匹配，匹配则返回空数组，否则返回包含差异信息对象的数组
+ * tpl    数据模板
+ * data   要校验的真实数据
+ * ======================*/
+let tpl1 = {name: 'value1'},result1;
+Mock.valid(tpl1, {
+    name: 'value2'
+});
+//返回包含以下内容的信息 =>
+result1 = [
+    {
+        path: ["data", "name"],   //path返回不匹配位置节点数组
+        type: "value",            //不匹配类型，name则指属性名，value则指属性值
+        actual: "value2",         //实际数据
+        expected: "value1",       //模板期望的数据
+        action: "equal to",
+        message: "[VALUE] Expect ROOT.name'value is equal to value1, but is value2"     //具体差异信息
+    }
+];
+
+/**=======================
+ * Mock.toJSONSchema( tpl )，把 Mock.js 风格的数据模板 tpl 转换成 JSON Schema（描述JSON数据格式）
+ * tpl    数据模板
+ * 具体表现示例参考：https://github.com/nuysoft/Mock/wiki/Mock.toJSONSchema()
+ * ======================*/
+
+
+/**====================================================================================================================*/
+/**================================================ Mock.Random 工具类 ================================================*/
+/**====================================================================================================================*/
+/* Mock.Random 是一个工具类，用于生成各种随机数据，除了内置的数据类型，还支持扩展自己想要的类型 */
+
+/**
+ * Mock.Random.extend() 扩展数据类型/占位符
+ * */
+const Random = Mock.Random;
+Random.extend({
+    constellation: function(date) {
+        let constellations = ['白羊座', '金牛座', '双子座', '巨蟹座', '狮子座', '处女座', '天秤座', '天蝎座', '射手座', '摩羯座', '水瓶座', '双鱼座'];
+        return this.pick(constellations);   //pick()方法Random对象上Helper类型辅助方法，作用是从数组中随机选取一个元素返回
+    }
+});
+
+/**
+ * 使用方式：
+ * 1、Random.dataMethod();    直接调用对应的数据方法，返回随机生成的相应数据，dataMethod类型的数据可能是Mock内置的，也可以是自定义扩展的
+ * 2、Mock.mock('@dataMethod');     作为“@占位符名(参数...?)”直接用mock方法生成一个随机相应数据返回
+ * 3、Mock.mock( { name: '@dataMethod' } );     作为“@占位符名(参数...?)”在数据模板中使用，按数据模板定义的数据结构返回相应数据
+ *
+ * Mock内置的数据类型分类和占位符可参考下面的知识点截图
+ * */
+
+//使用上面自定义的数据随机生成一个星座
+Random.constellation();         // => "水瓶座"
+Mock.mock('@constellation');    // => "天蝎座"
+Mock.mock( { constellation: '@constellation' } );   // => { constellation: "射手座" }
+
+/**=======================================
+ * Mock.Random 内置的一些随机数据类型部分举例
+ * ======================================*/
+
+/** Basic 基本类型 */
+Random.boolean();         //布尔值，参数( min?, max?, current? )可指定出现current的概率 => true或false
+
+Random.natural();         //自然数(大于等于0的整数)，参数( min?, max? )可指定值范围 => 1002794054057984
+Random.integer();         //整数(可正可负)，参数( min?, max? )可指定值范围 => 4303764511003750
+Random.float();           //浮点数(可正可负)，参数( min?, max?, dmin?, dmax? )可指定值整数部分范围和小数位数范围 => 1766114241544192.8
+
+Random.character();       //一个字符(英文状态下的字符)，参数( pool? )可指定字符池(返回的字符从中选)，pool可自定义，也有内置‘lower’表示小写字母，‘upper’表示大写字母，‘number’表示数字，‘symbol’表示符号，不传则默认从这全部四种中选
+Random.string();          //字符串(英文状态下的字符)，参数( pool?, min?, max? )可指定从字符池pool中随机选择min到max个字符组合字符串返回，默认选3到7个字符，pool同上
+
+Random.range();           //整型数组，参数( start?, stop, step? )可指定数组起始整数值(可负，默认0)、结束值(必选，且不包含到结果中)、步长(可选，默认1)，若值传入了stop，则返回一个从0开始且长度为stop的整形数组
+
+/** Date 日期/时间字符串类型 */
+Random.date();            //日期字符串，参数( format? )可指定日期字符串的格式(可选的格式占位符可查看知识点截图，默认为yyyy-MM-dd) => "2002-10-23"
+Random.time();            //时间字符串，参数( format? )作用同上(默认为HH:mm:ss) => "00:14:47"
+Random.datetime();        //日期+时间字符串，参数( format? )作用同上(默认为yyyy-MM-dd HH:mm:ss) => "1977-11-17 03:50:15"
+Random.now();             //返回当前日期+时间字符串，参数( unit?, format? )中 format 仍为字符串的格式(默认同datetime：yyyy-MM-dd HH:mm:ss)，
+                          //而其中 unit 为时间单位，用于对当前日期时间进行格式化(只精确到指定的单位位置，即剩余部分以其起始位置算)，可选值有year、month、week、day、hour、minute、second、week，默认不格式化
+                          //Random.now('year') => "2019-01-01 00:00:00"
+                          //Random.now('month') => "2019-02-01 00:00:00"
+                          //Random.now('day') => "2019-02-03 00:00:00"
+                          //Random.now('hour') => "2019-02-03 10:00:00"
+                          //Random.now('week') => "2019-02-03 00:00:00"，注意 week 是当前所在周的第一天(每周第一天是周日)
+
+/** Image 图像类型 */
+Random.image();           //图片地址，参数( size?, backgroundColor?, foreground?, format?, text? )可指定尺寸、背景色(默认#000)、前景色(文本，默认#fff)、图片格式(默认png)、图片文本(可用于alt，默认为参数size)
+                          //其中 size 尺寸的格式为“宽x高”，默认从mock内置的尺寸表中随机一个尺寸；format 图片格式可选png、jpg、gif，默认png
+                          //Random.image('200x100', '#02adea', 'Hello') => "http://dummyimage.com/200x100/02adea&text=Hello"
+                          //Random.image('200x100', '00405d', '#02adea', 'Hello') => "http://dummyimage.com/200x100/00405d/02adea&text=Hello"
+                          //说明：Random.image 用于生成尺寸自定义的图片地址，一般情况下应该使用更简单的 Random.dataImage
+
+Random.dataImage();       //Base64图片编码(png)，参数( size?, text? )可指定尺寸、图片文本(可用于alt，默认为参数size)
+                          //size 和 text 都同上面 Random.image 中的一样，若要指定尺寸最好使用上面的 Random.image
+                          //Random.dataImage() => "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAH0AAAB...kYA3TG3JwAAAAASUVORK5CYII="
+
+/** Color 颜色类型 */
+Random.color();           //十六进制颜色 => "#3538B2"
+Random.hex();             //十六进制颜色(内部方法不同?) => "#3538B2"
+Random.rgb();             //rgb(r, g, b)格式颜色 => "rgb(242, 198, 121)"
+Random.rgba();            //rgba(r, g, b, a)格式颜色 => "rgb(242, 198, 121, 0.53)"
+Random.hsl();             //hsl(h, s, l)格式颜色 => "hsl(345, 82, 71)"
+
+/** Text 文本类型 */
+Random.paragraph();       //英文段落，参数( min?, max? )可指定该段落包含句子的数量在min和max之间，默认为3到7句，当min=max可传入一个值即表示生成确定的句数
+Random.cparagraph();      //中文段落，参数( min?, max? )同上
+Random.sentence();        //首字母大写的英文句子，参数( min?, max? )可指定该句子中单词的个数在在min和max之间，默认为12到18个词，当min=max可传入一个值即表示生成确定的词数
+Random.csentence();       //中文句子，参数( min?, max? )同上，只是变为字数而不是词
+Random.word();            //英文单词，参数( min?, max? )可指定该单词中字母的个数在在min和max之间，默认为3到10个字母，当min=max可传入一个值即表示生成确定字母数的单词
+Random.cword();           //汉字，参数( pool?, min?, max? )可指定从汉字字符池pool随机选取min到max个汉字组成字符串返回，当min=max可传入一个值即表示确定的字数，默认是从内置字符池选择一个汉字
+Random.title();           //每个单词首字母都大写的英文标题，参数( min?, max? )可指定该标题包含min到max个单词，传一个值则表示确定的单词数
+Random.ctitle();          //中文标题，参数( min?, max? )同上
+
+/** Name 姓名类型 */
+Random.name();            //英文姓名，参数( middle? )为布尔值，表时是否生成中间名，默认false
+Random.first();           //英文名，无参数，注意英文姓名与中文姓名的顺序是反着的
+Random.last();            //英文姓，无参数，注意英文姓名与中文姓名的顺序是反着的
+Random.cname();           //中文姓名，无参数
+Random.cfirst();          //中文名，无参数
+Random.clast();           //中文姓，无参数
+
+/** Web 网站常用类型 */
+Random.url();             //url完整地址，参数( protocol?, host? )可指定url协议protocol(如http)，host可指定域名和端口号
+Random.protocol();        //url协议，返回一下协议名之一：'http'、'ftp'、'gopher'、'mailto'、'mid'、'cid'、'news'、'nntp'、'prospero'、'telnet'、'rlogin'、'tn3270'、'wais'
+Random.domain();          //域名
+Random.tld();             //顶级域名
+Random.email();           //邮件地址，参数( domain? )可指定邮件地址域名(即@符号后面的部分)
+Random.ip();              //IP地址 => "34.206.109.169"
+
+/** Miscellaneous 其他类型 */
+Random.guid();            //一个GUID(全局唯一标识符) => "662C63B4-FD43-66F4-3328-C54E3FF0D56E"
+Random.id();              //一个18位身份证号码 => "420000200710091854"
+Random.increment();       //一个全局的自增整数，最初为0，参数( step? )为自增步长，默认为1
+                          //注意全局自增指的是每次调用该方法都是在上次调用该方法时返回的数上增加(应该是闭包?)，且每次调用都会重置step步长(默认为1)
+
+/**======= Helper 辅助方法 =======*/
+/**==============================*/
+Random.capitalize("str"); //将传入的字符串首字母转换为大写后返回 => "Str"
+Random.upper("str");      //将传入的字符串都转换为大写后返回 => "STR"
+Random.lower("STR");      //将传入的字符串都转换为小写后返回 => "str"
+Random.pick(['a','e','i','o','u']);     //从传入的数组中随机选取一个元素返回 => "e"
+Random.shuffle(['a','e','i','o','u']);  //打乱数组中元素的顺序后返回 => ["o", "u", "e", "i", "a"]
+
+
+
+</script>
+<script>
+    document.getElementById('show-script').innerText = document.getElementById('script').innerText;
+    document.querySelector('fieldset legend').addEventListener('click',function () {
+        let parentNode = this.parentNode;
+        parentNode.classList.toggle('close');
+    },false);
+</script>
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>IE滤镜</title>
+    <link rel="stylesheet" href="../../css/defaultPc.css"/>
+    <style>
+        body{padding: 10px;}
+        ul li {float: left;width: 100px;height: 100px;margin-right: 10px;border: 1px solid #dadada;color: #00ff00;list-style: none;}
+        .code {display: block;white-space: pre;font-family: monospace;}
+    </style>
+</head>
+<body>
+<style type="text/css" class="code">
+    /*png图片透明度支持，暂无真实环境测试*/
+    .AlphaImageLoader {filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='images/log-state.png');}
+
+    /* IE8兼容background-size属性 */
+    .AlphaImageLoader {
+        background-size: cover;
+        /* 只是兼容cover的形式 */
+        -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader( src='images/log-state.png', sizingMethod='scale');
+        filter: progid: DXImageTransform.Microsoft.AlphaImageLoader( src='images/log-state.png', sizingMethod='scale');
+    }
+
+    /*渐变色支持(也可用于IE8兼容rgba半透明)，GradientType为渐变方向(可选，1为水平，0为垂直，默认垂直)，后面两个分别为起始与结束颜色及透明度，格式 #AARRGGBB ，rgba 的意思(但a在前面，且都为十六进制格式)，可用下面的transposition()函数将10进制转换为16进制*/
+    .Gradient {filter:progid:DXImageTransform.Microsoft.Gradient(GradientType='1',StartColorStr='#ff000000',EndColorStr='#ffff3300');}
+
+    /*透明度，类似 opacity 属性，这里opacity=50就表示透明度为0.5
+     * Style，设置或者调整不透明度的风格。0代表默认值，1代表线性不透明，2代表径向渐变，3代表矩形渐变
+     * Opacity，设置或调整不透明度值。0~100值，其中0默认值表示全透明，100为全不透明
+     * FinishOpacity，设置或调整最后不透明度值。0~100值，其中0默认值表示全透明，100为全不透明
+     * StartX，设置或调整水平不透明最开始位置，默认值为0，即从对象最左边开始。
+     * FinishX，设置或调整水平不透明度结束位置，默认值为0
+     * StartY，设置或调整垂直方向不透明度开始位置，默认值为0
+     * FinishY，设置或调整垂直不透明度结束位置，默认值为0  */
+    .Alpha {filter:progid:DXImageTransform.Microsoft.Alpha(opacity=50);}
+
+    /*调整对象的内容的颜色处理、图像旋转或不透明度
+     * GrayScale ，设置或调整对象的灰度值。
+     * Invert ，设置或调整对象的反相。
+     * Opacity ，设置或调整对象的不透明度。
+     * Mask ，设置或调整对象的的RGB是否为MashColor值，0默认值，显示正常RGB值，1表示改变内容为MashColor（不常用）
+     * Mirror ，设置或调整对象镜像。0正常显示，1内容对象将翻过来。
+     * Rotation ，设置或调整对象旋转，0正常显示，1代表旋转90°，2代表旋转180°，3代表旋转270°
+     * XRay ，设置或调整对象的X射线，布尔值，0正常显示，1代表X射线，有点像我们去医院拍X光一样的效果 */
+    .BasicImage {filter:progid:DXImageTransform.Microsoft.BasicImage( Rotation='1');}
+
+    /*设置对象的模糊值，类似 box-shadow 中的模糊效果，但其内部也会模糊，且是四周都出现模糊
+     * PixelRadius，设置对象的模糊半径，1~100数值。
+     * MakeShadow，设置对象是否投影，布尔值，true和false
+     * ShadowOpacity，设置对象投影不透明度，0.0~1.0，假如MakeShadow为false那么该值无效 */
+    .Blur {filter:progid:DXImageTransform.Microsoft.Blur(PixelRadius='3', MakeShadow=true);}
+
+    /*设置对象的投影效果，会把对象包括内容整体偏移，出现重叠
+     * OffX，设置投影的X位移，单位数值，默认值为5
+     * OffY，设置投影的Y位移，单位数值，默认值为5
+     * Color，设置投影的颜色值
+     * Positive，设置投影的透明或者非透明 */
+    .Chroma {filter:progid:DXImageTransform.Microsoft.DropShadow(OffX='10', OffY='10', Color='red', Positive='10');}
+
+    /*阴影，包括其内容都会有阴影效果，且四边都会有
+     * Color，设置阴影颜色。
+     * Direction，设置阴影的方向，角度也是从0°~315°取值（跟PS的投影效果非常的相似）
+     * Strength，设置投影强度，数值越大越模糊 */
+    .Shadow {filter:progid:DXImageTransform.Microsoft.Shadow(color='gray', Direction='135', Strength='10');}
+
+</style>
+    <p>参考文章 <a href="https://segmentfault.com/a/1190000002433305">IE中的CSS滤镜知识大全</a></p>
+    <p>在ie中 filter 分为静态滤镜(Visual Filters)和过渡转场(Transitions Reference)，前者的效果是可以设置元素的不透明度、渐变、模糊、对比度、透明度等这些，后者注重的IE的动画效果。</p>
+    <h4 class="fwb">对于在使用ie filter属性时，必要的前缀是需要的，对此ie在filter规范如下：</h4>
+    <pre>
+        .test{ filter:progid:DXImageTransform.Microsoft. }   /*.后面都是紧跟着各种滤镜和转场函数*/
+
+        /*如：模糊滤镜*/
+        .blur{ filter:progid:DXImageTransform.Microsoft.Blur() }   /*.函数的开头第一个字母必须大写，括号()里面的滤镜的各种值*/
+    </pre>
+    <ul class="clearfix">
+        <li class="Gradient">渐变Gradient</li>
+        <li class="Alpha" style="background: red;">元素透明度Alpha</li>
+        <li class="BasicImage"><img src="../../images/15.jpg" style="width: 100%;height: 100%;"/></li>
+        <li class="Blur">模糊度Blur</li>
+        <li class="Chroma">投影Chroma</li>
+        <li class="Shadow">阴影Shadow</li>
+    </ul>
+<script type="text/javascript" charset="UTF-8" class="code">
+    function transposition(num, base) {
+//        var dataStore = [],
+//            remainder = 0;
+//        base = base || 16;
+//        num = Math.floor(num);
+//        do {
+//            switch(num % base){
+//                case 10: remainder = 'A';break;
+//                case 11: remainder = 'B';break;
+//                case 12: remainder = 'C';break;
+//                case 13: remainder = 'D';break;
+//                case 14: remainder = 'E';break;
+//                case 15: remainder = 'F';break;
+//                default: remainder = num % base;
+//            }
+//            dataStore.push(remainder);
+//            num = Math.floor(num/base);
+//        }while(num>0);
+//
+//        if(dataStore.length>0){
+//            return dataStore.reverse().join('');
+//        }
+
+        //原生简单实现
+        num = Math.floor(num);
+        base = base || 16;
+        return num.toString(base);
+    }
+    console.log(transposition(256*0.5));
+</script>
+</body>
+</html>

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>artDialog</title>
+    <!--6.0.5版需要引入外部样式表方可使用-->
+    <link rel="stylesheet" href="../../plugins/artDialog/ui-dialog-6.0.5.css"/>
+    <!--7.0.0版dialog的样式采用js动态添加style标签内联样式(无需引入外部样式表)，若要方便修改样式可将js文件中添加内联样式的代码注释掉(如注释掉e.push)，同时引入外部样式表-->
+    <!--<link rel="stylesheet" href="plugins/artDialog/dialog-7.0.0.css"/>-->
+    <style>
+        script {display: block;}
+    </style>
+</head>
+<body>
+<div>
+    <p>插件默认的关闭功能都是.close().remove()方法实现的，即关闭后都会直接移除，close()方法关闭弹框不会移除弹框，remove()方法会直接移除弹框，所以在关闭后再次点击按钮并不会出现弹窗，若要改为只关闭不移除(这样关闭弹窗后点击按钮弹窗仍会出现)，可将js中this.close().remove()中后面的remove注释掉。本文实例已将插件中默认关闭后的remove注释掉。</p>
+    <button>0.普通对话框</button>
+    <button>1.模态对话框</button>
+    <button id="quickref-bubble">2.气泡浮层</button>
+    <button>3.确定/取消按钮</button>
+    <button>4.自定义更多按钮</button>
+    <button>5.定时关闭</button>
+    <button>6.增加左下角状态栏</button>
+    <button>7.更多配置</button>
+    <input type="button" value="右键自定义菜单" id="input-btn"/>
+</div>
+<script src="../../js/jquery-1.11.3.js"></script>
+<script src="../../plugins/artDialog/dialog-plus-6.0.5.js"></script>
+<!--<script src="plugins/artDialog/dialog-7.0.0.js"></script>-->
+<pre>
+<script type="text/javascript" charset="UTF-8">
+    /*========注意事项========
+    ***1、插件默认的关闭功能都是.close().remove()方法实现的，即关闭后都会直接移除，close()方法关闭弹框不会移除弹框，remove()方法会直接移除弹框，
+    *     所以在关闭后再次点击按钮并不会出现弹窗，若要改为只关闭不移除(这样关闭弹窗后点击按钮弹窗仍会出现)，可将js中this.close().remove()中后面的remove注释掉，
+    *     close()方法可以接受一个返回值作为参数，该参数将作为弹框的返回值returnValue
+    ***2、statusbar属性配置弹框下方状态栏HTML代码，注意：必须在有按钮的情况下状态栏才会显示
+    ***3、在按钮事件的回调函数中：return false;则不会触发弹窗的关闭
+    * */
+    $(function () {
+        var btn = $('button');
+        btn.on('click',function() {
+            var index = btn.index(this);
+            /**
+             * show()方法支持参数传入元素节点、事件对象；
+            * 参数类型为HTMLElement时：可吸附到元素上，同时对话框将呈现气泡样式；
+            * 参数类型为Event Object时：弹框位置将根据event.pageX与event.pageY定位
+            *
+            * showModal()方法显示一个模态对话框(其后会出现一个遮罩层)，使用与show方法一样
+            * */
+            if ($(this).is(btn.eq(index))){
+                if(index === 2){
+                    d[index].show(document.getElementById('quickref-bubble'));
+                }else {
+                    d[index].show();
+                }
+
+                if(index === 5){
+                    /*定时关闭并移除*/
+                    setTimeout(function () {
+                        d[index].close().remove();
+                    }, 2000);
+                }
+            }
+            return false;
+        });
+
+        /*右键自定义菜单*/
+        var d1 = dialog({
+            id: 'customize-menu',  //自定义弹框唯一id标识，可防止重复ID弹框弹出，可使用dialog.get(id)方法获得某弹框的接口
+            quickClose: true,       //点击空白处快速关闭，默认false
+            padding: 10,
+            zIndex: 999,    /*设置层级*/
+            content: '<ul style="list-style: none;padding: 0;margin: 0;line-height: 1.8;"><li>菜单一</li><li>菜单二</li></ul>'
+        });
+        $('#input-btn').on('contextmenu', function (event) {
+            d1.show(event);     //参数类型为Event Object时：弹框位置将根据event.pageX与event.pageY定位
+            console.log(d1.destroyed);  //false
+            return d1.destroyed;   //此处return false，是为阻止系统默认右键菜单，而不直接写成return false是因为destroyed属性只在弹窗存在时才出现，移除后就不会显示为false，若固定return false，则右键时将一直阻止默认菜单
+        });
+
+        var d = [];
+
+        /*普通对话框*/
+        d0 = dialog({
+            title: '欢迎',
+            content: '欢迎使用 artDialog 对话框组件！'
+        });
+	console.log(d0);
+
+        /*模态对话框*/
+        d[1] = dialog({
+            title: 'message',
+            content: '<input type="text" autofocus />'
+        });
+//        d[1].showModal();     //showModal方法显示一个模态对话框(其后会出现一个遮罩层)，使用与show方法一样
+
+        /*气泡浮层*/
+        d[2] = dialog({
+//            align: 'bottom right',  //用于设置气泡的显示方位，有12个方位可选，默认下左，在show方法中传入元素节点以气泡形式显示时才有效
+            content: 'Hello World!',
+            quickClose: true    // 点击空白处快速关闭，默认false
+        });
+//        d[2].show(document.getElementById('quickref-bubble'));
+
+        /*确定与取消按钮*/
+        d[3] = dialog({
+            title: '提示',
+            content: '按钮回调函数返回 false 则不许关闭',
+            okValue: '确定',  //确定按钮文字，默认ok，该属性只是设置文字，单独设置并不会出现按钮，出现按钮的配置是下方对应的回调配置
+            ok: function () {   //确定按钮及回调函数
+                this.title('提交中…');
+                this.close();
+                return false;
+            },
+            cancelValue: '取消',  //取消按钮文字，默认cancel，该属性只是设置文字，单独设置并不会出现按钮，出现按钮的配置是下方对应的回调配置
+            cancel: function () {}  //取消按钮及回调函数，若配置为false则不会显示按钮(就像未配置，可用于覆盖)，点击取消按钮或右上角关闭按钮丢失触发cancel回调函数
+//            cancelDisplay: false    /*是否显示取消按钮，默认true，在配置了取消cancel回调函数时就会显示取消按钮，可通过该属性设置为不显示，点击叉号关闭弹框时同样会触发cancel回调*/
+        });
+
+        /*自定义更多按钮*/
+        d[4] = dialog({
+            button: [
+                {
+                    value: '同意',    /*按钮文字*/
+                    callback: function () {
+                        this.content('你同意了');
+                        return false;   //return false，可以阻止弹窗关闭销毁
+                    },
+                    autofocus: true     /*是否自动聚焦，自定义按钮时默认false，ok确定按钮默认true*/
+                },
+                {
+                    value: '不同意',
+                    callback: function () {
+                        alert('你不同意');
+                    }
+                },
+                {
+                    id: 'button-disabled',
+                    value: '无效按钮',
+                    disabled: true      /*是否禁用该按钮，默认false*/
+                },
+                {
+                    value: '关闭我'
+                }
+            ]
+        });
+
+        /*定时关闭弹框--手动调用关闭方法*/
+        d[5] = dialog({
+            content: '对话框将在两秒内关闭'
+        });
+//        setTimeout(function () {
+//            d[5].close().remove();  //close()方法关闭弹框不会移除弹框，remove()方法会直接移除弹框，插件默认的关闭功能都是.close().remove()方法实现的，即关闭后都会直接移除，
+//                                    // 所以在关闭后再次点击按钮并不会出现弹窗，若要改为只关闭不移除，可将js中this.close().remove()中后面的remove注释掉
+//        }, 2000);
+
+        /*弹框左下角添加复选框*/
+        d[6] = dialog({
+            title: '欢迎',
+            content: '欢迎使用 artDialog 对话框组件！',
+            ok: function () {},     //确认按钮及回调
+            statusbar: '<label><input type="checkbox"/>不再提醒</label>'     //statusbar属性配置下方状态栏HTML代码，注意：必须在有按钮的情况下状态栏才会显示
+        });
+
+        /*内嵌iframe对话框，得使用增强版的dialog-plus.js*/
+        /*该例参考官方文档，plugins收集文件夹中*/
+
+        /*更多配置*/
+        d[7] = dialog({
+            id: 'id-name',  //自定义弹框唯一id标识，可防止重复ID弹框弹出，可使用dialog.get(id)方法获得某弹框的接口
+            title: '更多配置',  //标题
+            content: '内容：宽200，高100',    //内容，支持字符串和HTML代码，可以是一个隐藏的原生DOM对象(因原生DOM对象显示的是本身的HTML代码)
+            width: 200,    //宽度，该宽高设置的是中间内容的宽高，不包含弹框头部和弹框内边距
+            height: 100,    //高度
+            padding: 15,    //弹框内边距
+            fixed: true,    //开启固定定位，开启后弹框将不随页面滚动
+            quickClose: true,       //点击空白处快速关闭，默认false
+            skin: 'min-dialog tips',    /*给弹框设置额外的className参数，多个class用空格隔开*/
+            zIndex: 99,     /*设置弹框的层级，从而控制与其他的一些UI层的层级关系，默认1024，注意该属性是一个全局属性，出现的弹窗都会在此层级上累加*/
+//            align: 'bottom right',  //用于设置气泡的显示方位，有12个方位可选，默认下左，在show方法中传入元素节点以气泡形式显示时才有效
+//            url: 'ztree.html',    //增强版的dialog-plus.js中多的字段，用于内嵌iframe时指向iframe的地址
+//            oniframeload: function() {    //增强版的dialog-plus.js中多的字段，iframe加载完成时的回调
+//                console.log('oniframeload');
+//            },
+            okValue: '加宽',  //确认按钮文字
+            ok: function () {   //确认回调函数
+                this.width(300);
+//                this.reset();   /*reset()方法用于手动刷新弹框位置，通常在动态改变弹框宽高后需要重新让弹框居中时使用*/
+                return false;
+            },
+//            cancelDisplay: false    /*是否显示取消按钮，默认true，在配置了取消cancel回调函数时就会显示取消按钮，可通过该属性设置为不显示，点击叉号关闭弹框时同样会触发cancel回调*/
+            cancelValue: '取消',   //取消按钮文字
+            cancel: function () {   //取消回调函数
+                this.close(1);      /*close()方法可以接受一个返回值作为参数，该参数将作为弹框的返回值returnValue*/
+                console.log('弹框取消了');
+            },
+            onshow: function () {       /*弹窗打开事件*/
+                console.log('弹框是否打开：'+this.open);     /* open属性用于判断弹框是否打开 */
+                this.blur();    /*使弹框获得焦点*/
+                this.focus();   /*使弹框失去焦点*/
+                this.addEventListener('focus', function () {});    /*添加事件，事件类型就包括以下几种*/
+                this.removeEventListener('focus', function () {});   /*移除事件*/
+                console.log('ID为customize-menu的弹框的层级是：'+dialog.get('customize-menu').zIndex);       /*dialog.get(id)方法根据ID名获取相应弹框*/
+                console.log('当前最上层弹框的ID是：'+dialog.getCurrent().id);    /*dialog.getCurrent()获取当前最上层的弹框*/
+            },
+            onclose: function () {      /*弹窗关闭事件*/
+                console.log('弹窗关闭了，弹框返回值：'+this.returnValue);
+            },
+            onbeforeremove: function () {       /*弹窗即将移除前事件，本文已修改关闭弹框时不会移除弹框，所以本文要手动调用remove()方法来移除弹框*/
+                console.log('弹窗即将移除');
+            },
+            onremove: function () {      /*弹窗移除事件，本文已修改关闭弹框时不会移除弹框，所以本文要手动调用remove()方法来移除弹框*/
+                console.log('弹窗移除了');
+            },
+            onfocus: function () {       /*弹窗获取焦点事件*/
+                console.log('弹窗获得焦点了');
+            },
+            onblur: function () {      /*弹窗失去焦点事件*/
+                console.log('弹窗失去焦点了');
+            },
+            onreset: function () {      /*弹窗位置重置事件*/
+                console.log('弹窗位置重置了');
+            }
+        });
+
+    });
+</script>
+</pre>
+</body>
+</html>

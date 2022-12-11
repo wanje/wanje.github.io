@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>anime.js动画</title>
+    <link rel="stylesheet" href="../plugins/highlight/styles/androidstudio.css">
+    <script src="../plugins/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <style type="text/css">
+        ::-webkit-scrollbar {
+            display: none;
+        }
+        /*不显示滚动条*/
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+        .view {
+            float: left;
+            width: 35%;
+            height: 100vh;
+            padding-left: 30px;
+            margin: 0;
+            border-right: 1px solid #dadada;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            overflow: auto;
+        }
+        .view > li {
+            padding: 5px 0;
+            border-bottom: 1px solid lightgrey;
+            vertical-align: top;
+        }
+        .code {
+            float: right;
+            display: block;
+            width: 65%;
+            height: 100vh;
+            margin: 0;
+            white-space: pre;
+            font-family: monospace;
+            background: #ececec;
+            overflow: auto;
+        }
+        .block {
+            display: block;
+            width: 28px;
+            height: 28px;
+            line-height: 28px;
+            margin: 5px 0;
+            border: none;
+            background: #ff4b4b;
+            font-size: 10px;
+            font-style: normal;
+            text-align: center;
+            white-space: nowrap;
+        }
+        .circle {
+            border-radius: 100%;
+        }
+        #target1 button {
+            margin-top: 5px;
+        }
+        #target5 span:before {
+            content: attr(data-xxx);
+        }
+        #target7 i {
+            transform: translateX(100px);
+            overflow: hidden;
+        }
+        #target10 i {
+            float: left;
+            margin: 5px;
+        }
+        #target12 i {
+            position: absolute;
+            left: -14px;
+            top: -14px;
+            margin: 0;
+        }
+        #target12 i:after,
+        #target12 i:before {
+            content: '';
+            width: 4px;
+            height: 4px;
+            border-radius: 100%;
+            background: #000000;
+            position: absolute;
+            left: 0;
+            top: 0;
+            margin: -2px 0 0 -2px;
+        }
+        #target12 i:after {
+            left: 50%;
+            top: 50%;
+        }
+    </style>
+</head>
+<body>
+<!--<iframe src="#/" id="iframes" name="iframes" allowtransparency="true" frameborder="0" width="100%" height="700"> </iframe>-->
+<!--<iframe src="http://yi.teamshub.com/#/template/web?appId=186&teamId=2200707173327498&name=devCloud&cname=%25E5%25BC%2580%25E5%258F%2591%25E4%25BA%2591" id="iframes" name="iframes" allowtransparency="true" frameborder="0" width="100%" height="700"> </iframe>-->
+<!--<iframe src="http://yi.teamshub.com/#/framework?appId=186&teamId=2200707173327498&name=devCloud&cname=测试" id="iframes" name="iframes" allowtransparency="true" frameborder="0" width="100%" height="700"> </iframe>-->
+<!--<iframe src="http://172.22.32.31:9527/#/template/web?appId=186&teamId=2200707173327498&name=devCloud&cname=测试" id="iframes" name="iframes" frameborder="0" width="100%" height="700"> </iframe>-->
+<ol class="view">
+    <li id="target1" class="cus_click">
+        <i class="block" style="margin: 10px;"></i>
+        <button data-type="play">播放play</button>
+        <button data-type="pause">暂停pause</button>
+        <button data-type="restart">重播restart</button>
+        <button data-type="reverse">倒序播放reverse</button>
+        <span style="display: inline-block;font-size: 12px;"><input type="range" min="0" max="100" value="0" id="target1_seek1">seek(t)跳转到指定时刻的动画状态(update过程)</span>
+        <span style="display: inline-block;font-size: 12px;"><input type="range" min="0" max="100" value="0" id="target1_seek2">seek(t)跳转到指定时刻的动画状态(change过程)</span>
+        <button data-type="remove">移除目标元素在所有实例中的动画remove</button>
+        <button data-type="remove">从某实例中移除目标元素的动画remove</button>
+        <button data-type="get">获取目标元素属性值get</button>
+        <button data-type="set">直接设置目标元素属性的值set</button>
+        <button data-type="random">随机返回指定范围内的某个整数random</button>
+        <button data-type="tick">单帧动画播放tick</button>
+        <button data-type="running">运行中动画实例数组running</button>
+    </li>
+    <li id="target2">
+        <span></span>
+    </li>
+    <li id="target3">
+        <i class="block index-1"></i>
+        <i class="block index-2"></i>
+        <i class="block index-3" id="target3_3"></i>
+    </li>
+    <li id="target4">
+        DOM属性(attribute)动画化：
+        <input type="text"/>
+    </li>
+    <li id="target5">
+        自定义DOM属性(attribute)动画化：
+        <span data-xxx="0"></span>
+    </li>
+    <li id="target6">
+        DOM特性(property，DOM的JS属性)动画化：
+        <span></span>
+    </li>
+    <li id="target7">
+        设置相对变化值：`+=num`、`-=num`、`*=num`（示例设置了初始样式`transform: translateX(100px);`）
+        <i class="block">外部初始transform</i>
+        <i class="block" style="transform: translateX(100px);">行内初始transform</i>
+    </li>
+    <li id="target8" style="height: 110px;">
+        <p style="margin: 0 0 20px;">keyframes阶段性动画：</p>
+        <i class="block circle"></i>
+    </li>
+    <li id="target9">
+        <p style="margin: 0 0 20px;">步进计算辅助方法：anime.stagger(val, [options])</p>
+        <i class="block"></i>
+        <i class="block"></i>
+        <i class="block"></i>
+        <i class="block"></i>
+        <i class="block"></i>
+    </li>
+    <li id="target10" style="height: 200px;">
+        <p style="margin: 0 0 20px;">步进计算辅助方法：anime.stagger()，grid配置项(涟漪效果)</p>
+        <i class="block"></i><i class="block"></i><i class="block"></i>
+        <i class="block"></i><i class="block"></i><i class="block"></i><i class="block"></i><i class="block"></i><i
+            class="block"></i><i class="block"></i><i class="block"></i><i class="block"></i><i
+            class="block"></i><i class="block"></i><i class="block"></i><i class="block"></i><i
+            class="block"></i><i class="block"></i>
+        <i class="block"></i><i class="block"></i><i class="block"></i><i class="block"></i><i class="block"></i><i
+            class="block"></i><i class="block"></i><i class="block"></i><i class="block"></i><i
+            class="block"></i><i class="block"></i><i class="block"></i><i class="block"></i><i
+            class="block"></i><i class="block"></i><i class="block"></i><i class="block"></i><i
+            class="block"></i><i class="block"></i><i class="block"></i><i class="block"></i><i
+            class="block"></i><i class="block"></i><i class="block"></i><i class="block"></i><i
+            class="block"></i><i class="block"></i><i class="block"></i><i class="block"></i><i class="block"></i>
+    </li>
+    <li id="target11">
+        anime.timeline() 与 timelineInstance.add();
+        <i class="block index-1"></i>
+        <i class="block index-2"></i>
+        <i class="block index-3"></i>
+    </li>
+    <li id="target12">
+        <p>普通元素跟随SVG路径运动：</p>
+        <div style="width: 256px;height: 112px;position: relative;">
+            <i class="block"></i>
+            <svg width="256" height="112" viewBox="0 0 256 112">
+                <path fill="none" stroke="#ff4bff" stroke-width="1"
+                      d="M8,56 C8,33.90861 25.90861,16 48,16 C70.09139,16 88,33.90861 88,56 C88,78.09139 105.90861,92 128,92 C150.09139,92 160,72 160,56
+                       C160,40 148,24 128,24 C108,24 96,40 96,56 C96,72 105.90861,92 128,92 C154,93 168,78 168,56 C168,33.90861 185.90861,16 208,16
+                       C230.09139,16 248,33.90861 248,56 C248,78.09139 230.09139,96 208,96 L48,96 C25.90861,96 8,78.09139 8,56 "/>
+            </svg>
+        </div>
+    </li>
+    <li id="target13">
+        <p>SVG元素属性动画化：</p>
+        <svg id="target13_1" width="64" height="64" viewBox="0 0 128 128">
+            <filter id="displacementFilter">
+                <feTurbulence type="turbulence" baseFrequency=".05" numOctaves="2" result="turbulence"/>
+                <feDisplacementMap in2="turbulence" in="SourceGraphic" scale="15" xChannelSelector="R" yChannelSelector="G"/>
+            </filter>
+            <polygon points="64 68.64 8.574 100 63.446 67.68 64 4 64.554 67.68 119.426 100" style="filter: url(#displacementFilter)" fill="#ff4b4b"/>
+        </svg>
+        <svg id="target13_2" width="140" height="140" viewBox="0 0 140 140">
+            <g fill="none">
+                <g fill="#ff4b4b" fill-opacity=".15" transform="translate(0 6)">
+                    <polygon points="70 0 136.574 48.369 111.145 126.631 28.855 126.631 3.426 48.369"/>
+                    <polygon points="70 18 119.455 53.931 100.565 112.069 39.435 112.069 20.545 53.931"/>
+                    <polygon points="70 34.86 101.727 57.911 89.609 95.209 50.391 95.209 38.273 57.911"/>
+                    <polygon points="70 50.898 84.864 61.697 79.186 79.171 60.814 79.171 55.136 61.697"/>
+                </g>
+                <polygon class="polymorph" stroke-width="1" stroke="#ff4b4b" points="70 24 119.574 60.369 100.145 117.631 50.855 101.631 3.426 54.369"/>
+            </g>
+        </svg>
+    </li>
+    <li id="target14">
+        <p>SVG线条绘制动画：</p>
+        <svg viewBox="0 0 280 100">
+            <g fill="none" stroke="#ff4b4b" stroke-width="1">
+                <path d="M58 80V50.12C57.7 41.6 51.14 35 43 35a15 15 0 0 0 0 30h7.5v15H43a30 30 0 1 1 0-60c16.42 0 29.5 13.23 30 29.89V80H58z"/>
+                <path d="M73 80V20H58v60h15z"/>
+                <path d="M58 80V49.77C58.5 33.23 71.58 20 88 20a30 30 0 0 1 30 30v30h-15V50a15 15 0 0 0-15-15c-8.14 0-14.7 6.6-15 15.12V80H58zm75 0V20h-15v60h15z"/>
+                <path d="M118 80V49.77C118.5 33.23 131.58 20 148 20a30 30 0 0 1 30 30v30h-15V50a15 15 0 0 0-15-15c-8.14 0-14.7 6.6-15 15.12V80h-15zm-7.5-60a7.5 7.5 0 1 1-7.48 8v-1c.25-3.9 3.5-7 7.48-7z"/>
+                <path d="M133 65a15 15 0 0 1-15-15v-7.5h-15V50a30 30 0 0 0 30 30V65zm30 15V49.77C163.5 33.23 176.58 20 193 20a30 30 0 0 1 30 30v30h-15V50a15 15 0 0 0-15-15c-8.14 0-14.7 6.6-15 15.12V80h-15z"/>
+                <path d="M238 65a15 15 0 0 1 0-30c8.1 0 14.63 6.53 15 15h-15v15h30V49.89C267.5 33.23 254.42 20 238 20a30 30 0 0 0 0 60V65z"/>
+                <path d="M260.48 65a7.5 7.5 0 1 1-7.48 8v-1c.26-3.9 3.5-7 7.48-7z"/>
+            </g>
+        </svg>
+    </li>
+</ol>
+<pre class="code"><code class="css" id="show-script"></code></pre>
+<!--<script type="text/javascript" charset="UTF-8" src="../js/jquery-1.11.3.js"></script>-->
+<script type="text/javascript" charset="UTF-8" src="../plugins/anime.min.js"></script>
+<script>const animes = {};</script>
+<script type="text/javascript" charset="UTF-8" id="script">
+  const t1Seek1 = document.querySelector('#target1_seek1');
+  const t1Seek2 = document.querySelector('#target1_seek2');
+  // 返回一个anime实例
+  animes.target1 = anime({
+    targets: '#target1 .block', /* 动画作用到的目标对象，可以是`CSS选择器`、`原生DOM对象(Node或NodeList皆可)`、`数值类型的key-value键值对Object`、前面几种的`混合数组` */
+    translateX: 300, /* 要变换的CSS属性(transform直接使用其变换类型)及值，对于DOM元素来说这里只有一个值则就是最终值，起始值就是其对应CSS属性的初始计算值，若是个数组，则表示起始值、中间值、最终值（最前为from，最后为to） */
+    scale: '+=0.5', /* 所有的数值还可以使用`+=num`、`-=num`、`*=num`这样的形式设置相对值的变化，由于有些CSS属性的过渡可能影响页面布局或者重绘，所以过渡属性应优先使用变换和透明度 */
+    borderRadius: ['0%', '50%'], /* 数组指定阶段值，具有数值类型值的CSS属性(包括颜色值)都可以动画，对于不带单位的数值，anime将自动根据属性判断其单位，长度默认为px、角度默认为deg */
+    background: '#70f', /* 颜色渐变，颜色值格式包括：十六进制、rgb、rgba、hsl、hsla */
+    easing: 'linear', /* 缓动函数，默认是`easeOutElastic(1, 0.5)`，字符串值实际是内置的缓动函数名，另有贝塞尔曲线值、spring弹簧物理弹性值、Elastic弹性值、steps阶梯值，或者返回一个自定义的缓动计算函数的函数(或返回前面有效的几种值的函数)，具体可用值见：https://animejs.com/documentation/#linearEasing */
+    direction: 'alternate', /* 动画执行方向(将决定动画执行起始状态和结束状态时目标元素所处的位置)，默认`normal`正向(即初始值到最终值)，另有：`reverse`逆向(最终值-初始值)、`alternate`单循环(初始值-最终值-初始值) */
+    /*
+     * `duration`参数表示动画持续毫秒数(注意是单程时间)，默认1000毫秒，另其值可使用`anime.stagger(n)`方法设置的时间，可以使用函数`function(el,index,length){}`按条件返回时间，
+     * 函数值接收三个参数：`el`为当前目标元素、`index`为当前元素在targets目标集中的索引、`length`为targets目标集的长度，须注意这里的目标集不是传入的参数数组，而是解析后得到的`最终目标元素集合`
+     * 注意：所有可动画的属性的值的设定都可以使用函数形式
+     * */
+    duration: function () {
+      return anime.random(1200, 1800); // anime.random()方法是anime提供的工具方法
+    },
+    delay: 100, /* 动画开始延迟执行毫秒数，默认0毫秒，同duration一样其值也可设置为`anime.stagger(n)`和`function` */
+    endDelay: 100, /* 同`delay`，只不过这是设置动画结束时延迟执行下一步的毫秒数，比如direction为'alternate'的动画在执行到终点时默认是立即倒序执行的，设置了endDelay则会等待后再执行 */
+    /*
+     * `loop`参数表示是否循环执行动画，默认false，设为`true`则是无限循环、数字则循环指定次数，注意：其值会影响`direction`的执行效果，
+     * 若显式地设为`false`则会将最后一个值将始终变为最终值，即normal不受影响，`reverse`变为(最终值-最终值)、`alternate`变为(初始值-最终值-最终值)，显然`最终值-最终值`阶段是不会有动画的，
+     * 若设为数字(具体循环次数)，则会影响`alternate`效果，其会将该效果中的正向和逆向部分都分别算一次循环，而不是将整个来与回算作一次循环(但设为1和2时都按2算)
+     * */
+    loop: 2,
+    autoplay: false, /* 是否自动开始执行动画，默认true，注意：设为false时，目标元素最初是停留在动画执行的起始状态的，并非一定是参数的初始值设定的位置，例如：direction为'reverse'时，动画起始状态是在元素的终点值位置 */
+    rotate: {
+      /* 对要动画的属性单独设置动画参数，使用对象值，其中未指定的动画参数项则直接继承上一级的设置，相同像则覆盖上一级的设置 */
+      value: 360, /* 指定变化值 */
+      duration: 1300,
+      easing: 'easeInOutSine'
+    },
+    fillOpacity: {
+      /* 实测发现对于最大值为`1`的属性，如这里的透明度，插值变化几乎不明显，可见将其用百分比值形式代替(不确定是否所有类似属性都适用) */
+      value: '100%',
+      easing: 'linear' /* 因默认插值会有回弹，对于透明度的有效插值变化区间缩短了，故单独设为线性 */
+    },
+    /** 回调函数/钩子，这些钩子都接受当前动画实例为参数，其内部`this`指向也为该动画实例 */
+    update(anim) {
+      /* update钩子：动画过渡值每更新一次就调用一次，anim===this */
+      t1Seek1.value = this.progress; /* `progress`属性表示当前动画执行到的进程(比例值，相对单程duration而言) */
+      //console.log('动画进程更新钩子');
+    },
+    change() {
+      /* change钩子：动画过渡值改变钩子，注意与update钩子的区别(`update`钩子是动画进程更新钩子，动画在延迟等待等过程中动画进程还在前进，但是过渡值此时并未改变) */
+      t1Seek2.value = this.progress;
+      //console.log('动画过渡值改变钩子');
+    },
+    begin() {
+      /* begin钩子：整个动画开始时调用一次，注意是整个动画从初始值开始时，不包括暂停后启动，但是包括restart重启 */
+      console.log('动画开始钩子', this.began); /* `began`属性返回一个布尔值，表示该动画是否已开始 */
+    },
+    complete() {
+      /* complete钩子：整个动画结束时调用一次，注意是整个动画结束时，不包括暂停，若该动画是个loop为true的无限循环动画，则可能永远都不会结束 */
+      console.log('动画结束钩子', this.completed); /* `completed`属性返回一个布尔值，表示该动画是否已结束 */
+    },
+    loopBegin() {
+      /* loopBegin钩子：循环动画每个循环开始时调用一次，注意是是单程，若动画方向设置为往返'alternate'，则去程开始调用一次，返程开始也会调用一次 */
+      console.log('循环动画每次循环(单程)开始钩子');
+    },
+    loopComplete() {
+      /* loopComplete钩子：与`loopBegin`钩子相对的循环完成钩子(也是每个单程结束时调用)，实测发现：若动画一开始的方向是逆向(即起始就在终点值位置)，则起始就会调用一次`loopComplete`单程循环结束钩子 */
+      console.log('循环动画每次循环(单程)结束钩子');
+    },
+    changeBegin() {
+      /* changeBegin钩子：动画的过渡值开始change时调用一次，注意是是单程，若动画包含往返或循环，则每个去程和每个返程change开始时都会各调用一次 */
+      console.log('动画单程change开始钩子'); /* 注意：update开始时，change并不一定已开始，但change开始时，update肯定已开始或同时开始(看是否有设置延时等待时间) */
+    },
+    changeComplete() {
+      /* changeComplete钩子：与`changeBegin`钩子相对的过渡值change完成钩子(也是每个单程change结束时调用[此时update并不一定已结束]) */
+      console.log('动画单程change结束钩子');
+    }
+  });
+  /* 动画实例上`finished`属性返回一个Promise对象(IE11+支持)，在动画生命周期结束时调用then中的回调，需要注意：一次finished的Promise回调声明只会在距离其声明时刻最近的一次完整生命周期finished时被调用(并不是每个循环中都有的钩子) */
+  animes.target1.finished.then(() => {
+    /* 即使这里重新`play`或`restart`进入该动画播放的新生命周期，其结束时也并不会再次触发这里的Promise回调，除非为每个新生命周期重新声明Promise */
+    /* 若一个完整生命周期的动画在中途被打断，则该Promise回调会在新的动画生命周期finished时执行 */
+    console.log('finished')
+  });
+  /* 动画运行控制，这些方法既可以用于普通动画，也可用于timeline时间线动画，用法都一样 */
+  var t = 0;
+  document.querySelector('#target1').addEventListener('click', function (e) {
+    switch (e.target.dataset.type) {
+      case 'play': animes.target1.play(); /* play()方法：播放一个停止(或暂停)状态的动画(若动画本就处于播放状态则无效)，动画接着当前过渡位置运行 */
+        break;
+      case 'pause': animes.target1.pause(); /* pause()方法：暂停处于运行状态的动画，动画停止在当前过渡位置 */
+        break;
+      case 'restart': animes.target1.restart(); /* restart()方法：重启一个动画，使其重头开始播放(不管当前动画处于什么状态或过渡位置都重新开始播放) */
+        break;
+      case 'reverse': animes.target1.reverse(); /* reverse()方法：倒序播放当前运行中的动画(若动画处于停止或暂停状态则无效)，动画从当前过渡位置开始逆向运行，且起始值与最终值将颠倒 */
+        break;
+      /* anime辅助函数/属性(注意是anime对象上的，不是实例上的) */
+      case 'remove': anime.remove('#target1 .block'); /* anime.remove(targets)方法，移除目标元素targets，参数targets的可用值与动画实例声明是targets属性一样，注意该方法是移除目标元素在所有动画实例中的动画，并没有销毁动画实例或将元素从文档删除(但是移除了该目标后即使动画实例继续运行，也不会在该目标上产生效果了) */
+        animes.target3.remove('#target3 .index-2'); /* animeInstance.remove(target)方法，在某个动画实例中移除某指定的目标元素(相当于过滤部分目标)，即只是移除指定元素在当前动画实例中的动画，而指定的元素在其他动画实例中的动画(若存在)是不会移除的 */
+        break;
+//      case 'get': console.log(anime.get('#target1 .block', 'width')); /* anime.get(target, prop, unit)方法，获取某个目标元素target的prop属性的原始值，可选值unit可指明想要的单位换算结果(因为anime采用getComputedStyle方法获取元素的css属性值结果，默认值是px)，注意：对于css transforms属性只能获取到行内样式值 */
+      case 'get': console.log(anime.get(document.querySelector('#target1 .block'), 'width')); /* 实测发现目标target要传入DOM对象才有效，直接像anime实例中targets配置项那样传入选择器似乎无效 */
+        break;
+      case 'set': anime.set('#target1 .block', {scaleX: 2}); /* anime.set(targets, {property: value})方法，设置目标元素targets的某些属性为指定值，其实立即设置生效，并不是逐渐过渡到该值 */
+        break;
+      case 'random': console.log(anime.random(0, 100)); /* anime.random(minValue, maxValue)方法，随机返回一个在minValue与maxValue之间的整数值 */
+        break;
+      case 'tick': animes.target1.tick(t+=100); console.log(t); /* animeInstance.tick(time)方法，播放实例time时刻的一帧动画(注意要将autoplay置为false)，该方法应结合requestAnimationFrame方法使用 */
+        break;
+      case 'running': console.log(anime.running); /* anime.running属性，该属性返回一个数组，该数组保存了当前所有正在运行的动画实例（当前window下所有正在运行的anime实例） */
+        break;
+    }
+  });
+  t1Seek1.addEventListener('input', function () { /* 这里使用`input`事件而非`change`事件的原因是只要滑动进度条就能出发input，而改变值要失焦后才会触发change */
+    animes.target1.seek(this.value/100*animes.target1.duration); /* seek(t)方法：将动画直接跳转到指定的`t`时刻的过渡状态(注意是瞬间跳转)，`t`时刻是相对该动画的执行时长`duration`而言的(所以是单程)，该方法可应用于根据滚动位置来控制动画 */
+  });
+  t1Seek2.addEventListener('input', function () {
+    animes.target1.seek(this.value/100*animes.target1.duration);
+  });
+
+  /* 数值targets目标对象使用 */
+  const objTargets = {
+    num: 0,
+    percent: '0%' /* 百分比类型数值 */
+  };
+  animes.target2 = anime({
+    targets: objTargets, /* 数值类型对象目标，其中包含要补间计算的key及其对应的初始value */
+    num: 90, /* 对应targets指向对象中的key及其对应的最终值 */
+    percent: '70%',
+    round: 1, /* 数值计算中四色五人小数未精度，默认0是Math的计算精度，1表示个位、10表示精确到十分位、100表示精确到百分位 */
+    easing: 'linear', /* 线性变化，默认是缓冲回流 */
+    update: function () { /* 每次数据更新回调 */
+      document.querySelector('#target2 span').innerHTML = `数值对象targets变化：num-${objTargets.num}，percent-${objTargets.percent}`;
+    }
+  });
+
+  /* 多组targets目标，函数作为属性值 */
+  animes.target3 = anime({
+    targets: ['#target3 .index-1', document.querySelector('#target3 .index-2'), document.getElementById('target3_3')],
+    translateX: 300, /* 实际上是独立对象参数形式`translateX: { value: 300 }`的简写 */
+    duration: function (el, i, l) {
+        /* 需要注意：这里的`el`与`i`和`l`不是传入`targets`参数的数组中各项的值、索引和数组长度，targets参数数组中的各NodeList结果集都会拆开后组合形成最终的目标元素集，是按照这个最终的目标元素集进行遍历和计算长度的 */
+      return (i + 1) * 1000
+    }
+  });
+
+  /* DOM属性(attribute)动画化 */
+  animes.target4 = anime({
+    targets: '#target4 input',
+    value: 1700, /* DOM对象的attribute属性动画化，包括值为数值的任意自定义属性(data-xxx或xxx皆可)，这些属性需要在元素上显式声明了(标签上设置了)才有效（并不是通过JS的property来判断） */
+    round: 1,
+    easing: 'linear'
+  });
+
+  /* 自定义DOM属性(attribute)动画化 */
+  animes.target5 = anime({
+    targets: '#target5 span',
+    'data-xxx': 700, /* 自定义属性要先在元素上声明，否则获取不到该属性 */
+    round: 1,
+    easing: 'linear'
+  });
+
+  /* DOM特性(property，DOM元素的JS属性)动画化，原则上说可以赋Number类型值的DOM的JS属性都可以这样动画化 */
+  animes.target6 = anime({
+    targets: '#target6 span',
+    innerHTML: [0, 1000],
+    round: 1,
+    easing: 'linear'
+  });
+
+  /* 设置相对变化值：`+=num`、`-=num`、`*=num` */
+  animes.target7 = anime({
+    targets: '#target7 i',
+    translateX: '+=200', /* 实测`transform`类型的样式在使用相对值时，初始样式值设置在行内时(直接写在标签上或是JS设置的)才能正确获得这个相对参照值，若是外部样式则并不能获取到这个初始参照值(会将参照值当做0) */
+    width: '+=90', /* 非`transform`类型的样式会将其动画开始前的对应样式计算值作为相对参照值，所以不用必须在行内去设置参照值 */
+    easing: 'linear',
+//    update() {
+//      console.log(this.animations, this.animations[0].currentValue)
+//    }
+  });
+
+  /* keyframes阶段动画 */
+  animes.target8 = anime({
+    targets: '#target8 i',
+    duration: 3500,
+    loop: true,
+    /* 阶段动画体现方式1：`keyframes`属性，类似CSS中的动画定义，定义每个阶段要变化的属性及其状态，每个阶段的动画定义参数与外层类似，未声明的参数则大多继承父级设置，若未给每个阶段指定duration执行时长，则将均分父级设置的总时长 */
+    keyframes: [
+      {translateY: -20, duration: 500},
+      {translateX: 300, duration: 1000},
+      {translateY: 40, duration: 500},
+      {translateX: 0, duration: 1000},
+      {translateY: 0, duration: 500}
+    ],
+    /* 阶段动画体现方式2：为要动画的属性单独设置各阶段的状态，对于多个动画属性要注意各属性的时间衔接，同样，若未给每个阶段值指定执行时长，将均分父级设置的总时长 */
+    scaleX: [
+      {value: 4, duration: 100, delay: 500, easing: 'easeOutExpo'},
+      {value: 1, duration: 900},
+      {value: 4, duration: 100, delay: 500, easing: 'easeOutExpo'},
+      {value: 1, duration: 900}
+    ],
+    scaleY: [
+      {value: [1.75, 1], duration: 500},
+      {value: 2, duration: 50, delay: 1000, easing: 'easeOutExpo'},
+      {value: 1, duration: 450},
+      {value: 1.75, duration: 50, delay: 1000, easing: 'easeOutExpo'},
+      {value: 1, duration: 450}
+    ],
+    background: ['#ff4b4b', '#ff4b4b', '#70f', '#00f', '#0f0']
+  });
+
+  /* 步进计算辅助方法：anime.stagger(val, [options])，第一个参数必需(步长)，第二个配置项可选 */
+  animes.target9 = anime({
+    targets: '#target9 i',
+    translateX: 300,
+    /* anime.stagger()第一个步长参数可以为`数字`和`字符串(带单位的度量值)`，也可以是`数组`[startValue, endValue]，此时并非表示多个步长，而是由数组首尾差值(endValue - startValue)确定所有目标元素的最大间隔值，再将该整体间隔进行分配 */
+    delay: anime.stagger(200, {
+      start: 100, /* 步进设置的起始值，默认起始值为0 */
+      /* 从哪个目标元素开始设置值，其值可以是要作为第一个设置目标的元素在目标集中的索引index，也可以是以下字符串：`first`(默认值，等同于0)、`last`(等同于targetsLength-1)、`center`(根据目标集长度可能是中间一个，也可能是中间两个) */
+      from: 1, /* 当目标集是一个一维列表时，设置顺序将从from开始向两端扩散(此时可想到以该from位置为中心对称的目标将得到相同值)，若目标集是一个二维网格grid，则设置顺序由from开始向四周扩散 */
+      direction: 'reverse', /* 设置方向/顺序，默认`normal`表示正序，`reverse`逆序(此时所有值都与原顺序相反，效果上就是所有目标元素的执行顺序颠倒了) */
+      easing(p) { /* 缓动函数(按该缓动原则计算分配比例)，可以是内置的`缓动方法名`(实际就是内置缓动函数的函数名)，也可以是自定义的缓动`function` */
+        console.log(p); /* 这里接受的参数是按照`linear`线性分配原则所返回的每个目标对应的所在梯度比例(值在0到1之间) */
+        return p;
+      }
+    })
+  });
+
+  animes.target10 = anime({
+    targets: '#target10 i',
+    scale: [
+      {value: .1, easing: 'easeOutSine', duration: 500},
+      {value: 1, easing: 'easeInOutQuad', duration: 1200}
+    ],
+    delay: anime.stagger(200, {
+      from: 'center', /* 设置了grid时，步进的默认设置顺序将从起始位置往四周扩散，形成涟漪效果 */
+      grid: [12, 4], /* grid参数指定网格布局，值为一个两个元素的数组：[rows, columns]，rows表示一行多少个元素，columns表示一列多少个元素 */
+      axis: 'x' /* 强制更改grid中效果执行方向(轴向)，默认是从from往四周扩散，axis设为`x`表示横向扩散，`y`表示纵向扩散，此时只会从from所在行或者列往整体执行 */
+    })
+  });
+
+  /* 时间线(执行流)：anime.timeline(params) 与 timelineInstance.add(params, [offset]); 时间线中的动画将按添加顺序依次执行，前一个子动画执行完才会执行下一个子动画 */
+  animes.target11 = anime.timeline({ /* 创建动画时间线实例：anime.timeline(params)，参数`params`表示该时间线中的所有子动画的公用配置对象，其中的配置项效果会被子动画继承，注意该实例也仍是一个动画实例(该有的方法也都有) */
+    easing: 'easeOutExpo', /* 注意1：这里配置的公共配置项可被所有子动画继承(实际表示可被子动画覆盖的)的只有6个：targets(目标)、easing(缓动)、duration(时长)、delay(起始延时)、endDelay(结束延时)、round(小数精确位) */
+    duration: 400, /* 注意2：可被覆盖的配置项只有上面指出的6个，除此之外部分其他配置项可放在公共配置项中，只是子动画中无法覆盖(即使时公共配置中未显式声明而采用的默认值的配置项也无法被覆盖) */
+    delay: 300, /* 注意3：除了上面两个注意点中提到的配置项，目标元素可动画的属性放在该公共配置项中是无效的，可动画的属性只能放在子动画的配置项中 */
+    opacity: 0.5, /* 无效，因该属性属于目标元素可动画的属性 */
+    direction: 'alternate', /* 有效，但不会被覆盖 */
+//    loop: true /* 有效，但不会被覆盖 */
+  });
+  animes.target11.add({ /* 往时间线实例中添加动画(子动画)：timelineInstance.add(params, [offset]); 第一个必需参数`params`同动创建动画的参数一样为配置对象，可覆盖公用配置项；该方法仍返回实例本身，故可链式调用 */
+    targets: '#target11 .index-1',
+    translateX: 300,
+    loop: true, /* 无效，子动画配置项中只能是目标元素`可动画的属性`和公共配置项中`可被覆盖的6个配置项` */
+  })
+  .add({
+    targets: '#target11 .index-2',
+    translateX: 300,
+    background: '#70f'
+  }, '+=100') /* 第二个可选参数`offset`为当前子动画执行时间偏移，默认是在前一个动画执行完毕后就立即进入当前动画流程，可设置为相对值`+=num`或`-=num`(表示在前一个动画结束后或前num时间进入当前动画流程)，也可设置为绝对值数字num(表示在整个时间线的num时间位置开始进入当前动画流程，不管其在时间线中的add顺序) */
+  .add({
+    targets: '#target11 .index-3',
+    translateX: 300,
+    rotate: 450,
+  }, 200);
+
+  /**===== SVG相关动画 =====*/
+
+  /* SVG运动轨迹动画 */
+  const svgPath = anime.path('#target12 path'); /* anime.path(path)，指定运动轨迹要遵循的path路径，该方法返回的是一个函数(返回的函数参数只接受'x'、'y'、'angle'三个值之一) */
+  animes.target12 = anime({
+    targets: '#target12 .block', /* 最好让目标元素初始布局位置的几何中心与svg画布的原点在同一位置，以免元素运动轨迹与svg路径只是形状类似而不是路线重合的 */
+    translateX: svgPath('x'), /* `x`参数表示返回按上面path轨迹在直角坐标系中换算出的横向X轴方向的偏移量，度量单位是px */
+    translateY: svgPath('y'), /* `Y`参数表示返回按上面path轨迹在直角坐标系中换算出的纵向Y轴方向的偏移量，度量单位是px */
+    rotate: svgPath('angle'), /* `angle`参数表示返回按上面path轨迹运动时每个过渡点的旋转角度(可由每个位置的法向量/斜率计算出)，度量单位是deg */
+    easing: 'linear',
+    duration: 5000,
+    autoplay: false
+  });
+
+  /* SVG属性(attribute)动画化 */
+  animes.target13 = [];
+  animes.target13[0] = anime({
+    targets: ['#target13_1 polygon', '#target13_1 feTurbulence', '#target13_1 feDisplacementMap'],
+    points: '64 128 8.574 96 8.574 32 64 0 119.426 32 119.426 96',
+    round: 100,
+    baseFrequency: 0, /* 其会去关联设置了该attribute的目标元素，若多个目标中设置了该attribute则应该都会关联上 */
+    scale: 1, /* 这里不是CSS属性，而是对应到SVG及其内元素上的attribute上的，因目标元素上显式声明了(标签上设置了)该attribute则按标签属性进行变化，否则将按照CSS属性变化进行处理，对于一些元素上特有的属性则并非一定要在元素上设置初始值，在设置变化是用数组设置from和to值也可以 */
+    direction: 'alternate',
+    easing: 'easeInOutExpo'
+  });
+  /* SVG元素变形过渡 */
+  animes.target13[1] = anime({
+    targets: '#target13_2 .polymorph',
+    points: [ /* 变化的形状要求points顶点个数是一样的，其实该变形也属于SVG元素属性attribute的动画化 */
+      {
+        value: [ /* 因目标元素是svg中的`polygon`，其也没有子元素，而points属性是其特有的attribute，也不存在对应的CSS属性，故其实可以不用在标签上设置初始值，这里用数组设置了from和to值也是可以的 */
+            '70 24 119.574 60.369 100.145 117.631 50.855 101.631 3.426 54.369',
+            '70 41 118.574 59.369 111.145 132.631 60.855 84.631 20.426 60.369'
+          ]
+      },
+      { value: '70 6 119.574 60.369 100.145 117.631 39.855 117.631 55.426 68.369' },
+      { value: '70 57 136.574 54.369 89.145 100.631 28.855 132.631 38.426 64.369' },
+      { value: '70 24 119.574 60.369 100.145 117.631 50.855 101.631 3.426 54.369' }
+    ],
+    easing: 'easeOutQuad',
+    duration: 2000
+  });
+
+  /* SVG线条绘制动画：通过设置svg的'stroke-dashoffset'属性(描边线条重复单元dasharray的起始位置)控制线条显示长度(结合svg的虚线段间隔属性'stroke-dasharray') */
+  animes.target14 = anime({
+    targets: '#target14 path',
+    strokeDashoffset: [anime.setDashoffset, 0], /* `anime.setDashoffset`是一个anime内置函数，其返回目标路径的曲线长度，这里设置的值就表示整个曲线的长度 */
+    easing: 'easeInOutSine',
+    duration: 1500,
+    delay: function(el, i) { return i * 300 }
+  });
+
+</script>
+<script>
+  document.getElementById('show-script').innerHTML = document.getElementById('script').innerHTML;
+  document.querySelectorAll('.view > li:not(.cus_click)').forEach(function (item) {
+    item.addEventListener('click', function () {
+      const ans = animes[this.id];
+      if (ans instanceof Array) {
+        ans.forEach(function (an) {
+          an.play();
+        });
+      } else {
+        ans.play();
+      }
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,1358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1">
+    <title>echarts</title>
+    <style type="text/css">
+        body{ margin: 0; padding: 0; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;}
+        .text-danger {
+            color: #ff0000;}
+        p {
+            margin: 5px 0;}
+        .code {display: block;white-space: pre;font-family: monospace;}
+    </style>
+</head>
+<body>
+    <!-- 实际使用时将div中的文字删除，这里这是方便查看，页面中文字实际被图表覆盖 -->
+    <div id="chart1" style="height: 400px;">饼图</div>
+    <ul f="ul" style="font-size: 12px;overflow: auto;max-height: 20em;white-space: nowrap;">
+        <li><b>重点配置项说明(注意该说明最后要手动删除)，下面以option对象表示setOption方法中的对象参数，页面代码中也包含部分注释，可在代码界面查看，若要使用插件本身默认值，可将相关属性删除即可</b></li>
+        <li>
+            <p style="margin: 5px 0;color: #ff0000;">option.backgroundColor</p>
+            <p style="margin: 5px 0;">修改整个图表容器背景色，支持所有css颜色值格式，也支持渐变和图片(渐变和图片参看官方文档)</p>
+        </li>
+        <li>
+            <p style="margin: 5px 0;color: #ff0000;">option.title</p>
+            <p style="margin: 5px 0;">设置图表标题，若不要标题可将该属性删除</p>
+        </li>
+        <li>
+            <p style="margin: 5px 0;color: #ff0000;">option.title.textStyle</p>
+            <p style="margin: 5px 0;">修改图表标题文本样式，包括字体颜色、大小、粗细</p>
+        </li>
+        <li>
+            <p style="margin: 5px 0;color: #ff0000;">option.legend</p>
+            <p style="margin: 5px 0;">设置图例，若不要图例可将该属性删除</p>
+        </li>
+        <li>
+            <p style="margin: 5px 0;color: #ff0000;">option.legend.icon</p>
+            <p style="margin: 5px 0;">修改图例色块形状，已改为圆形，删除该属性将使用默认的带圆角方形</p>
+        </li>
+        <li>
+            <p style="margin: 5px 0;color: #ff0000;">option.legend.itemWidth</p>
+            <p style="margin: 5px 0;">修改图例色块宽度，icon为圆形时可改变圆大小，对应还有高度itemHeight</p>
+        </li>
+        <li>
+            <p style="margin: 5px 0;color: #ff0000;">option.legend.textStyle</p>
+            <p style="margin: 5px 0;">修改图例文本样式，用法同标题</p>
+        </li>
+        <li>
+            <p style="margin: 5px 0;color: #ff0000;">option.series</p>
+            <p style="margin: 5px 0;">图形系列区域相关设置</p>
+        </li>
+        <li>
+            <p style="margin: 5px 0;color: #ff0000;">option.series.radius</p>
+            <p style="margin: 5px 0;">修改饼图半径，可为绝对值或百分比，百分比表示占容器大小比例（以容器最短边为准）</p>
+        </li>
+        <li>
+            <p style="margin: 5px 0;color: #ff0000;">option.series.data</p>
+            <p style="margin: 5px 0;">添加数据，按参考代码修改即可</p>
+        </li>
+        <li>
+            <p style="margin: 5px 0;color: #ff0000;">option.label</p>
+            <p style="margin: 5px 0;">图形上的文本标签设置</p>
+        </li>
+        <li>
+            <p style="margin: 5px 0;color: #ff0000;">option.label.show</p>
+            <p style="margin: 5px 0;">若不需要显示文本标签，则将该属性置为false</p>
+        </li>
+        <li>
+            <p style="margin: 5px 0;color: #ff0000;">option.label.position</p>
+            <p style="margin: 5px 0;">修改文本标签显示位置，已修改为内部inside，默认为外部outside</p>
+        </li>
+        <li>
+            <p style="margin: 5px 0;color: #ff0000;">option.label.formatter</p>
+            <p style="margin: 5px 0;">修改标签内容的显示格式，已改为百分比，其他格式可参看代码中注释</p>
+        </li>
+        <li>
+            <p style="margin: 5px 0;color: #ff0000;">option.color</p>
+            <p style="margin: 5px 0;">颜色列表，即图表中各个色块的颜色，不设置将使用插件默认颜色列表</p>
+        </li>
+    </ul>
+
+    <div id="chart2" style="height: 400px;">环形图</div>
+    <ul f="ul" style="font-size: 12px;overflow: auto;max-height: 20em;white-space: nowrap;">
+        <li><b>重点配置项说明(注意该说明最后要手动删除)，下面以option对象表示setOption方法中的对象参数，页面代码中也包含部分注释，可在代码界面查看，若要使用插件本身默认值，可将相关属性删除即可</b></li>
+        <li>
+            <p style="margin: 5px 0;color: #ff0000;">option.backgroundColor</p>
+            <p style="margin: 5px 0;">修改整个图表容器背景色，支持所有css颜色值格式，也支持渐变和图片(渐变和图片参看官方文档)</p>
+        </li>
+        <li>
+            <p style="margin: 5px 0;color: #ff0000;">option.title</p>
+            <p style="margin: 5px 0;">设置图表标题，若不要标题可将该属性删除</p>
+        </li>
+        <li>
+            <p style="margin: 5px 0;color: #ff0000;">option.title.textStyle</p>
+            <p style="margin: 5px 0;">修改图表标题文本样式，包括字体颜色、大小、粗细</p>
+        </li>
+        <li>
+            <p style="margin: 5px 0;color: #ff0000;">option.legend</p>
+            <p style="margin: 5px 0;">设置图例，若不要图例可将该属性删除</p>
+        </li>
+        <li>
+            <p style="margin: 5px 0;color: #ff0000;">option.legend.icon</p>
+            <p style="margin: 5px 0;">修改图例色块形状，已改为圆形，删除该属性将使用默认的带圆角方形</p>
+        </li>
+        <li>
+            <p style="margin: 5px 0;color: #ff0000;">option.legend.itemWidth</p>
+            <p style="margin: 5px 0;">修改图例色块宽度，icon为圆形时可改变圆大小，对应还有高度itemHeight</p>
+        </li>
+        <li>
+            <p style="margin: 5px 0;color: #ff0000;">option.legend.textStyle</p>
+            <p style="margin: 5px 0;">修改图例文本样式，用法同标题</p>
+        </li>
+        <li>
+            <p style="margin: 5px 0;color: #ff0000;">option.series</p>
+            <p style="margin: 5px 0;">图形系列区域相关设置</p>
+        </li>
+        <li>
+            <p style="margin: 5px 0;color: #ff0000;">option.series.radius</p>
+            <p style="margin: 5px 0;">修改环形图内外半径，可为绝对值或百分比，百分比表示占容器大小比例（以容器最短边为准）</p>
+        </li>
+        <li>
+            <p style="margin: 5px 0;color: #ff0000;">option.series.data</p>
+            <p style="margin: 5px 0;">添加数据，按参考代码修改即可</p>
+        </li>
+        <li>
+            <p style="margin: 5px 0;color: #ff0000;">option.label.show</p>
+            <p style="margin: 5px 0;">若不需要显示文本标签，则将该属性置为false</p>
+        </li>
+        <li>
+            <p style="margin: 5px 0;color: #ff0000;">option.label</p>
+            <p style="margin: 5px 0;">图形上的文本标签相关样式设置</p>
+        </li>
+        <li>
+            <p style="margin: 5px 0;color: #ff0000;">option.label.formatter</p>
+            <p style="margin: 5px 0;">修改标签内容的显示格式，已改为百分比，其他格式可参看代码中注释</p>
+        </li>
+        <li>
+            <p style="margin: 5px 0;color: #ff0000;">option.labelLine</p>
+            <p style="margin: 5px 0;">图形上的文本标签指示线相关样式设置</p>
+        </li>
+        <li>
+            <p style="margin: 5px 0;color: #ff0000;">option.color</p>
+            <p style="margin: 5px 0;">颜色列表，即图表中各个色块的颜色，不设置将使用插件默认颜色列表</p>
+        </li>
+    </ul>
+
+    <div id="chart3" style="height: 400px;">平滑折线图</div>
+
+    <div id="chart4" style="height: 400px;">柱状图</div>
+
+    <div id="chart5" style="height: 400px;">横向柱状图</div>
+
+    <div id="chart6" style="height: 400px;">雷达图</div>
+
+    <div style="height: 400px;">
+        <div id="chart7" style="float: left;width: 50%;height: 100%;">字符云</div>
+        <div id="chart8" style="float: left;width: 50%;height: 100%;">字符云自定义图片图案</div>
+    </div>
+
+
+<div id="chartX">空</div>
+<script type="text/javascript" charset="UTF-8" src="../../js/jquery-1.11.3.js"></script>
+<script type="text/javascript" charset="UTF-8" src="../../plugins/echarts/echarts-4.0.2.min.js"></script>
+<!--<script type="text/javascript" charset="UTF-8" src="plugins/echarts/echarts-3.6.1.min.js"></script>-->
+<script type="text/javascript" charset="UTF-8" src="../../plugins/echarts/echarts-wordcloud.min.js"></script>
+<!--<script type="text/javascript" charset="UTF-8" src="plugins/echarts/echarts-wordcloud.js"></script>-->
+<script type="text/javascript" charset="UTF-8" src="../../plugins/echarts/themes/purple-passion.js"></script>
+<script type="text/javascript" charset="UTF-8" class="code">
+//    $(function(){
+        //以下内容可先在官方教程中查看，再去查看配置项文档，只列出了部分常用配置
+        /** 在支持回调函数的数据格式formatter设置中，可通过参数获取到很多图表的配置数据，方便自定义数据展示格式 */
+
+        /**
+         * echarts.init()方法:
+         * 第一个必选参数为要渲染图表的DOM容器或canvas元素；
+         * 第二个可选参数为指定的图表主题，根据自己下载的主题文件进行设置，设置为`null`表示使用默认主题
+         * 第三个可选参数对象可设置一些额外的图表属性，包含：设备像素比、图形渲染模式、图表宽高
+         * */
+        echarts.init(document.getElementById('chartX'), null, {
+          devicePixelRatio: 1, //设备像素比，默认取浏览器的值window.devicePixelRatio
+          renderer: 'svg', //渲染器类型，有canvas和svg可选，默认canvas
+          width: null, //可显式指定实例宽度，单位为像素。如果传入值为 null/undefined/'auto'，则表示自动取 dom（实例容器）的宽度（默认如此）
+          height: null, //可显式指定实例高度
+        });
+
+        /*=================================================== 饼图 ===================================================*/
+        var chart1 = echarts.init(document.getElementById('chart1'), null, {renderer: 'svg'});
+        chart1.setOption({
+            //标题组件
+            title: {
+                text: "饼图/南丁格尔图标题",   //支持使用“\n”换行，注意并不支持HTML标签
+                left: 'center',    //距离容器左侧的距离，可以是数字、百分比、及表示上下左右中间的关键字，center可水平居中
+                top: 10,           //距离容器顶部的距离，另外还有right、bottom属性，作用都类似，middle可垂直居中
+                textStyle: {
+                    //设置标题文本样式，包括字体类型、大小、颜色、粗细、行高、对齐方式、文字阴影、自定义富文本样式等
+                    color: '#333',   //默认#333
+                    fontSize: 16,
+                    fontWeight: 'normal'   //v4.x中显示默认为normal，但实测为bolder
+                }
+            },
+            backgroundColor: "transparent",    //设置整个绘图区域的背景色，可以是简单的纯色，也可以是渐变色，默认透明
+            textStyle: {
+                //全局文本样式设置，可被局部文本样式设置覆盖
+            },
+            //图例组件
+            legend: {
+//                type: 'scroll',    //默认为普通图例，若设为scroll则在图例数量较多不好显示时可以滚动
+//                orient: 'horizontal',     //设置图例的布局朝向，horizontal为水平，vertical为垂直，默认水平
+                bottom: 10,
+                itemWidth: 14,      //图例标记的图形宽度，默认为25，对应有高度itemHeight，默认14
+//                borderRadius: 10,   //圆角，实测无效，可直接使用icon属性设置图标类型
+//                formatter: '格式化图例文本，支持字符串模板和回调函数两种形式',
+                selectedMode: false,    //图例选择模式，控制是否通过点击图例改变对应series系列的显示状态，也可设置为单选或多选模式
+                //图例公用文本样式
+                textStyle: {
+                    color: '#7d7d7d'
+                },
+                icon: 'circle'     //图标类型，默认为roundRect，echarts提供多种形状：circle(圆)、rect(方形)、roundRect(带圆角方形)、triangle(三角)、diamond(菱形)、pin(气泡)、arrow(箭头)，也可以使用图片
+            },
+            color: ['#29BBF4',"#F2C336","#F09CA0","#4EE8DD","#71CD71","#3F79C6"],      //颜色列表，如果系列没有单独设置颜色则循环使用此处的颜色列表
+            series: [   //series属性表示系列，值是一个数组，每个单元格存一个图表对象(因可以多个图表组合使用)，若只有一个图也可以直接将配置对象放在外面，不使用数组的形式
+                {
+                    name: '访问来源',
+                    type: 'pie',       //图表类型，pie表示饼图
+                    center: ['25%','50%'],   //圆心位置，默认中间['50%','50%']
+                    radius: '60%',     //饼图半径占容器大小（以最小的一边为准），若为数组则第一个表示内半径，第二个表示外半径
+//                    hoverAnimation: false,      //是否开启 hover 在扇区上的放大动画效果，默认true开启
+                    selectedMode: false,    //是否开启选中模式，选中的item将突出显示，有值'single'，'multiple'，分别表示单选还是多选，默认为false关闭
+                    data:[
+                        {
+                            value:235,
+                            name:'视频广告',
+                            itemStyle: {
+                                //这里的itemStyle属性用于单独设置该部分数据扇形区的样式
+                            }
+                        },
+                        {value:274, name:'联盟广告'},
+                        {value:310, name:'邮件营销'},
+                        {value:335, name:'直接访问'},
+                        {value:400, name:'搜索引擎'}
+                    ],
+                    itemStyle: {
+                        //itemStyle属性用于设置图形的样式，如阴影、透明度、颜色、边框等，这里设置的是作用于每个扇形的样式，若单独给某个扇形设置样式，则可设置data中对应某个数据下的itemStyle属性
+                    },
+                    //这里的label属性用于设置图形上的文本标签样式、格式、显示在图形内或外等
+                    label: {
+//                        show: false,        //若不需要显示标签
+                        position: 'inside',      //可将饼图的标签文本放在内部
+                        formatter: '{d}%',      //标签内容格式，其中模板变量有 {a}、{b}、{c}、{d}，分别表示系列名，数据名，数据值，百分比(注意要自己加%号)
+                    },
+                    labelLine: {
+                        //这里的labelLine属性用于设置图形上的文本标签指示线样式，其显示与否可设置(前提是label的显示位置为outside，默认)
+                    },
+                    emphasis: {
+                        //emphasis属性用于设置鼠标hover状态下的高亮显示样式
+                        //上面的itemStyle、label、labelLine属性都可以设置
+                        //emphasis属性也可以单独放在各itemStyle、label、labelLine属性中，作为它们的子属性，单独设置对应的hover状态样式
+                    }
+                },
+                {
+                    name: '访问来源',
+                    type: 'pie',
+                    roseType: 'radius',     //展示为南丁格尔玫瑰图，默认为false不显示，若显示可选两种模式‘radius’( 扇区圆心角展现数据的百分比，半径展现数据的大小)，‘area’(所有扇区圆心角相同，仅通过半径展现数据大小)
+                    center: ['75%','50%'],
+                    radius: '60%',
+                    data:[
+                        {value:235, name:'视频广告'},
+                        {value:274, name:'联盟广告'},
+                        {value:310, name:'邮件营销'},
+                        {value:335, name:'直接访问'},
+                        {value:400, name:'搜索引擎'}
+                    ],
+                    //这里的label属性用于设置图形上的文本标签样式、格式、显示在图形内或外等
+                    label: {
+//                        show: false,        //若不需要显示标签
+                        formatter: '{d}%',      //标签内容格式，其中模板变量有 {a}、{b}、{c}、{d}，分别表示系列名，数据名，数据值，百分比(注意要自己加%号)
+                    }
+                }
+            ],
+            /*visualMap: [    //visualMap组件定义数据的视觉映射，数组内容表示多个类型的映射，这里说的类型由type属性指定，详细用法参见官方文档
+                {   // 第一个 visualMap 组件
+                    type: 'continuous', // 定义为连续型 viusalMap
+                    //...
+                },
+                {   // 第二个 visualMap 组件
+                    type: 'piecewise', // 定义为分段型 visualMap
+                    //...
+                }
+            ]*/
+        });
+//        chart1.showLoading();   //showLoading()方法显示数据图形加载中的动画（以数据异步加载中数据为请求完成前图形界面为空白时以免用户以为为bug）
+//        chart1.hideLoading();   //hideLoading()方法用于隐藏上面显示的加载中的动画（数据加载完使图形渲染出后就需要将加载中动画去掉）
+
+        /*=================================================== 环形图 ===================================================*/
+        var chart2 = echarts.init(document.getElementById('chart2'));
+        chart2.setOption({
+            //标题组件
+            title: {
+                text: "环形图标题",
+                left: 'center',
+                top: 10, //距离容器顶部的距离，另外还有right、bottom属性，作用都类似
+                textStyle: {
+                    color: '#333', //标题字体颜色，默认#333
+                    fontSize: 16,
+                    fontWeight: 'normal'
+                }
+            },
+            backgroundColor: "transparent", //背景色，默认透明
+            //图例组件
+            legend: {
+                bottom: 10,
+                icon: 'circle', //图标类型，默认为roundRect带圆角方形
+                itemWidth: 14, //图例小色块宽度，对应还有高度itemHeight，圆形时改变宽或高就可改变小圆大小
+                selectedMode: false,
+                textStyle: {    //图例公用文本样式设置
+                    color: '#7d7d7d'
+                }
+            },
+            color: ['#29BBF4', "#F2C336", "#F09CA0", "#4EE8DD", "#71CD71", "#3F79C6"], //颜色列表
+            series: [{
+                name: '访问来源', //图表名
+                type: 'pie',
+                center: ['25%','50%'],   //圆心位置，默认中间['50%','50%']
+                radius: ['50%','60%'], //环形图内外半径占容器大小（以最短边为准），第一个为内半径，第二个为外半径
+//                hoverAnimation: false,      //是否开启 hover 在扇区上的放大动画效果，默认true开启
+                data: [{
+                    value: 235,
+                    name: '视频广告'
+                }, {
+                    value: 274,
+                    name: '联盟广告'
+                }, {
+                    value: 310,
+                    name: '邮件营销'
+                }, {
+                    value: 335,
+                    name: '直接访问'
+                }, {
+                    value: 400,
+                    name: '搜索引擎'
+                }],
+//                hoverAnimation: false,  //鼠标移入放大动画，默认true开启
+//                avoidLabelOverlap: false,   //是否防止标签重叠，默认true，在将圆环标签设置显示在圆环中间时应置为false，免得不在正中(因默认不重叠是按所有系列文字顺序排列放在中间，而非单个放在中间)
+                //图形上的文本标签设置
+                label: {
+//                    show: false,    //若不需要显示标签
+                    formatter: '{d}%', //标签内容格式，其中模板变量有 {a}、{b}、{c}、{d}，分别表示系列名，数据名，数据值，百分比(注意要自己加%号)
+                }
+            },
+            {
+                name: '访问来源', //图表名
+                type: 'pie',
+                roseType: 'radius',
+                center: ['75%','50%'],
+                radius: ['10%','60%'],
+                data: [{
+                    value: 235,
+                    name: '视频广告'
+                }, {
+                    value: 274,
+                    name: '联盟广告'
+                }, {
+                    value: 310,
+                    name: '邮件营销'
+                }, {
+                    value: 335,
+                    name: '直接访问'
+                }, {
+                    value: 400,
+                    name: '搜索引擎'
+                }]
+            }]
+        });
+
+
+        /*================================================= 平滑折线图 =================================================*/
+        var chart3 = echarts.init(document.getElementById('chart3'));
+        chart3.setOption({
+            backgroundColor: {
+                type: 'linear',     //线性渐变
+                x: 0,       //数字代表宽高的百分比
+                y: 0,
+                x2: 0,
+                y2: 1,
+                colorStops: [{
+                    offset: 0, color: '#7de0d2' // 0% 处的颜色
+                }, {
+                    offset: 0.7, color: '#49c4f6' // 70% 处的颜色，范围以外的区域将是起始或结束位置的纯色
+                }]
+            },
+            //直角坐标系绘图网格，包含网格区域大小、背景、边框、阴影、提示框等设置，可用数组设置多个坐标系网格，以在同一个canvas中不同坐标系下绘制图形
+            grid: {
+//                show: true,     //默认为false不显示，只是不显示可见样式，但距离设置这些都是有效的
+                left: 20,       //left、right、top、bottom分别表示网格距离容器左右上下的距离，可以是绝对数值，也可以是百分比(此时要加引号)
+                right: 20,
+                top: 40,
+                bottom: 20,
+                containLabel: true,      //网格区域是否包含坐标轴的刻度标签，默认为false，其决定了距离设置与宽高设置所确认的区域的大小是否包含了坐标轴标签所占据的空间
+//                backgroundColor: '#eee',    //网格区域背景色
+//                tooltip: {}     //网格提示框组件独立设置，可覆盖全局设置，但有些全局设置中的属性其没有
+            },
+            legend: {
+                top: 10,
+                right: 10,
+                textStyle: {
+                    color: '#ffffff'
+                }
+            },
+            //提示框组件，其可以设置在多个地方，如此处的全局中、坐标系中、系列中、系列的每个数据项中，其是div元素制作的
+            tooltip: {
+//                show: true,         //默认显示，可置为false不显示
+                trigger: 'axis',           // 触发类型，默认数据项触发，可选为：item(数据项)、axis(坐标轴)、none(不触发)
+                backgroundColor: '#ffffff',     // 提示框背景颜色，默认为透明度为0.7的黑色
+                borderColor: '#e0e0e0',
+                borderWidth: 1,
+                extraCssText: 'box-shadow: 0 0 7px rgb(222, 222, 222);filter:alpha(opacity=70);',   //提示框额外的自定义样式，注意因兼容IE8的透明度属性，插件本身使用了filter，所以若要改变透明度则也需要改变该属性，以保持统一
+                textStyle: {
+                    color: '#4c4c4c'
+                },
+//                position: 'bottom',     //提示框位置，支持关键字、坐标数组、函数
+                confine: true,      //将提示框限制在图表区域内，以免超出时被截断
+//                formatter:'{b}<br/>流量：{c}',     //提示框内容格式，支持字符串模板和回调函数，具体参看文档，支持html标签
+                //坐标轴指示器配置，可覆盖公用配置
+                axisPointer:{
+                    type: 'line',   //指示器类型，‘line’为直线，‘shadow’为阴影，‘cross’为十字准星
+                    //直线指示器线条样式，包括颜色、宽度、类型、阴影、透明度
+                    lineStyle: {
+                        color: 'rgba(255,255,255,0.5)'
+                    }
+                }
+            },
+            color: ['#37a2da','#ffd85c','#ff9f7f','#e062ae','#9d96f5'],
+            //多个坐标轴可放在数组中，一个则直接放外面
+            xAxis: [
+                {
+//                    type: 'category',       //坐标轴类型，‘category’表示类目轴(该类型需通过data属性设置类目数据，一般直角坐标系X轴默认就是category，Y轴默认是value)，另外还有‘value’数值轴，‘time’时间轴，‘log’对数轴
+//                    boundaryGap : false,    //坐标轴两端留白，默认为true，即数据起点和终点与坐标系起点和终点隔开一段距离，对于类目轴可设为true/false；对于非类目轴则设为包含两个值的数组，设置了min、max时无效
+                    data: ['16-06','16-07','16-08','16-09','16-10','16-11'],
+                    //坐标轴标签
+                    axisLabel: {
+                        interval: 0,        //标签显示间隔数，默认标签放不下时会间隔显示，设为0时表示不间隔即全部标签都显示
+//                        inside: true,     //标签是否显示在坐标系内，默认false
+                        color: '#ffffff',   //标签字体颜色，若不设置则默认与坐标轴的颜色一样
+                        fontSize: 12,       //默认12像素
+                        margin: 8           //标签与坐标轴间的距离，默认8像素
+                    },
+                    axisTick:{show:false},   //刻度线设置，默认会显示
+                    //坐标轴线设置
+                    axisLine:{
+                        show:true,
+                        lineStyle:{
+//                            color: 'rgba(255,255,255,0.5)'    //若Y轴有设置分隔线，当分割线是从X轴开始时，X轴的轴线会覆盖在分割线之上
+                            color: 'transparent'
+                        }
+                    },
+                },
+                {   //第二个X轴
+                    data: [2198766, 180892, 198765, 167245, 239876, 256887],
+                    axisLabel: {
+                        interval: 0,
+                        color: '#ffd85c',
+                        margin: -5
+                    },
+                    axisTick:{show:false},
+                    axisLine:{
+                        show: false,
+                        onZero: false
+                    },
+                    position: 'bottom',
+                    offset: 30,
+                    name: '合计',     //坐标轴名字
+                    nameLocation: 'start',      //坐标轴名字位置
+                    nameGap: 0,        //坐标轴名字与坐标轴间的距离，默认为15px
+                    //坐标轴文本样式
+                    nameTextStyle: {
+                        color: '#ffd85c',
+                        fontSize: 12    //默认12px
+                    }
+                }
+            ],
+            yAxis : {
+                axisTick:{show:false},
+                axisLabel: {
+                    color: '#ffffff',
+                },
+                axisLine:{
+                    show:true,
+                    lineStyle:{
+                        color:'rgba(255,255,255,0.5)'
+                    }
+                },
+                //坐标分隔线设置
+                splitLine: {
+                    show: true,
+                    lineStyle: {
+                        color: 'rgba(255,255,255,0.5)'
+                    }
+                }
+            },
+            series: [
+                {
+                    name: '银川',
+                    type:'line',
+//                    coordinateSystem: 'cartesian2d',        //坐标系类型，默认为‘cartesian2d’直角坐标系，还可为‘polar’极坐标系
+                    smooth: true,   //平滑，默认false
+                    symbol: 'emptyCircle',      //标记形状，折线中默认为‘emptyCircle’空心圆，还有‘circle’原点、‘rect’方形、‘roundRect’圆角方形，‘triangle’三角、‘diamond’菱形、‘pin’气泡、‘arrow’箭头，还支持使用图片
+                    symbolSize: 5,      //数据点标记大小
+//                        animation: false,     //是否显示标记动画，即触发数据点时图形放大，默认true显示
+                    //线条单独样式，包括颜色、宽度、类型、阴影、透明度
+                    lineStyle: {
+//                        color: '#ffffff'    //线条颜色，默认采用全局color数组的设置
+                    },
+                    data:[23, 30, 25, 18, 12,40, 9, 12, 10, 23, 30]
+                },
+                {
+                    name:'石嘴山',
+                    type:'line',
+                    smooth: true,
+                    symbolSize:5,
+                    animation: false,
+                    //区域填充样式设置
+                    areaStyle:{},
+                    data:[30, 23, 30, 25, 18, 12,40, 9, 12, 10,23]
+                },
+                {
+                    name:'吴忠',
+                    type:'line',
+                    smooth: true,
+                    symbolSize:5,
+                    animation: false,
+                    data:[18, 12, 23, 30, 25, 10, 23, 30, 40, 9, 12]
+                },
+                {
+                    name:'固原',
+                    type:'line',
+                    symbolSize:5,
+                    animation: false,
+                    data:[12,40, 9, 12, 10, 23, 30, 23, 30, 25, 18]
+                },
+                {
+                    name:'中卫',
+                    type:'line',
+                    symbolSize:5,
+                    animation: false,
+                    data: [5, 20, 36, 10, 10, 20,30,40,20,10,21]
+                }
+            ]
+        });
+
+
+        /*=================================================== 柱状图 ===================================================*/
+        //纵向柱状图
+        var chart4 = echarts.init(document.getElementById("chart4"));
+        chart4.setOption({
+            legend: {
+                right: 20,
+                top: 10,
+                itemWidth:12,
+                itemHeight:12,
+                textStyle: {
+                    color: '#888888'
+                }
+            },
+            grid: {
+                containLabel: true,
+                left: 20,
+                right: 20,
+                top: 40,
+                bottom: 20
+            },
+            color: ['#37a2da','#ffd85c','#ff9f7f','#e062ae','#9d96f5'],
+            xAxis: {
+                data: ['在途佣金', '已过期佣金', '本账期新增', '本账期调整', '即将到期', '系统建议封存'],
+                axisLabel: {
+                    interval: 0,
+                    color: '#929292'
+                },
+                axisTick:{show:false},
+                axisLine:{
+                    show:true,
+                    lineStyle:{
+                        color:'#e7e7e7'
+                    }
+                }
+            },
+            yAxis: {
+                axisLabel: {
+                    show: false
+                },
+                axisTick:{
+                    show: false
+                },
+                axisLine:{
+                    show: false
+                },
+                splitLine: {
+                    show: false
+                }
+            },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                }
+            },
+            series: [
+                {
+                    name: '银川',
+                    type: 'bar',
+//                    stack: 'customName',        //数据堆积，即在相同位置图形进行砌砖式堆砌，只有设置了相同customName(自定义)名字的系列会进行堆砌
+                    barGap: 0,   //同类目柱间距离(多个时可看出)，官方文档说可以是具体值，也可以是百分比，实测不管哪种，代表的都是倍数值，如20不是表示20像素，而是表示间隔距离是柱宽的20倍，只需设置一个系列
+                    barCategoryGap: '26%',      //相邻类目间柱形距离，即类目间的空白距离，默认20%，也可设为具体值，实测该具体值是像素值，只需设置一个系列
+                    data: [257, 200, 150, 180, 170, 80],
+                    //图形文本标签设置
+                    label: {
+                        show: true,         //默认false
+                        position: 'top',    //显示位置，支持关键字和坐标数组(具体值或百分比)
+                        formatter: '{c}'    //标签格式
+                    }
+                },
+                {
+                    name: '石嘴山',
+                    type: 'bar',
+//                    stack: 'customName',      // stack值同为'customName'的将进行数据堆砌展示
+                    data: [180, 170, 110, 130, 210, 130]
+                },
+                {
+                    name: '吴忠',
+                    type: 'bar',
+                    data: [170, 110, 130, 210, 130, 180]
+                },
+                {
+                    name: '固原',
+                    type: 'bar',
+                    data: [200, 150, 180, 170, 257, 80]
+                },
+                {
+                    name: '中卫',
+                    type: 'bar',
+                    data: [130, 210, 130, 180, 170, 110]
+                }
+            ]
+        });
+
+        //横向柱状图
+        var chart5 = echarts.init(document.getElementById("chart5"));
+        chart5.setOption({
+            legend: {
+                right: 10,
+                top: 10,
+                itemWidth:12,
+                itemHeight:12,
+                textStyle: {
+                    color: '#888888'
+                }
+            },
+            grid: {
+                containLabel: true,
+                left: 5,
+                right: 15,
+                top: 35,
+                bottom: 5
+            },
+            color: ['#37a2da','#ff9f7f'],
+            xAxis: {
+                axisLabel: {
+                    color: '#929292',
+                    margin: 5
+                },
+                axisTick:{show:false},
+                axisLine:{
+                    show: false
+                },
+                splitLine:{
+                    show: false
+                }
+            },
+            yAxis: {
+                data: ['在途佣金', '已过期佣金', '本账期新增', '本账期调整', '即将到期', '系统建议封存'],
+                inverse: true,
+                axisLabel: {
+                    interval: 0,
+                    color: '#929292',
+                    margin: 5
+                },
+                axisTick:{show:false},
+                axisLine:{
+                    show: false
+                }
+            },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                }
+            },
+            series: [
+                {
+                    name: '互斥规则数量',
+                    type: 'bar',
+                    data: [257, 200, 150, 180, 170, 80]
+                },
+                {
+                    name: '本账期限制用户数量',
+                    type: 'bar',
+                    barGap: '15%',
+                    barCategoryGap: '25%',
+                    data: [180, 170, 110, 130, 210, 130]
+                }
+            ]
+        });
+
+
+        /*=================================================== 雷达图 ===================================================*/
+        var chart6 = echarts.init(document.getElementById("chart6"));
+        chart6.setOption({
+            tooltip: {
+                show: true
+            },
+            radar: [{
+                radius: '55%',
+                center: ['25%','45%'],
+                shape: 'polygon',    //雷达图类型，默认‘polygon’多边形，‘circle’为圆形
+                //雷达图每个指示器名字样式设置
+                name: {
+                    color: '#0aa6c6'    //指示器文字颜色，不设置将默认与指示器轴线颜色axisLine.lineStyle.color相同
+                },
+                nameGap: 10,  //名字与轴的间距，默认15px
+                splitNumber: 3,   //指示器轴分隔段数，默认5
+                axisLine: {
+                    lineStyle: {
+                        color: '#0aa6c6'
+                    }
+                },
+                splitLine: {
+                    lineStyle: {
+                        color: '#0aa6c6'
+                    }
+                },
+                //分割区域设置
+                splitArea: {
+                    show: true,  //默认false不显示
+                    //区域样式
+                    areaStyle: {
+                        color: 'rgba(8,158,187,0.2)'    //用数组设置一组颜色则分别用于每个区段
+                    }
+                },
+                indicator: [
+                    { name: '资源申请', max: 100},
+                    { name: '资源注入', max: 100},
+                    { name: '资源调度', max: 100},
+                    { name: '资源配额', max: 100},
+                    { name: '资源模板', max: 100}
+                ]
+            },
+            {
+                radius: '55%',
+                center: ['75%','45%'],
+                shape: 'circle',
+                nameGap: 10,
+                splitNumber: 3,
+                axisLine: {
+                    lineStyle: {
+                        color: '#0aa6c6'
+                    }
+                },
+                splitLine: {
+                    lineStyle: {
+                        color: '#0aa6c6'
+                    }
+                },
+                splitArea: {
+                    show: true,  //默认false不显示
+                    areaStyle: {
+                        color: 'rgba(8,158,187,0.2)'
+                    }
+                },
+                indicator: [
+                    { name: '资源申请', max: 100},
+                    { name: '资源注入', max: 100},
+                    { name: '资源调度', max: 100},
+                    { name: '资源配额', max: 100},
+                    { name: '资源模板', max: 100}
+                ]
+            }],
+            series: [{
+                type: 'radar',
+                data : [
+                    {
+                        value : [80, 90, 70, 50, 60],
+                        name : '资源统计(%)'
+                    }
+                ],
+                areaStyle: {},
+                label: {
+                    show: true,
+                    formatter: '{c}%'
+                }
+            },
+            {
+                type: 'radar',
+                radarIndex: 1,      //该雷达图所使用的 radar 组件的 index，即radar配置数组索引
+                data : [
+                    {
+                        value : [80, 90, 70, 50, 60],
+                        name : '资源统计(%)'
+                    }
+                ],
+                areaStyle: {},
+                label: {
+                    show: true,
+                    formatter: '{c}%'
+                }
+            }]
+        });
+
+
+        /*=================================================== 字符云 ===================================================*/
+        /**重要：echarts4.x在配合echarts-wordcloud.min.js使用时，一般形状有效，但根据图案maskImage显示出现混乱
+         * echarts3.x在配合echarts-wordcloud.js使用时，一般形状和根据图案maskImage显示都有效，但图表上3.x和4.x配置有些不同可能影响图表使用
+         * echarts4.x在配合echarts-wordcloud.js使用时，一般形状和根据图案maskImage显示形状都有效，但文字颜色随机无效，只显示成黑色
+         * echarts3.x在配合echarts-wordcloud.min.js使用时会报错，无法使用
+         * */
+        var chart7 = echarts.init(document.getElementById("chart7"));
+        chart7.setOption({
+            tooltip: {},
+            series: [ {
+                type: 'wordCloud',
+                gridSize: 2,
+                sizeRange: [12, 50],    //字体大小范围，默认[12,60]
+                rotationRange: [-90, 90],  //旋转角度范围
+//                rotationStep: 5,        //旋转角度步长，默认45
+                shape: 'circle',        //云图形状，默认‘circle’圆形，‘smooth’菱形，‘diamond’钻石，‘cardioid’苹果或心形，‘triangle’正三角，‘star’五角星，‘pentagon’五边形，等。。。
+//                maskImage: maskImage,   //以图片中非白色区域为文字填充区域，maskImage为一个图片对象
+                //                left: 'center',     //云图距离画布左侧位置，默认center
+                //                top: 'center',      //云图距离画布顶部位置，默认center
+                //                right: null,          //云图距离画布右侧位置，默认null
+                //                bottom: null,         //云图距离画布底部位置，默认null
+                width: '70%',           //云图宽度，默认70%
+                height: '80%',          //云图高度，默认80%
+                drawOutOfBound: true,
+                textStyle: {
+                    normal: {
+                        color: function () {
+                            return 'rgb(' + [
+                                    Math.round(Math.random() * 200),
+                                    Math.round(Math.random() * 200),
+                                    Math.round(Math.random() * 200)
+                                ].join(',') + ')';
+                        }
+                    },
+                    emphasis: {
+                        shadowBlur: 4,
+                        shadowColor: '#00d55f'
+                    }
+                },
+                data: [
+                    {
+                        name: '管理',
+                        value: 10000,
+                        textStyle: {
+                            normal: {
+                                color: '#6e6fde'
+                            },
+                            emphasis: {
+                                color: '#c893ce'
+                            }
+                        }
+                    },
+                    {name: '数据', value: 6181},
+                    {name: '系统', value: 4386},
+                    {name: '企业', value: 4055},
+                    {name: '商店', value: 2467},
+                    {name: '工业', value: 2244},
+                    {name: '应用', value: 1898},
+                    {name: '数据', value: 6181},
+                    {name: '系统', value: 4386},
+                    {name: '企业', value: 4055},
+                    {name: '商店', value: 2467},
+                    {name: '工业', value: 2244},
+                    {name: '应用', value: 1898},
+                    {name: '酒店', value: 1484},
+                    {name: '网站', value: 1112},
+                    {name: '办公', value: 965},
+                    {name: '中心', value: 847},
+                    {name: '大数据', value: 582},
+                    {name: '视讯', value: 555},
+                    {name: '工业', value: 2244},
+                    {name: '应用', value: 1898},
+                    {name: '酒店', value: 1484},
+                    {name: '网站', value: 1112},
+                    {name: '办公', value: 965},
+                    {name: '中心', value: 847},
+                    {name: '大数据', value: 582},
+                    {name: '视讯', value: 555},
+                    {name: '手机', value: 550},
+                    {name: '网站', value: 1112},
+                    {name: '办公', value: 965},
+                    {name: '中心', value: 847},
+                    {name: '大数据', value: 582},
+                    {name: '视讯', value: 555},
+                    {name: '手机', value: 550},
+                    {name: '能耗', value: 462},
+                    {name: '医疗', value: 366},
+                    {name: '员工打卡', value: 360},
+                    {name: '智慧运营', value: 282},
+                    {name: '圈子', value: 273},
+                    {name: '物流', value: 265},
+                    {name: '商务', value: 265}
+                ]
+            } ]
+        });
+
+        /** 自定义图案 */
+        var keywords = {
+            "visualMap": 22199,
+            "continuous": 10288,
+            "contoller": 620,
+            "series": 274470,
+            "gauge": 12311,
+            "detail": 1206,
+            "piecewise": 4885,
+            "textStyle": 32294,
+            "markPoint": 18574,
+            "pie": 38929,
+            "roseType": 969,
+            "label": 37517,
+            "emphasis": 12053,
+            "yAxis": 57299,
+            "name": 15418,
+            "type": 22905,
+            "gridIndex": 5146,
+            "normal": 49487,
+            "itemStyle": 33837,
+            "min": 4500,
+            "silent": 5744,
+            "animation": 4840,
+            "offsetCenter": 232,
+            "inverse": 3706,
+            "borderColor": 4812,
+            "markLine": 16578,
+            "line": 76970,
+            "radiusAxis": 6704,
+            "radar": 15964,
+            "data": 60679,
+            "dataZoom": 24347,
+            "tooltip": 43420,
+            "toolbox": 25222,
+            "geo": 16904,
+            "parallelAxis": 4029,
+            "parallel": 5319,
+            "max": 3393,
+            "bar": 43066,
+            "heatmap": 3110,
+            "map": 20285,
+            "animationDuration": 3425,
+            "animationDelay": 2431,
+            "splitNumber": 5175,
+            "axisLine": 12738,
+            "lineStyle": 19601,
+            "splitLine": 7133,
+            "axisTick": 8831,
+            "axisLabel": 17516,
+            "pointer": 590,
+            "color": 23426,
+            "title": 38497,
+            "formatter": 15214,
+            "slider": 7236,
+            "legend": 66514,
+            "grid": 28516,
+            "smooth": 1295,
+            "smoothMonotone": 696,
+            "sampling": 757,
+            "feature": 12815,
+            "saveAsImage": 2616,
+            "polar": 6279,
+            "calculable": 879,
+            "backgroundColor": 9419,
+            "excludeComponents": 130,
+            "show": 20620,
+            "text": 2592,
+            "icon": 2782,
+            "dimension": 478,
+            "inRange": 1060,
+            "animationEasing": 2983,
+            "animationDurationUpdate": 2259,
+            "animationDelayUpdate": 2236,
+            "animationEasingUpdate": 2213,
+            "xAxis": 89459,
+            "angleAxis": 5469,
+            "showTitle": 484,
+            "dataView": 2754,
+            "restore": 932,
+            "timeline": 10104,
+            "range": 477,
+            "value": 5732,
+            "precision": 878,
+            "target": 1433,
+            "zlevel": 5361,
+            "symbol": 8718,
+            "interval": 7964,
+            "symbolSize": 5300,
+            "showSymbol": 1247,
+            "inside": 8913,
+            "xAxisIndex": 3843,
+            "orient": 4205,
+            "boundaryGap": 5073,
+            "nameGap": 4896,
+            "zoomLock": 571,
+            "hoverAnimation": 2307,
+            "legendHoverLink": 3553,
+            "stack": 2907,
+            "throttle": 466,
+            "connectNulls": 897,
+            "clipOverflow": 826,
+            "startValue": 551,
+            "minInterval": 3292,
+            "opacity": 3097,
+            "splitArea": 4775,
+            "filterMode": 635,
+            "end": 409,
+            "left": 6475,
+            "funnel": 2238,
+            "lines": 6403,
+            "baseline": 431,
+            "align": 2608,
+            "coord": 897,
+            "nameTextStyle": 7477,
+            "width": 4338,
+            "shadowBlur": 4493,
+            "effect": 929,
+            "period": 225,
+            "areaColor": 631,
+            "borderWidth": 3654,
+            "nameLocation": 4418,
+            "position": 11723,
+            "containLabel": 1701,
+            "scatter": 10718,
+            "areaStyle": 5310,
+            "scale": 3859,
+            "pieces": 414,
+            "categories": 1000,
+            "selectedMode": 3825,
+            "itemSymbol": 273,
+            "effectScatter": 7147,
+            "fontStyle": 3376,
+            "fontSize": 3386,
+            "margin": 1034,
+            "iconStyle": 2257,
+            "link": 1366,
+            "axisPointer": 5245,
+            "showDelay": 896,
+            "graph": 22194,
+            "subtext": 1442,
+            "selected": 2881,
+            "barCategoryGap": 827,
+            "barGap": 1094,
+            "barWidth": 1521,
+            "coordinateSystem": 3622,
+            "barBorderRadius": 284,
+            "z": 4014,
+            "polarIndex": 1456,
+            "shadowOffsetX": 3046,
+            "shadowColor": 3771,
+            "shadowOffsetY": 2475,
+            "height": 1988,
+            "barMinHeight": 575,
+            "lang": 131,
+            "symbolRotate": 2752,
+            "symbolOffset": 2549,
+            "showAllSymbol": 942,
+            "transitionDuration": 993,
+            "bottom": 3724,
+            "fillerColor": 229,
+            "nameMap": 1249,
+            "barMaxWidth": 747,
+            "radius": 2103,
+            "center": 2425,
+            "magicType": 3276,
+            "labelPrecision": 248,
+            "option": 654,
+            "seriesIndex": 935,
+            "controlPosition": 121,
+            "itemGap": 3188,
+            "padding": 3481,
+            "shadowStyle": 347,
+            "boxplot": 1394,
+            "labelFormatter": 264,
+            "realtime": 631,
+            "dataBackgroundColor": 239,
+            "showDetail": 247,
+            "showDataShadow": 217,
+            "x": 684,
+            "valueDim": 499,
+            "onZero": 931,
+            "right": 3255,
+            "clockwise": 1035,
+            "itemWidth": 1732,
+            "trigger": 3840,
+            "axis": 379,
+            "selectedOffset": 670,
+            "startAngle": 1293,
+            "minAngle": 590,
+            "top": 4637,
+            "avoidLabelOverlap": 870,
+            "labelLine": 3785,
+            "sankey": 2933,
+            "endAngle": 213,
+            "start": 779,
+            "roam": 1738,
+            "fontWeight": 2828,
+            "fontFamily": 2490,
+            "subtextStyle": 2066,
+            "indicator": 853,
+            "sublink": 708,
+            "zoom": 1038,
+            "subtarget": 659,
+            "length": 1060,
+            "itemSize": 505,
+            "controlStyle": 452,
+            "yAxisIndex": 2529,
+            "edgeLabel": 1188,
+            "radiusAxisIndex": 354,
+            "scaleLimit": 1313,
+            "geoIndex": 535,
+            "regions": 1892,
+            "itemHeight": 1290,
+            "nodes": 644,
+            "candlestick": 3166,
+            "crossStyle": 466,
+            "edges": 369,
+            "links": 3277,
+            "layout": 846,
+            "barBorderColor": 721,
+            "barBorderWidth": 498,
+            "treemap": 3865,
+            "y": 367,
+            "valueIndex": 704,
+            "showLegendSymbol": 482,
+            "mapValueCalculation": 492,
+            "optionToContent": 264,
+            "handleColor": 187,
+            "handleSize": 271,
+            "showContent": 1853,
+            "angleAxisIndex": 406,
+            "endValue": 327,
+            "triggerOn": 1720,
+            "contentToOption": 169,
+            "buttonColor": 71,
+            "rotate": 1144,
+            "hoverLink": 335,
+            "outOfRange": 491,
+            "textareaColor": 58,
+            "textareaBorderColor": 58,
+            "textColor": 60,
+            "buttonTextColor": 66,
+            "category": 336,
+            "hideDelay": 786,
+            "alwaysShowContent": 1267,
+            "extraCssText": 901,
+            "effectType": 277,
+            "force": 1820,
+            "rippleEffect": 723,
+            "edgeSymbolSize": 329,
+            "showEffectOn": 271,
+            "gravity": 199,
+            "edgeLength": 193,
+            "layoutAnimation": 152,
+            "length2": 169,
+            "enterable": 957,
+            "dim": 83,
+            "readOnly": 143,
+            "levels": 444,
+            "textGap": 256,
+            "pixelRatio": 84,
+            "nodeScaleRatio": 232,
+            "draggable": 249,
+            "brushType": 158,
+            "radarIndex": 152,
+            "large": 182,
+            "edgeSymbol": 675,
+            "largeThreshold": 132,
+            "leafDepth": 73,
+            "childrenVisibleMin": 73,
+            "minSize": 35,
+            "maxSize": 35,
+            "sort": 90,
+            "funnelAlign": 61,
+            "source": 336,
+            "nodeClick": 200,
+            "curveness": 350,
+            "areaSelectStyle": 104,
+            "parallelIndex": 52,
+            "initLayout": 359,
+            "trailLength": 116,
+            "boxWidth": 20,
+            "back": 53,
+            "rewind": 110,
+            "zoomToNodeRatio": 80,
+            "squareRatio": 60,
+            "parallelAxisDefault": 358,
+            "checkpointStyle": 440,
+            "nodeWidth": 49,
+            "color0": 62,
+            "layoutIterations": 56,
+            "nodeGap": 54,
+            "color(Array": 76,
+            "<string>)": 76,
+            "repulsion": 276,
+            "tiled": 105,
+            "currentIndex": 145,
+            "axisType": 227,
+            "loop": 97,
+            "playInterval": 112,
+            "borderColor0": 23,
+            "gap": 43,
+            "autoPlay": 123,
+            "showPlayBtn": 25,
+            "breadcrumb": 119,
+            "colorMappingBy": 85,
+            "id": 18,
+            "blurSize": 85,
+            "minOpacity": 50,
+            "maxOpacity": 54,
+            "prevIcon": 12,
+            "children": 21,
+            "shape": 98,
+            "nextIcon": 12,
+            "showNextBtn": 17,
+            "stopIcon": 21,
+            "visibleMin": 83,
+            "visualDimension": 97,
+            "colorSaturation": 56,
+            "colorAlpha": 66,
+            "emptyItemWidth": 10,
+            "inactiveOpacity": 4,
+            "activeOpacity": 4,
+            "showPrevBtn": 19,
+            "playIcon": 26,
+            "ellipsis": 19,
+            "gapWidth": 19,
+            "borderColorSaturation": 10,
+            "handleIcon": 2,
+            "handleStyle": 6,
+            "borderType": 1,
+            "constantSpeed": 1,
+            "polyline": 2,
+            "blendMode": 1,
+            "dataBackground": 1,
+            "textAlign": 1,
+            "textBaseline": 1,
+            "brush": 3
+        };
+        var worldCloudData = [];
+        for (var name in keywords) {
+            worldCloudData.push({
+                name: name,
+                value: Math.sqrt(keywords[name])
+            })
+        }
+
+        var maskImage = new Image();
+        maskImage.src = 'images/echarts-logo.png';
+//        maskImage.width = 150;
+//        maskImage.height = 120;
+        var chart8 = echarts.init(document.getElementById("chart8"));
+        maskImage.onload = function () {
+            chart8.setOption({
+                tooltip: {},
+                series: [{
+                    name: '搜索指数',
+                    type: 'wordCloud',
+                    gridSize: 2,
+                    sizeRange: [12, 50],
+                    maskImage: maskImage,
+                    width: 336,
+                    height: 285,
+                    drawOutOfBound: true,
+                    textPadding: 0,
+                    autoSize: {
+                        enable: true,
+                        minSize: 6
+                    },
+                    textStyle: {
+                        normal: {
+                            color: function () {
+                                return 'rgb(' + [
+                                        Math.round(Math.random() * 200),
+                                        Math.round(Math.random() * 200),
+                                        Math.round(Math.random() * 200)
+                                    ].join(',') + ')';
+                            }
+                        },
+                        emphasis: {
+                            shadowBlur: 4,
+                            shadowColor: '#00d55f'
+                        }
+                    },
+                    data: worldCloudData
+                }]
+            });
+        };
+
+
+        //窗口尺寸改变时图表重新适应
+        $(window).on('resize',function(){
+            setTimeout(function(){
+                chart1.resize();
+                chart2.resize();
+                chart3.resize();
+                chart4.resize();
+                chart5.resize();
+                chart6.resize();
+                chart7.resize();
+                chart8.resize();
+            },300);
+        });
+        //新版echarts中添加了类似css中的媒体查询，用于自适应容器的大小变化，一下只做配置项说明(即setOption方法中的参数对象)
+        var option = {
+            baseOption: {
+                //基础配置项，即上面未使用媒体查询时的所有配置项属性都移至该属性下，是使用echarts内部媒体查询的必须配置项
+            },
+            media: [    //数组media属性中定义了 media query 的逐条规则，每个单元格中存一个规则对象
+                {
+                    query: {
+                        //这里写规则，目前支持三个属性：width、height、aspectRatio（长宽比），每个属性都可以加上 min 或 max 前缀，表示范围(用法就与css中的媒体查询一样，注意加上前缀就用小驼峰命名法)
+                    },
+                    option: {
+                        //这里写此规则满足下的配置项option，即对样式改变，理论上基础配置项中的所有配置都可以在这里改变，但一般我们只写与布局有关的，因目的是自适应大小，不是不同屏幕下显示不同样式
+                    }
+                },
+                {
+                    //第二条规则及对应配置项，以此类推可添加任意多条规则及对应配置项
+                },
+                {
+                    //这里没有写规则，表示默认，可置于任意位置，即其他规则都不满足时则默认采用此中的配置option，类似于switch...case...语法中的default语句
+                    option: {
+                        //这里写默认配置项
+                    }
+                }
+            ]
+        };
+
+
+        /*============================================ ECharts图表事件及其他 ============================================*/
+        //支持类似jQuery的以on方法添加事件监听的方式，且有两大类事件，一是鼠标事件，而是组件交互的行为事件
+        //一、支持的鼠标事件有：'click'、'dblclick'、'mousedown'、'mousemove'、'mouseup'、'mouseover'、'mouseout'
+                //所有的鼠标事件包含参数 params，这是一个包含点击图形的数据信息的对象(可参考官方教程)，就像jQuery中的事件回调有个event对象参数，但两者包含的内容不同
+        //二、组件交互的行为事件，指echarts中提供的组件产生交互行为触发的自身的自定义事件，具体事件及其对应参数可查看官方文档
+                //echarts提供了代码触发组件的交互行为的方法(即平时编程说的模拟事件)，通过调用dispatchAction()方法进行配置可以统一管理这些行为，具体可参看文档
+
+        //echartsInit.dispose();    //dispose()方法用于销毁对应的图表实例
+
+//    });
+</script>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>字符串String</title>
+    <link rel="stylesheet" href="../../plugins/highlight/styles/androidstudio.css">
+    <script src="../../plugins/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <style type="text/css">
+        body,pre {margin: 0;}
+        .code {display: block;white-space: pre;font-family: monospace;}
+    </style>
+</head>
+<body>
+<a href="https://mp.weixin.qq.com/s/PJGdfGMsgLl6E87aIyFUmw">JavaScript字符串操作方法大全，包含ES6方法</a>
+<pre><code class="css">
+    String对象：
+    str.length;//获取字符串长度
+    str.big();//字体变大
+    str.small();//字体变小
+    str.blod();//字体加粗
+    str.italics();//斜体
+    str.strike();//中划线
+    str.fontsize(20);//字体大小，不带单位
+    str.fontcolor("red");//字体颜色
+    str.toLowerCase();//全部小写，()中不写内容
+    str.toUpperCase();//全部大写，()中不写内容
+    str.sub();//作为上标显示，()中不写内容
+    str.sup();//作为下标显示，()中不写内容
+    str.link("url");//添加链接
+
+    str.indexOf(s,from);//参数s为必需值，表示需要查找的指定的字符；可选参数from表示开始查找的位置，默认是从位置0开始查找；返回值为所查找字符第一次出现的位置，-1表示未找到
+    str.lastIndexOf(s,from);//参数与indexOf相同，作用也一样，只是此方法是倒序查找，from默认是str.length-1，即最后一个字符
+    str1.localeCompare(str2);//此方法比较两个字符串的大小，比较规则未详细说明，返回的结果类似数组的sort方法的排序规则，若str1比str2小则返回-1，大则返回1，相等则返回0
+    str.charAt(n);//返回n位置的字符，当n为负数或大于等于字符串长度str.length时，将返回空字符串
+    str.charCodeAt(n);//返回n位置字符的数字编码，当n为负数或大于等于字符串长度str.length时，将返回NaN
+    String.fromCharCode(num...);//注意前面的String就是字符串原生对象String，返回以num为数字编码的字符，多个num可用逗号隔开
+    str.substring(start,end);//提取两个下标之间的字符(一般都用slice方法)，start为必需值，都为非负整数(若为负数或NaN则会被当做0)，start位置可取，end位置字符取不到，若start>stop则会自动调整换位，此方法不会改变原数组
+    str.substr(start,n);//返回从开始位置start起共n个字符，n省略时则返回start后所有字符，start可为负值表倒数共几个(也可理解为其会自动加上字符长度str.length)，此时无n值，此方法不会改变原数组
+    str.trim();//去掉字符串左右两边的空格(IE9+原生支持);要兼容可用正则自定义一个trim函数：str.replace(/^\s+|\s+$/g,"");
+    str.split("|"/regexp,n);//把一个字符串以指定的符号或正则regexp为界分割成字符串数组，第一个值(必需)为分割字符串的标示(若字符串中无此符号，则会将此字符串整体当作一个单元格)，第二个值(可选)表示返回的数组长度
+                     //返回的数组中不包含分隔符，当分隔符为""空字符时可将字符串中每个字符都分隔开；当参数1是正则regexp时会忽略全局标识g，另须注意正则(以匹配到的字符为分隔符)中分组捕获的文本也会被包含在返回的数组中
+
+    正则RegExp：在运用正则进行匹配时，正则的regexp.lastIndex属性的值会从0开始依次变为匹配到的字符串后下一个字符的下标(它表示每次开始进行匹配的位置)，不成功的匹配会重置regexp.lastIndex为0
+
+    regexp.exec(str);//此方法将正则regexp用于匹配字符串str，匹配失败则返回null，若匹配成功则返回一个数组，此数组下标0单元格返回匹配到的字符串(只包含一处)，下标1单元格返回分组1捕获的文本，以此类推，还有index属性为匹配位置的索引，input属性为最初输入的字符串
+                     //当正则带有全局g标识时，并不会匹配到所有值，每次值匹配一个，要匹配到所有则还要循环调用该方法(每次regexp会记住当前匹配到的索引，下次将接着匹配后面的，而不是又从头开始)，所以此时须注意正则regexp和字符串str都要使用变量存储，否则在循环中每次的regexp和str都不一样(虽然字面值一样)，将无法完全匹配
+    regexp.test(str);//用正则regexp测试字符串str中是否有匹配的字符，有则返回true，否则返回false，此方法正则若使用g全局标识则同上面exec类似，每次起始索引位置会接着上一次结束的位置，所以慎用g标识
+                     // var regex = /foo/g; -> test方法全局g标识的影响
+                     // regex.test('foofo'); -> true，第一次执行，regex.lastIndex为0，即从0位置开始索引
+                     // regex.test('foofo'); -> false，因上一次执行结束匹配到了内容导致regex.lastIndex变为3，即此次是从3位置开始索引
+
+    str.match(s/regexp);//查找字符串中的指定字符s，找到则返回包含该字符的一个数组(只包含首次匹配到的)，未找到则返回null；若参数是一个正则表达式regexp，当正则不带g全局标识，则其返回的结果与regexp.exec(str)相同，
+                        //当正则带有全局g标识，则返回除捕获分组外的所有匹配的数组
+    str.search(s/regexp);//返回指定字符或正则匹配到的字符串第一次出现的位置，未找到则返回-1，参数为正则时可不要g全局标识，因为加了也会被忽略
+    str.replace(s1/regexp,s2);//用字符串s2替换字符串s1(只替换其第一次出现的位置)或正则regexp匹配到的字符串(当正则带g全局标识时才替换所有匹配到的位置，否则也只替换第一次出现的位置)
+                              //当参数1是正则，s2为字符串且其中包含字符$时，需注意此$字符有特别含义：$$表示$、$&表示整个匹配的文本、$num表示第num个分组捕获的文本、$`表示匹配处前面的文本、$'表示匹配处后面的文本
+                              //s2还可以是一个函数function，此时将对每个匹配文本依次调用此函数，该函数返回的字符串将被用作替换文本，传递给此函数的参数1为整个匹配到的文本，参数2为分组1捕获的文本，参数3为分组3捕获的文本，以此类推
+
+    str.slice(start,end);//返回截取的字符串或数组，end省略则默认为字符串长度，参数可为负值，此时就表示倒序查找(也可理解为负数会自动加上字符串长度)，同样不包括结束位置，此方法不会改变原字符串或原数组；[].slice.apply(arguments)可用于将伪数组转换为标准数组
+    str1.concat(str2);//字符串或数组拼接，返回拼接后的字符串或数组，并不会改变原字符串和数组，可拼接多个，将str1内容与str2内容拼接在一起，数组str内容也可直接[1,2,3]形式写出；数组与字符串可混合拼接，结果数据类型以str1为准，字符串后拼接数组时，[]会去除，但分隔数据的,会以字符串形式保留下来
+                      //在拼接两个数组时，若数组单元格中包含数组或对象数据，在拼接后控制台打印时数组数据会显示成Array[n]，对象数据会显示成Object，但它们的数据保存并没有变，仍然可以正常访问到，只是在控制台的显示形式变了而已
+                      //字符串后拼接数组时，对象元素会被显示成[object Object]，因为是字符串，所以里面的数据是无法访问到的，再将数组用join方法转换为字符串形式时也会出现此情况
+</code></pre>
+<hr/>
+<pre><code class="" id="show-script"></code></pre>
+<script type="text/javascript" charset="UTF-8" id="script">
+
+    console.log("a".localeCompare("d"));    //-1
+    console.log("f".localeCompare("d"));    //1
+    console.log("d".localeCompare("d"));    //0
+
+    console.log(String.fromCharCode(67,97,116));    //Cat
+
+    console.log(/&.+;/g.test('frank &abc; beans'));     //true
+
+    console.log("abcdef".match("d"));   //["d", index: 3, input: "abcdef"]，返回数组
+    console.log("abcdef".search("d"));   //3，只返回第一次出现的下标
+    console.log("abcded".search(/\w/));   //0
+
+    console.log([1,'a',[2,'b'],{name:'wanje',age:24}].concat([3,4,5]));     //[1, "a", Array[2], Object, 3, 4, 5]
+    console.log("ab".concat([1,[2,'b'],'a',{name:'wanje',age:24}]));     //ab1,2,b,a,[object Object]；字符串后拼接数组时，对象元素会被显示成[object Object]，因为是字符串，所以里面的数据是无法访问到的
+
+
+</script>
+<script>
+    document.getElementById('show-script').innerHTML = document.getElementById('script').innerHTML;
+</script>
+</body>
+</html>

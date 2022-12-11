@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <title>ThreeJs</title>
+    <!--<script src="./js/three-r118.min.js"></script>-->
+    <style type="text/css">
+        #my_canvas {
+            width: 100vw;
+            height: 100vh;
+        }
+    </style>
+</head>
+
+<body>
+<canvas id="my_canvas"></canvas>
+
+<script>
+  //获取WebGL绘图上下文
+  function getWebGLCtx(canvas) {
+    var gl = null;
+    var msg = "你的浏览器不支持WebGL";
+    try {
+      gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl"); //'experimental-webgl'为老版本支持，兼容IE11，也可使用标准的'webgl'
+
+    } catch (e) {
+      msg = "Error creating WebGL Context!: " + e.toString();
+    }
+    if (!gl) {
+      alert(msg);
+      throw new Error(msg);
+    }
+    return gl;
+  }
+
+  //设置WebGL视口（canvas元素上的绘图区域，也即为可视窗口）
+  function setViewport(gl, canvas) {
+    gl.viewport(0, 0, canvas.width, canvas.height); //参数：(起点X坐标，起点Y坐标，窗口宽度，窗口高度)
+  }
+
+  //WebGL图元包含三种：点、线、三角形
+
+
+  var canvas = document.getElementById('my_canvas');
+  var gl = getWebGLCtx(canvas);
+  setViewport(gl, canvas);
+
+</script>
+</body>
+</html>

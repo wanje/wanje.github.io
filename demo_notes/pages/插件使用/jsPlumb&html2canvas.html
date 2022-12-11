@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1">
+    <title>html2canvas</title>
+    <style>
+        /*.feedback-overlay-black{ background-color:#000; opacity:0.5; position:absolute; top:0; left:0; width:100%; height:100%; margin:0; }*/
+        /*div{ padding:20px; margin:0 auto; border:5px solid black; }*/
+        body {background: #eeeeee;}
+        .jtk-drag-select {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        .el-label {background: #ffffff; padding: 0 0.2em;}
+        h1{ border-bottom:2px solid white; }
+        h2{ background: #efefef; padding:10px; }
+        .component-box img { height: 60px; cursor: pointer; margin-right: 5px;}
+        .component-box img:hover { outline: 2px solid #0876e4; }
+        .context-menu {
+            position: fixed;
+            z-index: 9999;
+            background: #eeeeee;
+            border: 1px solid #bbbbbb;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+            margin: 0;
+            padding: 5px 0;
+            font-size: 12px;
+            display: none;
+        }
+        .context-menu.show {display: block;}
+        .context-menu li {
+            list-style: none;
+            cursor: pointer;
+            padding: 0 10px;
+            line-height: 2;
+        }
+        .context-menu li:hover {
+            background: #0876e4;
+            color: #ffffff;
+        }
+        .copy-view {
+            height: 0;
+            overflow: hidden;
+        }
+        .view-wrap {
+            height: 500px;margin: 0 auto;border: 1px solid #000;overflow: hidden;
+            position: relative;
+        }
+        .view-box {
+            height: 500px;
+            min-height: 100%;
+            position: relative;
+            -webkit-transform: scale(1);
+            -moz-transform: scale(1);
+            -ms-transform: scale(1);
+            -o-transform: scale(1);
+            transform: scale(1);
+            /*overflow: hidden;*/
+        }
+        .view-box span[data-flag="text"]:empty:before {
+            content: '空文本';
+            color: #dadada;
+        }
+        .view-box img:hover {
+            outline: 2px solid #42b983;
+        }
+    </style>
+</head>
+<body>
+<div id="app" @contextmenu.prevent="setComMenu" @click="getClick" @dblclick="getDblclick">
+    <div class="component-box">
+        <img v-for="(src, index) of images" :src="src" :key="index" @click="addImg(src)"/>
+    </div>
+    <div id="view_wrap" class="view-wrap">
+        <div id="view_box" class="view-box" ref="view" @mousewheel="changeZoom" @DOMMouseScroll="changeZoom">
+            <!--<img src="../../images/aws/图标-._03.png" width="70" id="item_left" style="position: absolute;"/>-->
+            <!--<img src="../../images/aws/图标-._06.png" width="70" id="item_right" style="position: absolute;"/>-->
+        </div>
+    </div>
+    <div>
+        <button @click="toCanvas">转化为canvas</button>
+        <button @click="saveImg">保存成图片</button>
+    </div>
+    <div id="copy_view" class="copy-view"></div>
+    <div id="preview"></div>
+    <ul id="context_menu" class="context-menu" :class="{show: menuShow}" ref="menu">
+        <li v-for="(item,index) of menu" :key="index" @click="runFn(item.callback, item.params)">{{item.text}}</li>
+    </ul>
+</div>
+<div id="id">
+    产品白皮书、在线帮助、在线文档、操作手册、推广方案、案例推广、项目模板、移动端组件丰富等
+</div>
+<script type="text/javascript" src="../../plugins/vue2.6.7.min.js"></script>
+<script type="text/javascript" src="../../plugins/jsplumb.min.js"></script>
+<!--<script type="text/javascript" src="../../plugins/jsplumbtoolkit.min.js"></script>-->
+<script type="text/javascript" src="../../plugins/canvg.min.js"></script>
+<script type="text/javascript" src="../../plugins/html2canvas.min.js"></script>
+<script type="text/javascript" src="../../plugins/canvas2image.min.js"></script>
+<script type="text/javascript">
+  window.onload = function () {
+
+    /**
+    * 所有的端点Endpoints和连接线Connections的样式设置都提供了‘cssClass’和‘hoverClass’选项设置常态和鼠标悬停态下的自定义样式class
+    * 在addEndpoint添加端点和makeSource设置源点方法中，传入的配置项中也都有‘connectorClass’和‘connectorHoverClass’选项设置从相应点引出的连接线两种状态下的样式class
+    * */
+
+
+    //空心圆端点样式即其连线样式设置
+    let hollowCircle = {
+      DragOptions: { cursor: 'pointer', zIndex: 200 },
+      endpoint: ["Dot", { radius: 3 }],  //端点的形状，支持‘Rectangle’方形、‘Dot’圆形
+      //基本连接线样式
+      connectorStyle: {
+        stroke: "#333",
+        strokeWidth: 2,
+//            'stroke-dasharray': '5,5'   //虚线
+      },
+      //鼠标悬浮在连接线上的样式
+      connectorHoverStyle: {
+        stroke: "#1565C0",
+        strokeWidth: 3
+      },
+      paintStyle: {    //连接点的样式
+        stroke: "#1565C0",
+        radius: 3,
+        strokeWidth: 1
+      },
+      //anchor: "AutoDefault",
+      isSource: true,    //是否可作为连线源（连线起点）
+      isTarget: true,    //是否可作为目标源（连线终点），设置这两个为true可拖动端点来自定义连接线
+      //连接线样式,种类有贝塞尔曲线"Bezier"、流程图水平垂直线"Flowchart"、直线"Straight"、状态机(带弧度的直线)"StateMachine"
+      connector: ["Flowchart", {
+        stub: [0, 0],
+        gap: 5,
+        cornerRadius: 5,
+        alwaysRespectStubs: true
+      }],
+      maxConnections: 10,    // 设置连接点最多可以连接几条线，-1表示不限制连线数量
+      connectorOverlays: [["Arrow", { width: 5, length: 5, location: 1 }]]
+    };
+    //实例化初始配置
+    let initOption = {
+      //限制所有插入的元素内容都放在指定id的容器内部，注意这是限制插入元素的位置，而不是拖拽范围，也可以使用 jsPlumb.setContainer('view_box'); 方法设定
+      Container: "view_box",   //该选项不能使用importDefaults()方法去设置默认值，只能实例化时传入默认配置，或者使用setContainer()去改变
+      Anchor: ["Top", "Right", "Bottom", "Left"],  //锚点位置，如left，right，top，bottom等；对任何没有显式声明锚点的Endpoint设置锚点，用于source和target节点
+      Anchors: ["Right", "Left"],   //默认的连接source和target锚点（即已通过connect设定连接的，非后面手动拖动的连线）
+      //默认连接线的类型，包括流程图(Flowchart)、贝塞尔曲线(Bezier)、直线(Straight)、状态机(StateMachine)
+      Connector: ["Flowchart", {  //若第二个线条样式使用默认值，则可以只指定线条类型，不使用数组格式传入第二个配置参数(配置项都可选)
+        stub: [15, 20],     //source和target端点连线最小延伸长度(像素)，数组形式可分别指定source和target，相同的话可使用一个数字即可，默认30
+        gap: 5,             //设置连线与被连接元素间的空白距离，默认0
+        cornerRadius: 10,    //连线直角处的圆角大小，默认0
+        alwaysRespectStubs: true,    //始终考虑连接线首尾的最小延伸长度，默认false，在两个元素距离较近时忽略最小延伸距离
+//            midpoint: 0.5        //连接线距离两个元素的比例，默认0.5表示中间
+      }],
+      ConnectionsDetachable: false, //连线是否可用鼠标分离（即是否允许拖动连线来断开连接）
+      ConnectionOverlays: [  //连线的叠加组件，如箭头、标签
+        //箭头参数设置
+        ["Arrow", {
+          location: 1,    //location表示所在线条上的位置，值为0~1，表示比例，0在线条起点，1在线条终点
+          visible: true,
+          width: 8,
+          length: 8,
+          id: "ARROW",
+          events: {
+            click: function () {
+            }
+          }
+        }],
+        //标签参数设置
+        ["Label", {
+//                label: '文字',  //这里不作为默认设置，否者所有连接线(包括拖拽生成)都会出现该标签
+          location: 0.3,
+//                id: "label",
+          cssClass: "el-label", //label的class样式名(用于自定义标签样式)
+          events: {
+            tap: function () {
+            }
+          },
+          visible: true
+        }]
+      ],
+      //如果请求不存在的Anchor、Endpoint或Connector，是否抛异常
+      DoNotThrowErrors: false,
+      //通过jsPlumb.draggable拖拽元素时的默认参数设置
+      DragOptions: {cursor: 'pointer', zIndex: 200},
+      //拖拽连线到目标端点上(target Endpoint)放置时的默认参数设置
+      DropOptions: {},
+      //端点（锚点）的默认样式声明，会在添加端点又未给出明确样式覆盖时会采用该默认样式
+      Endpoint: "Dot",
+      //用jsPlumb.connect创建连接时，source端点和target端点的默认样式设置，会覆盖上面的Endpoint，为null则就是使用默认的Endpoint
+      Endpoints: ['Dot', null],
+      //每个端点的叠加物
+      EndpointOverlays: [],
+      //所有端点的默认样式，设置项就是svg的圆支持的样式
+      EndpointStyle: {fill: '#1565C0', radius: 3},
+      //连线的source和target端点的样式，，会覆盖上面的EndpointStyle，为null则就是使用默认的EndpointStyle
+      EndpointStyles: [null, null],
+      //所有端点hover时的默认样式
+      EndpointHoverStyle: {fill: '#1565C0', radius: 4},
+      //连线的source和target端点hover时的样式，会覆盖EndpointHoverStyle
+      EndpointHoverStyles: [null, null],
+      //连线基本样式
+      PaintStyle: { stroke: '#333333', strokeWidth: 2, joinstyle: 'round' },
+      //连线hover时的样式
+      HoverPaintStyle: {stroke: '#1565C0', strokeWidth: 3},
+      //标签的默认样式，用css写法
+      LabelStyle: {color: "#333333"},
+      //是否开启jsPlumb内部日志
+      LogEnabled: false,
+      //连线和端点的叠加物（ConnectionOverlays只是作用在连线上），如线条上叠加箭头(可多个)
+      Overlays: [ ['Arrow', { width: 8, length: 8, location: 0.5 }] ],
+      //端点支持的最大连接数
+      MaxConnections: 10,
+      //是否重新连接使用鼠标分离的线
+      ReattachConnections: true,
+      //默认渲染模式
+      RenderMode: "svg",
+      //范围，具有相同scope的点才可连接
+      Scope: "jsPlumb_DefaultScope",
+    };
+    //所有菜单数据
+    let menuData = {
+      comMenu: [
+        {
+          text: '添加文本',
+          callback: 'addText',
+          params: {}
+        }
+      ],
+      connectMenu: [
+        {
+          text: '删除连线',
+          callback: 'deleteConnect',
+          params: {}
+        }
+      ],
+      textMenu: [
+        {
+          text: '删除',
+          callback: 'removeEl',
+          params: {}
+        }
+      ],
+      imgMenu: [
+        {
+          text: '删除',
+          callback: 'removeEl',
+          params: {}
+        },
+        {
+          text: '前置层级',
+          callback: 'raiseIndex',
+          params: {}
+        }
+      ],
+    };
+
+    let app = new Vue({
+      el: '#app',
+      data: {
+        myPlumb: null,
+        images: [
+          '../../images/aws/图标-._03.png',
+          '../../images/aws/图标-._06.png',
+          '../../images/aws/图标..-._03.png',
+          '../../images/aws/图标..-._07.png',
+          '../../images/aws/图标..-._10.png',
+        ],
+        canImg: null,
+        zIndex: 1,
+        menuShow: false,
+        menu: [
+          {
+            text: '添加文本',
+            callback: 'addText'
+          }
+        ],
+      },
+      mounted(){
+        let _this = this,
+            myPlumb = _this.myPlumb = jsPlumb.getInstance(initOption);
+
+        //连线，可传入第二个配置对象，其会与第一个参数对象合并作为最终配置项，所以可以将公用配置单独提取到一个变量中作为第二个参数传入
+        //参数配置中可设置线条样式、端点样式、连线上的叠加图形(如箭头)等
+//            myPlumb.connect({
+//                source: 'item_left',    //起点，可以是id, element, 或者Endpoint
+//                target: 'item_right',   //目标点
+//            });
+//            _this.setEndpoint('item_left');
+//            _this.setEndpoint('item_right');
+//            _this.activateDrag('item_left');
+//            _this.activateDrag('item_right');
+
+        //在连接线上绑定事件
+        myPlumb.bind('contextmenu', function (connect, event) {
+          event.preventDefault();
+          event.stopPropagation();
+          _this.setConnectMenu(event,connect);
+        });
+
+//            _this.myPlumb.addToDragSelection('item_left');
+//            _this.myPlumb.addToDragSelection('item_right');
+
+      },
+      methods: {
+        consoleLog(msg) {
+          console.log(msg)
+        },
+        runFn(fn,params){
+          this[fn](params);
+        },
+        //html转为canvas
+        toCanvas(){
+          let _this = this;
+          let view = document.querySelector('#view_box'),
+              copyView = document.querySelector('#copy_view'),
+              preview = document.querySelector('#preview');
+          let cont = document.createElement('div');
+
+          cont.style.cssText = "position: relative;";
+          cont.innerHTML = view.outerHTML;
+          cont.querySelectorAll('svg').forEach(function (item) {
+            let canv = document.createElement('canvas');
+            canv.width = item.width.baseVal.value;
+            canv.height = item.height.baseVal.value;
+            if (item.style.position) {
+              canv.style.position = item.style.position;
+              canv.style.left = item.style.left;
+              canv.style.top = item.style.top;
+            }
+            item.parentNode.replaceChild(canv, item);
+            copyView.innerHTML = '';
+            copyView.appendChild(cont);
+            canvg(canv, item.outerHTML, { ignoreMouse: true, ignoreAnimation: true });
+          });
+          html2canvas(cont, {
+            backgroundColor: null   //设置转换的canvas背景为透明
+          }).then(function(canvas) {
+            _this.canImg = canvas;
+            preview.innerHTML = '';
+            preview.appendChild(canvas);
+          });
+        },
+        //保存图片
+        saveImg(){
+          let _this = this;
+          if (!_this.canImg) _this.toCanvas();
+          setTimeout(function () {
+            //convertToXXX()方法将canvas转换为base64格式图片放在一个<img>元素中返回用于显示，saveAsXXX()方法将canvas转换为对应图片并下载到本地
+//            const img = Canvas2Image.convertToPNG(_this.canImg); //返回：<img src="data:image/png;base64,iVBORw0KG...5CYII=" />
+//            Canvas2Image.saveAsJPEG(_this.canImg);
+            Canvas2Image.saveAsPNG(_this.canImg);
+          },200);
+        },
+        //显示菜单
+        showMenu(event){
+          this.$refs.menu.style.cssText = `left:${event.clientX}px;top:${event.clientY}px;`;
+          this.menuShow = true;
+        },
+        //隐藏菜单
+        hideMenu(){
+          this.menuShow = false;
+        },
+        //设置菜单
+        setMenu(event,menuArr){
+          this.menu = menuArr;
+          this.showMenu(event);
+        },
+        //设置公用菜单
+        setComMenu(event){
+//                let id = event.target.id;
+          this.setMenu(event, menuData.comMenu);
+        },
+        //设置连接线菜单
+        setConnectMenu(event,connect){
+          menuData.connectMenu[0].params = connect;
+          this.setMenu(event, menuData.connectMenu);
+        },
+        //绑定右键菜单事件
+        onContextMenu(node, menuArr){
+          let _this = this;
+          node.addEventListener('contextmenu', function(event){
+            event.preventDefault();
+            event.stopPropagation();
+            menuArr.forEach(function (item) {
+              item.params = Object.assign(item.params, {
+                event: event
+              });
+            });
+            _this.setMenu(event,menuArr);
+          }, false);
+        },
+        //添加文本
+        addText(){
+          let span = document.createElement('span');
+
+          span.innerText = '双击编辑文本';
+          span.setAttribute('data-flag', 'text');
+          span.style.cssText = `position: absolute;left:50%;top:50%;z-index: 999;min-width: 1em;background: #ffffff;padding: 0 0.2em;`;
+          span.addEventListener('blur', function(){
+            this.setAttribute('contenteditable', false);
+            if (this.innerHTML==='') this.innerHTML = '双击编辑文本';
+          }, false);
+          this.setId(span);
+          this.onContextMenu(span, menuData.textMenu);
+          this.$refs.view.appendChild(span);
+        },
+        //添加图片
+        addImg(src){
+          let _this = this,
+              img = document.createElement('img');
+
+          img.setAttribute('src', src);
+          img.style.cssText = `position: absolute;width:70px;left:${10+Math.random()*80}%;top:${10+Math.random()*80}%;`;
+          this.setId(img, true);
+          this.onContextMenu(img, menuData.imgMenu);
+          this.$refs.view.appendChild(img);
+        },
+        //外层容器代理click点击事件
+        getClick(event){
+          this.hideMenu();
+        },
+        //外层容器代理bdlclick双击事件
+        getDblclick(event){
+          let el = event.target,
+              f = el.getAttribute('data-flag');
+
+          switch (f) {
+            case 'text': {
+              el.setAttribute('contenteditable', true);
+              el.focus(); //html2canvas对mousedown事件作了阻止默认操作，所以这里要手动触发聚焦
+              el.innerHTML = '';
+              break;
+            }
+          }
+        },
+        //给插入的元件设置id
+        setId(node,isConnect){
+          let id = (new Date()).getTime();
+          node.id = id;
+
+          if (isConnect) this.setEndpoint(id);
+          this.activateDrag(id);
+        },
+        //给元素设置连线点
+        setEndpoint(id){
+          id += '';
+          let _this = this;
+          setTimeout(function () {
+            //addEndpoint()方法添加端点，关键字'Top', 'Right', 'Bottom', 'Left'，也可以是"TopCenter", "RightMiddle", "BottomCenter", "LeftMiddle"
+//                    _this.myPlumb.addEndpoint(id, { anchors: [0, 0.5] }, hollowCircle);   //数组形式表示相对元素宽高比例的位置
+            _this.myPlumb.addEndpoint(id, { anchors: "Top" }, hollowCircle);
+            _this.myPlumb.addEndpoint(id, { anchors: "Right" }, hollowCircle);
+            _this.myPlumb.addEndpoint(id, { anchors: "Bottom" }, hollowCircle);
+            _this.myPlumb.addEndpoint(id, { anchors: "Left" }, hollowCircle);
+          });
+        },
+        //激活元件拖拽功能
+        activateDrag(id){
+          id += '';
+          let _this = this;
+          setTimeout(function () {
+            _this.myPlumb.draggable(id, {
+              containment: 'view_box',     //限定元素可拖动范围（容器id）
+//                        grid: [10, 10],              //拖拽节点的网格对齐，横纵方向按设定的步长移动（可给容器设置一个网格背景图作为参照）
+            });
+          });
+        },
+        //删除某条连线
+        deleteConnect(connect){
+          this.myPlumb.deleteConnection(connect);     //deleteConnection()方法删除指定的连接线
+        },
+        //删除元素
+        removeEl(params){
+          let {event} = params;
+          this.myPlumb.remove(event.target.id);
+        },
+        //元件前置
+        raiseIndex(params){
+          let {event} = params;
+          event.target.style.zIndex = this.zIndex++;
+        },
+        //界面放缩
+        changeZoom() {
+          console.log('滚动缩放');
+        }
+      }
+    });
+
+    let onePlumb = jsPlumb.getInstance();
+
+    //连线，可传入第二个配置对象，其会与第一个参数对象合并作为最终配置项，所以可以将公用配置单独提取到一个变量中作为第二个参数传入
+    //参数配置中可设置线条样式、端点样式、连线上的叠加图形(如箭头)等
+    //connect方式创建的连接线一旦移除，则创建的端点也会自动移除。如果不想端点被移除，则可以继续加参数，将`deleteEndpointsOnDetach`设为false
+    //connect方法中的参数也可以不使用
+    onePlumb.connect({
+        source: 'item_left',    //起点，可以是id, element, 或者Endpoint，若元素上已存在Endpoint，使用id或element时将会新创建一个Endpoint，且删除连线时新创建的Endpoint也会删掉
+        target: 'item_right',   //目标点
+//        uuids: [source, target], //也可以用全局唯一id来指定起点与目标点，但需要知道对应点的uuids
+//        deleteEndpointsOnDetach: false //删除连线时端点不删除
+    });
+    //设置所有元素放置的容器，也可以在初始化是配置‘Container’选项
+    onePlumb.setContainer('id');
+    //获取容器DOM元素，即上面设置的放置容器
+    onePlumb.getContainer();
+    //删除对应id的节点, 该remove方法可以删除节点以及和节点相关的连线
+    onePlumb.remove('id');
+    //这个方法删除指定的节点和连线，传入的node为节点元素
+    onePlumb.removeAllEndpoints('node');
+    //这个方法删除所有连线，不需要传入参数
+    onePlumb.deleteEveryConnection();
+    //这个方法删除所有节点，不需要传入参数
+    onePlumb.deleteEveryEndpoint();
+    //删除指定元素的连线，传入节点ID
+    onePlumb.deleteConnectionsForElement("id",{});
+    //获取满足指定条件连线关系，参数可选(有三个条件项)，不传参时返回默认作用域所有连线的一个数组list，每个item记录一条连线相关数据
+    onePlumb.getConnections({ //下面的三个条件项都可选，且都可使用字符串数组表示包含多个，如：['sourceId1', 'sourceId2']
+      scope: 'myScope', //指定作用域
+      source: 'sourceId', //指定原点元素id
+      target: 'targetId' //指定目标元素id
+    });
+    //获取所有连线关系，返回一个数组，每个item记录一条连线相关数据
+    onePlumb.getAllConnections(); //不传参，获取所有连线关系
+    //选择指定条件的连线并进行下一步遍历或筛选操作，用法同getConnections()，但该方法返回一个对象，对象上包含each和其他一些处理函数，文档地址：https://jsplumb.github.io/jsplumb/querying.html#select
+    onePlumb.select({ //可传入一个对象参数，用于指明要选择的连线的条件，不传则表示选择所有连线，选项值可使用字符串数组，表示对应选项的多个值
+      scope: 'myScope', //指定作用域
+      source: 'sourceId', //指定原点元素id
+      target: 'targetId' //指定目标元素id
+    });
+    //同上面select()方法，只是该方法用于筛选端点，选项值也都可用字符串或字符串数组
+    onePlumb.selectEndpoints({
+      element: 'el', //指点元素上的所有端点，包括原点和目标点（该选项上面select线条方法没有）
+      scope: 'myScope', //指定作用域
+      source: 'sourceId', //指定元素上的所有原点
+      target: 'targetId' //指定元素上的所有目目标点
+    });
+    /**
+     * 上面获取到的每条连线关系item中，item.sourceId 和 item.targetId 分别指向连线起点和终点的id，
+     * 但是，当应用了连线跟随父容器滚动自适应重绘功能时，对于滚动出容器的点，上面两个属性值指向的是线条的始末点id，而非实际体现关联关系的两个元素的id，
+     * 这时要使用 item.proxies[0].originalEp.elementId 和 item.proxies[1].originalEp.elementId 去获取实际关联元素的id
+     * */
+    function getPointId(item) {
+      let sourceId = item.sourceId,
+          targetId = item.targetId;
+      // 线条至少有一个端点超过对应滚动容器时才会存在 proxies 属性值（字面意思为代理，即代理的实际点）
+      if (item.proxies) {
+        // 未超出滚动容器的线条端点 proxies 中的对应值为空
+        if (item.proxies[0]) sourceId = item.proxies[0].originalEp.elementId;
+        if (item.proxies[1]) targetId = item.proxies[1].originalEp.elementId;
+      }
+      return [sourceId, targetId]
+    }
+    //重绘连线
+    onePlumb.repaintEverything();
+    //每次调用connect和addEndpoint方法都会进行重绘，一般在像导入大量数据进行添加端点和连线处理时应先暂停重绘，所有端点和连线都设定好后再立即重绘，以免卡顿
+    //暂停重绘
+    onePlumb.setSuspendDrawing(true);
+    //数据处理完调用，第二个参数的true，会使整个jsPlumb立即重绘，内部实际调用了repaintEverything()方法
+    onePlumb.setSuspendDrawing(false,true);
+    //该方法是抽离出的上面说的暂停重绘->处理事务->激活重绘，可用于批量处理，默认回调执行完后会重启重绘，若传入第二个参数为true则可阻止重启重绘(后面自己手动再启用重绘)
+    onePlumb.batch(function () {
+      //这里可以做一系列的添加端点和确定连线关系的处理等，不传入第二个参数true则处理完会自动重绘
+
+      //区域缩放
+//            zoomView(event){
+//                let _this = this;
+//                _this.zoom = event.wheelDelta>0 ? Number((_this.zoom + 0.05).toFixed(2)) : Number((_this.zoom - 0.05).toFixed(2));
+//                if (_this.zoom<0.3) _this.zoom = 0.3;
+//                el = this.$refs.view;
+//                el.style["transformOrigin"] = "50% 50%";
+//                el.style["transform"] = `scale(${_this.zoom})`;
+//                console.log('缩放：'+_this.zoom);
+//            }
+    },true);
+    //该方法设置视图放缩级别，但实际没效果，使用错误？
+    onePlumb.setZoom(1);
+    //该方法通知一个局部容器其内部有元素的尺寸发生变化（如隐藏了某个子元素导致父元素尺寸也会变化，这时就要手动调用该方法通知父容器，以便重新计算位置）
+    onePlumb.revalidate('containerId');
+
+  };
+
+</script>
+</body>
+</html>

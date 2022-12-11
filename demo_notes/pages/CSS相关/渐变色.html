@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1">
+    <title>渐变色</title>
+    <link rel="stylesheet" href="../../plugins/highlight/styles/androidstudio.css">
+    <script src="../../plugins/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <style>
+        ::-webkit-scrollbar { display: none; }    /*不显示滚动条*/
+        *{-webkit-box-sizing: border-box;-moz-box-sizing: border-box;-ms-box-sizing:border-box;-o-box-sizing:border-box;box-sizing: border-box;}
+        body,p,ul,pre {margin: 0;padding: 0;}
+        ul{list-style:none;}
+        img {max-width: 100%;vertical-align: top;background: #ffffff;}
+        a { color: #0000ff;}
+        .mgt-15 {margin-top: 15px;}
+        .mgl-30 {margin-left: 30px;}
+        .inline-block {display: inline-block;}
+        .color-white {color: #eeeeee;}
+        .box-wrap {height: 220px;border: 1px solid #dadada;*zoom:1;}
+        .box-wrap:before {content:"";display:table;}
+        .box-wrap:after {clear:both;content:'';display:block;font-size:0;line-height:0;visibility:hidden;height:0;}
+        .left-box,
+        .right-box {float: left;width: 75%;height: 100%;overflow: auto;}
+        .left-box {position: relative;border-right: 1px solid #dadada; width: 25%;}
+        .right-box code {min-height: 100%; margin-left: -6em;}
+        .catalogue-list {position: -webkit-sticky;position: sticky;top: 0;z-index: 9;background: #ffffff;}
+        .to-top {position: fixed;width: 50px;height: 50px;line-height: 50px;right: 30px;bottom: 20px;border-radius: 100%;text-align: center;background: #bbb;color: #ffffff!important;text-decoration: none;font-weight: bold;}
+        .to-top:hover {background: #888888;}
+    </style>
+</head>
+<body>
+<a href="#" class="to-top">Top</a>
+<p class="catalogue-list">目录：
+    <a href="#渐变色文字">渐变色文字</a>
+    <a class="mgl-30" href="#线性渐变">线性渐变</a>
+    <a class="mgl-30" href="#径向渐变">径向渐变</a>
+    <a class="mgl-30" href="#圆形径向渐变">圆形径向渐变</a>
+    <a class="mgl-30" target="_blank" href="css-secret.html#条纹背景">重复渐变</a>
+</p>
+<p class="mgt-15">渐变除了可以用在<code>background-image</code>上，还可以用在<code>border-image</code>上</p>
+<ul class="mgt-15">
+<li id="渐变色文字">渐变色文字
+    <div class="box-wrap">
+        <style class="js_styleCode">
+            /* 渐变色文字 */
+            .gradient-text { /*实际就是只透过文字看到背景色*/
+                -webkit-background-clip: text !important; /*背景剪裁设为文字*/
+                -webkit-text-fill-color: transparent !important; /*设置文字填充颜色*/
+                color: #f5157c; /*回退文字颜色*/
+                background: -webkit-gradient(linear, left bottom, right top, color-stop(0%, #f5157c), color-stop(100%, #5a19d4));
+                background: -webkit-linear-gradient(left, #f5157c, #5a19d4);
+                background: linear-gradient(to right, #f5157c, #5a19d4);
+            }
+        </style>
+        <div class="left-box"><h1><span class="gradient-text">渐变色文字</span></h1></div>
+        <pre class="right-box"><code class="css js_showCode" contenteditable="true"></code></pre>
+    </div>
+</li>
+
+<li id="线性渐变">线性渐变
+    <div class="box-wrap color-white">
+        <style type="text/css" class="js_styleCode">
+            /* 线性渐变 */
+            .gradient-linear {
+                background-image: -webkit-gradient(linear, left bottom, right top, color-stop(0%, #f5157c), color-stop(100%, #5a19d4));
+                background-image: -webkit-linear-gradient(left, #f5157c, #5a19d4); /*颜色值后面可空格隔开再写一个百分比，表示该颜色值的分界点*/
+                background-image: -o-linear-gradient(left, #f5157c, #5a19d4); /*第一个渐变方向参数除了使用关键字表示渐变起始位置，还可以使用角度值，如：45deg，左边默认为0deg，逆时针方向为正值*/
+                background-image: -moz-linear-gradient(left, #f5157c, #5a19d4);
+                background-image: -ms-linear-gradient(left, #f5157c, #5a19d4);
+                background-image: linear-gradient(to right, #f5157c, #5a19d4);  /*第一个参数为渐变方向*/
+                filter: progid:DXImageTransform.Microsoft.Gradient(GradientType='1', StartColorStr='#fff5157c', EndColorStr='#ff5a19d4'); /* GradientType为1时表示水平方向(此时可不设置该属性)，为0时表示垂直方向，颜色值中前两位表示透明度*/
+            }
+            .gradient-linear-deg {
+                background-image: linear-gradient(45deg, #f5157c, #5a19d4); /*第一个参数默认为90deg，也就是top，从上到下渐变*/
+            }
+            .gradient-linear-rate {
+                background-image: linear-gradient(to right,#f5157c, #5a19d4);
+            }
+        </style>
+        <div class="left-box">
+            <div class="inline-block gradient-linear" style="width: 150px;height: 100px;">渐变方向关键字</div>
+            <div class="inline-block gradient-linear-deg" style="width: 150px;height: 100px;">渐变方向角度</div>
+            <div class="inline-block gradient-linear-rate" style="width: 150px;height: 100px;">指定颜色比例</div>
+        </div>
+        <pre class="right-box"><code class="css js_showCode" contenteditable="true"></code></pre>
+    </div>
+</li>
+
+<li id="径向渐变">径向渐变
+    <div class="box-wrap color-white" style="height: 500px;">
+        <style class="js_styleCode">
+            /* 径向渐变
+             * 语法：background: radial-gradient([shape] [extent] [at position], [size], color-stop, ..., color-stop);
+             * shape：     可选，渐变形状，默认为椭圆ellipse，除此之外还可设为圆形circle
+             * extent：    可选，渐变范围设置，默认为椭圆ellipse可省略，除此之外还可设为圆形circle
+             * position：  可选，渐变中心的位置，默认为center表示元素中心，也可以设置为百分比或其他单位值，与background-position或transform-origin类似
+             * color-stop：渐变颜色，其后还可以跟一个表示长度的值来描述颜色分隔的位置，否则将按颜色数量均匀分布
+             */
+            .gradient-radial {
+                background-image:-webkit-radial-gradient(yellow 10%,red 50%,blue 100%);  /*以中心向外辐射渐变，其中的百分比%表示过渡的起始位置，注意百分比值是分别相对各方向半径的*/
+                background-image:-o-radial-gradient(yellow 10%,red 50%,blue 100%);
+                background-image:-moz-radial-gradient(yellow 10%,red 50%,blue 100%);
+                background-image:radial-gradient(yellow 10%,red 50%,blue 100%);
+            }
+
+            /* 指定渐变形状 */
+            .gradient-radial-circle {
+                background-image: radial-gradient(circle, yellow, red, blue); /*渐变形状有两种：圆形circle、椭圆形ellipse，默认为椭圆(元素的宽高决定椭圆的横纵轴)*/
+            }
+            .gradient-radial-ellipse {
+                background-image: radial-gradient(30px 40px ellipse, yellow, red, blue);
+                /*指定形状的横轴和纵轴半径，可以省略后面的形状关键字，因为横纵半径不同就表示椭圆，相同或只有一个半径值则表示圆
+                 *在未指定横纵轴半径时，默认是以元素的宽高(或渐变中心到边角的距离)来决定横纵轴长度的，于是在正方形元素中就变现不出椭圆渐变
+                 */
+            }
+
+            /* 指定渐变中心位置 */
+            .gradient-radial-center {
+                background-image:radial-gradient(circle at 100px 80px,yellow,red,blue);  /* 位置可使用各种长度单位，也可以使用关键字；若要使用默认椭圆渐变，则可以省略circle */
+            }
+
+            /* 指定渐变终止点边缘位置 */
+            .gradient-radial-size {
+                background-image:radial-gradient(closest-side circle at 50px 70px,yellow,red,blue);
+            }
+        </style>
+        <div class="left-box">
+            <div class="inline-block gradient-radial" style="width: 150px;height: 100px;">普通径向</div>
+            <div class="inline-block gradient-radial-circle" style="width: 150px;height: 100px;">圆形径向</div>
+            <div class="inline-block gradient-radial-ellipse" style="width: 100px;height: 100px;">自定义半径的椭圆形径向</div>
+            <div class="inline-block gradient-radial-center" style="width: 150px;height: 100px;">指定渐变中心位置</div>
+            <div class="inline-block gradient-radial-size" style="width: 150px;height: 100px;">指定渐变终止点边缘位置</div>
+            <img src="../../知识点截图/径向渐变终止位置.png">
+        </div>
+        <pre class="right-box"><code class="css js_showCode" contenteditable="true"></code></pre>
+    </div>
+</li>
+</ul>
+</body>
+
+<script src="../../js/jquery-1.11.3.min.js"></script>
+<script>
+$(function () {
+
+    $('.js_styleCode').each(function (index, el) {
+        let _this = $(el);
+        _this.closest('li').find('.js_showCode').html(_this.html());
+    });
+
+    /*实时响应*/
+    $('.js_showCode').on('keyup',function () {
+        let _this = $(this);
+        _this.closest('li').find('.js_styleCode').html(_this.text());
+    });
+
+});
+</script>
+</html>

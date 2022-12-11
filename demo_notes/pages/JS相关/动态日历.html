@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>动态日历</title>
+    <link rel="stylesheet" href="../../plugins/highlight/styles/androidstudio.css">
+    <script src="../../plugins/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <style type="text/css">
+        /* base */
+        body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fieldset, legend, input, textarea, p, blockquote, th, td { margin: 0;padding: 0 }
+        table { border-collapse: collapse;border-spacing: 0 }
+        fieldset, img { border: 0 }
+        address, caption, cite, code, dfn, em, strong, th, var { font-style: normal;font-weight: normal }
+        ol, ul { list-style: none }
+        caption, th { text-align: left }
+        h1, h2, h3, h4, h5, h6 { font-size: 100% ;font-weight: normal }
+        q:before, q:after { content: '' }
+        abbr, acronym { border: 0;font-variant: normal }
+        sup { vertical-align: text-top }
+        sub { vertical-align: text-bottom }
+        input, textarea, select { font-family: inherit;font-size: inherit;font-weight: inherit; * font-size: 100% }
+        legend { color: #4f4f4f}
+        /* common */
+        .tc {text-align: center;}
+        .code {display: block;white-space: pre;font-family: monospace;}
+
+        /* 日历 */
+        body {margin: 0;font-family: "microsoft yahei", Arial, sans-serif, simsun;font-size: 12px;line-height: 20px;_background-attachment:fixed;_background-image:url(about:blank);}
+        .sidebar{width:230px;margin: 30px auto; background-color:#f6fbfe;}
+        .date{width: 220px;height: 40px;line-height: 40px;text-align:center;background: #31b0ed;font-size: 14px;padding-left: 10px;color: #ffffff;}
+        .choose-date{text-align:center}
+        .choose-date td>div{display: inline-block;width: 64px;height: 20px;margin-top: -3px;background-color: #2aa3dd;position: relative;overflow: hidden;vertical-align: middle;}
+        .choose-date select {height: 20px;width: 85px;padding: 0 0 0 10px;margin: 0;background-color: transparent;color: #ffffff;border: none;position: absolute;left: 0;top: 0;z-index: 100;z-index: 0\9;}
+        .choose-date select option {background-color: #2aa3dd;}
+        .choose-date label {display:inline-block;width: 14px;height: 20px;background: url(../../images/yw_jiao.png) 0 8px no-repeat;position: absolute;right: 0;top: 0;;}
+        .pre-month-icon,.next-month-icon {display: inline-block;width: 12px;height: 12px;margin-left: 10px;background: url(../../images/arrow-white-icon.png) no-repeat;}
+        .next-month-icon {margin-left: 0;margin-right: 10px;background-position: -17px 0;}
+        .sb-in{width:100%;}
+        .sb-in dt{ width: 100%; height:34px; line-height:34px; background: #2096ce;color: #ffffff;}
+        .sb-in dt span{font-size:14px; font-weight:bold; color:#039; padding-left:28px; display:block; height:26px;}
+        .calendar-ct{padding-bottom:8px}
+        .sb-in dd h3{width:100%; height:26px; line-height:26px;text-align: center; background: #e4f0f7;}
+        .sb-in dd .inftable{width:100%;margin-top: 8px;}
+        .sb-in dd .inftable td{height:24px; line-height:24px;}
+        .sb-in dd .inftable td i {display: inline-block;width: 10px;height: 10px;margin: 0 8px 0 25px;background: url(../../images/log-state.png) no-repeat;}
+        .sb-in dd .inftable td i.back {background-position: -26px 0;}
+        .sb-in dd .inftable td i.wait {background-position: -0 -24px;}
+        .sb-in dd .inftable td i.no-edit {background-position: -26px -24px;}
+        .sb-in dd .inftable td i.log-week-ok,.sb-in dd .inftable td i.log-week-no {display: inline-block;width: 9px;height: 12px;margin-left: 26px;background: url(../../images/log-week-state.png) 0 -40px no-repeat;}
+        .sb-in dd .inftable td i.log-week-ok {background-position: 0 0;}
+        .calendar th,.calendar td{text-align:center; padding: 3px 5px;height: 34px;width:22px;}
+        .calendar .even {background:#f3f7fa;}
+        .calendar th{font-weight:normal; height:26px; line-height:26px;color: #50baef;background-color: #e4f0f7;padding:0 5px;}
+        .calendar td>a {display: inline-block;width: 10px;height: 10px;background: url(../../images/log-state-no.png) 0 0 no-repeat;}
+        .calendar td>a.pass,.calendar td>a.back,.calendar td>a.wait,.calendar td>a.no-edit {background: url(../../images/log-state.png) no-repeat;}
+        .calendar td>a.back {background-position: -26px 0;}
+        .calendar td>a.wait {background-position: -0 -24px;}
+        .calendar td>a.no-edit {background-position: -26px -24px;}
+        .calendar .til a {display: inline-block;width: 9px;height: 12px;margin-top: 8px;background: url(../../images/log-week-state.png) 0 -40px no-repeat;}
+        .calendar .til a.on {background-position: 0 0;}
+
+        /* 倒计时 */
+        .flash-sale-time [class^="countdown-"] {
+            display: inline-block;
+            padding: 3px 5px;
+            font-size: 14px;
+            margin: 0 0.3em;
+            text-align: center;
+            border-radius: 0.3em;
+            background: #d13600;
+            color: #ffffff;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- 日历 -->
+    <div class="sidebar">
+        <h3 class="date"><span class="fl">今天</span><span id="today"></span></h3>
+        <dl class="sb-in">
+            <dt class="bg">
+            <table class="choose-date" width="100%">
+                <tr>
+                    <td><a href="javascript: void(0);" class="pre-month-icon" id="btn-pre-month"></a></td>
+                    <td>
+                        <div>
+                            <select name="chooseYear" id="chooseYear">
+                                <option value="2017">2017</option>
+                                <option value="2018">2018</option>
+                                <option value="2019">2019</option>
+                                <option value="2020">2020</option>
+                                <option value="2021">2021</option>
+                                <option value="2022">2022</option>
+                                <option value="2023">2023</option>
+                                <option value="2024">2024</option>
+                                <option value="2025">2025</option>
+                                <option value="2026">2026</option>
+                                <option value="2027">2027</option>
+                                <option value="2028">2028</option>
+                            </select>
+                            <label for="chooseYear" class="js-chooseT"></label>
+                        </div>
+                    </td>
+                    <td>
+                        <div>
+                            <select name="chooseMonth" id="chooseMonth">
+                                <option value="1">01</option>
+                                <option value="2">02</option>
+                                <option value="3">03</option>
+                                <option value="4">04</option>
+                                <option value="5">05</option>
+                                <option value="6">06</option>
+                                <option value="7">07</option>
+                                <option value="8">08</option>
+                                <option value="9">09</option>
+                                <option value="10">10</option>
+                                <option value="11">11</option>
+                                <option value="12">12</option>
+                            </select>
+                            <label for="chooseMonth" class="js-chooseT"></label>
+                        </div>
+                    </td>
+                    <td><a href="javascript: void(0);" class="next-month-icon" id="btn-next-month"></a></td>
+                </tr>
+            </table>
+            </dt>
+            <dd class="calendar-ct" id="dailyCalendarView">
+                <table class="calendar" border="0" cellspacing="0">
+                    <thead>
+                    <tr class="th-bg">
+                        <th>周</th>
+                        <th>一</th>
+                        <th>二</th>
+                        <th>三</th>
+                        <th>四</th>
+                        <th>五</th>
+                        <th>六</th>
+                        <th>日</th>
+                    </tr>
+                    </thead>
+                    <tbody id="calendar-page">
+                    <!--===============================以下被注释掉的部分是动态打印的===============================-->
+                    <!--<tr class="odd">-->
+                    <!--<td class="til"><a href="###" class="on"></a></td>-->
+                    <!--<td class="noimg"></td>-->
+                    <!--<td class="noimg"></td>-->
+                    <!--<td class="noimg"></td>-->
+                    <!--<td class="noimg"></td>-->
+                    <!--<td class="noimg"></td>-->
+                    <!--<td class="noimg"></td>-->
+                    <!--<td>-->
+                    <!--<a href="###" class="pass"></a>-->
+                    <!--<p>1</p>-->
+                    <!--</td>-->
+                    <!--</tr>-->
+                    <!--<tr class="even">-->
+                    <!--<td class="til">-->
+                    <!--<a href="###"></a>-->
+                    <!--</td>-->
+                    <!--<td>-->
+                    <!--<a href="###" class="back"></a>-->
+                    <!--<p>2</p>-->
+                    <!--</td>-->
+                    <!--<td>-->
+                    <!--<a href="###"class="wait"></a>-->
+                    <!--<p>3</p>-->
+                    <!--</td>-->
+                    <!--<td>-->
+                    <!--<a href="###" class="no-edit"></a>-->
+                    <!--<p>4</p>-->
+                    <!--</td>-->
+                    <!--<td>-->
+                    <!--<a href="###"></a>-->
+                    <!--<p>5</p>-->
+                    <!--</td>-->
+                    <!--<td>-->
+                    <!--<a href="###"></a>-->
+                    <!--<p>6</p>-->
+                    <!--</td>-->
+                    <!--<td>-->
+                    <!--<a href="###"></a>-->
+                    <!--<p>7</p>-->
+                    <!--</td>-->
+                    <!--<td>-->
+                    <!--<a href="###"></a>-->
+                    <!--<p>8</p>-->
+                    <!--</td>-->
+                    <!--</tr>-->
+                    <!--<tr class="odd">-->
+                    <!--<td class="til">-->
+                    <!--<a href="###"></a>-->
+                    <!--</td>-->
+                    <!--<td>-->
+                    <!--<a href="###"></a>-->
+                    <!--<p>9</p>-->
+                    <!--</td>-->
+                    <!--<td>-->
+                    <!--<a href="###"></a>-->
+                    <!--<p>10</p>-->
+                    <!--</td>-->
+                    <!--<td>-->
+                    <!--<a href="###"></a>-->
+                    <!--<p>11</p>-->
+                    <!--</td>-->
+                    <!--<td>-->
+                    <!--<a href="###"></a>-->
+                    <!--<p>12</p>-->
+                    <!--</td>-->
+                    <!--<td>-->
+                    <!--<a href="###"></a>-->
+                    <!--<p>13</p>-->
+                    <!--</td>-->
+                    <!--<td>-->
+                    <!--<a href="###"></a>-->
+                    <!--<p>14</p>-->
+                    <!--</td>-->
+                    <!--<td>-->
+                    <!--<a href="###"></a>-->
+                    <!--<p>15</p>-->
+                    <!--</td>-->
+                    <!--</tr>-->
+                    <!--<tr class="even">-->
+                    <!--<td class="til">-->
+                    <!--<a href="###"></a>-->
+                    <!--</td>-->
+                    <!--<td>-->
+                    <!--<a href="###"></a>-->
+                    <!--<p>16</p>-->
+                    <!--</td>-->
+                    <!--<td>-->
+                    <!--<a href="###"></a>-->
+                    <!--<p>17</p>-->
+                    <!--</td>-->
+                    <!--<td>-->
+                    <!--<a href="###"></a>-->
+                    <!--<p>18</p>-->
+                    <!--</td>-->
+                    <!--<td>-->
+                    <!--<a href="###"></a>-->
+                    <!--<p>19</p>-->
+                    <!--</td>-->
+                    <!--<td>-->
+                    <!--<a href="###"></a>-->
+                    <!--<p>20</p>-->
+                    <!--</td>-->
+                    <!--<td>-->
+                    <!--<a href="###"></a>-->
+                    <!--<p>21</p>-->
+                    <!--</td>-->
+                    <!--<td>-->
+                    <!--<a href="###"></a>-->
+                    <!--<p>22</p>-->
+                    <!--</td>-->
+                    <!--</tr>-->
+                    <!--<tr class="odd">-->
+                    <!--<td class="til">-->
+                    <!--<a href="###"></a>-->
+                    <!--</td>-->
+                    <!--<td>-->
+                    <!--<a href="###"></a>-->
+                    <!--<p>23</p>-->
+                    <!--</td>-->
+                    <!--<td>-->
+                    <!--<a href="###"></a>-->
+                    <!--<p>24</p>-->
+                    <!--</td>-->
+                    <!--<td>-->
+                    <!--<a href="###"></a>-->
+                    <!--<p>25</p>-->
+                    <!--</td>-->
+                    <!--<td>-->
+                    <!--<a href="###"></a>-->
+                    <!--<p>26</p>-->
+                    <!--</td>-->
+                    <!--<td>-->
+                    <!--<a href="###"></a>-->
+                    <!--<p>27</p>-->
+                    <!--</td>-->
+                    <!--<td>-->
+                    <!--<a href="###"></a>-->
+                    <!--<p>28</p>-->
+                    <!--</td>-->
+                    <!--<td>-->
+                    <!--<a href="###"></a>-->
+                    <!--<p>29</p>-->
+                    <!--</td>-->
+                    <!--</tr>-->
+                    <!--<tr class="even">-->
+                    <!--<td class="til">-->
+                    <!--<a href="###"></a>-->
+                    <!--</td>-->
+                    <!--<td>-->
+                    <!--<a href="###"></a>-->
+                    <!--<p>30</p>-->
+                    <!--</td>-->
+                    <!--<td>-->
+                    <!--<a href="###"></a>-->
+                    <!--<p>31</p>-->
+                    <!--</td>-->
+                    <!--<td class="noimg"></td>-->
+                    <!--<td class="noimg"></td>-->
+                    <!--<td class="noimg"></td>-->
+                    <!--<td class="noimg"></td>-->
+                    <!--<td class="noimg"></td>-->
+                    <!--</tr>-->
+                    </tbody>
+                </table>
+                <h3>状态说明</h3>
+                <table class="inftable" data-step="4" data-intro="日志审核（技术、项目）通过为绿色；补填的日志全部审核通过前为黄色，成本工时为0，审核通过为绿色。">
+                    <tr>
+                        <td><i class="pass"></i>通过</td>
+                        <td><i class="back"></i>打回</td>
+                    </tr>
+                    <tr>
+                        <td><i class="wait"></i>待审</td>
+                        <td><i class="no-edit"></i>未填</td>
+                    </tr>
+                    <tr>
+                        <td><i class="log-week-ok"></i>周报已填</td>
+                        <td><i class="log-week-no"></i>周报未填</td>
+                    </tr>
+                </table>
+            </dd>
+        </dl>
+    </div>
+
+    <!-- 倒计时 -->
+    <p class="flash-sale-time tc" id="flash-sale-time"><span class="countdown-days">02</span>天<span class="countdown-hours">06</span>时<span class="countdown-minutes">29</span>分<span class="countdown-seconds">59</span>秒</p>
+    <hr>
+    <pre><code class="" id="show-script"></code></pre>
+<script src="../../js/jquery-1.11.3.js"></script>
+<script type="text/javascript" charset="UTF-8" id="script">
+    // 显示日历
+    $(function(){
+        var $chooseYear =  $('#chooseYear'),//年份选择
+                $chooseMonth =  $('#chooseMonth');//月份选择
+
+        // 显示日历
+        function showCalendar(year,month){
+            var t = getDaysOfMonth(year,month);
+            var $calendarTab = $('#calendar-page');
+            printCalendar($calendarTab, t.days, t.week);
+        }
+
+        // 初始化日历
+        !function(){
+            var today = new Date(),
+                    todayY = today.getFullYear(),
+                    todayM = today.getMonth()+ 1,
+                    todayD = today.getDate();
+            $chooseYear.val(todayY);
+            $chooseMonth.val(todayM);
+            showCalendar(todayY,todayM);
+            $('#today').html(todayY+'-'+(todayM>9 ? todayM : '0'+todayM)+'-'+todayD);
+        }();
+
+        // 选择年月而改变日历显示
+        $('#chooseYear,#chooseMonth').on('change',function(){
+            showCalendar($chooseYear.val(),$chooseMonth.val());
+        });
+
+        // 点击按钮切换上一月日历显示
+        $('#btn-pre-month').on('click',function(){
+            if(+$chooseMonth.val()==1){
+                if($chooseYear.val()==$chooseYear.find('option:first-child').val()) return;
+                $chooseMonth.val(12);
+                $chooseYear.val(+$chooseYear.val()-1).change();
+            }else{
+                $chooseMonth.val(+$chooseMonth.val()-1).change();
+            }
+        });
+
+        // 点击按钮切换下一月日历显示
+        $('#btn-next-month').on('click',function(){
+            if(+$chooseMonth.val()==12){
+                if($chooseYear.val()==$chooseYear.find('option:last-child').val()) return;
+                $chooseMonth.val(1);
+                $chooseYear.val(+$chooseYear.val()+1).change();
+            }else{
+                $chooseMonth.val(+$chooseMonth.val()+1).change();
+            }
+        });
+    });
+
+    // 获取某年某月第一天是星期几及当月天数
+    function getDaysOfMonth(year,month){
+        var daysOfMonth = new Date(year,month,0).getDate();//当月天数
+        var week = (new Date(year,month-1,1).getDay())==0 ? 7 : (new Date(year,month-1,1).getDay());//当月第一天是周几，7代表周日
+        var time = {
+            days: daysOfMonth,
+            week: week
+        };
+        return time;
+    }
+
+    // 打印日历(传入日期的插入节点jq对象，当月天数，当月1号周几)
+    function printCalendar(node,days,week){
+        node.html('');
+        var trNum = Math.ceil((days+week-1)/7);//日历显示行数
+        var nodeTr,day=1;
+        for(var i=1;i<=trNum;i++){
+            node.append('<tr class="'+(i%2==0 ? "even" : "odd")+' tr-row'+i+'"></tr>');
+            nodeTr = $('.tr-row'+i);
+            if(i==1){
+                for(var j=0;j<8;j++){
+                    if(j==0){
+                        nodeTr.append(' <td class="til"><a href="###"></a></td>');
+                    }else if(j<week && j>0){
+                        nodeTr.append('<td></td>');
+                    }else{
+                        nodeTr.append('<td><a href="###"></a><p>'+(day++)+'</p></td>');
+                    }
+                }
+            }else{
+                for(var k=0;k<8;k++){
+                    if(k==0){
+                        nodeTr.append(' <td class="til"><a href="###"></a></td>');
+                    }else if(day>days){
+                        nodeTr.append('<td></td>');
+                    }else{
+                        nodeTr.append('<td><a href="###"></a><p>'+(day++)+'</p></td>');
+                    }
+                }
+            }
+        }
+    }
+
+    /*===========================其他与时间日期相关的问题收集===========================*/
+
+    //获取服务器时间，使用ajax请求，从请求头中读取服务器时间(不管请求返回是否成功，在请求头中都包含服务器时间戳)
+    function getServerDate(){
+        // console.log(new Date($.ajax({async: false}).getResponseHeader("Date")));
+        //使用jQuery中的ajax方法
+        return new Date($.ajax({async: false}).getResponseHeader("Date"));
+
+        //使用原生ajax方法
+        // var xhr = new XMLHttpRequest();
+        // if(!xhr){
+        //     xhr = new ActiveXObject("Microsoft.XMLHTTP");
+        // }
+        // xhr.open("HEAD",location.href,false);
+        // xhr.send();
+        // return new Date(xhr.getResponseHeader("Date"));
+    }
+
+    //倒计时
+    var today = new Date(),
+        todayY = today.getFullYear(),
+        todayM = today.getMonth()+ 1,
+        todayD = today.getDate();
+    countdown({
+        ele: $('#flash-sale-time'),
+        time: {
+            year: todayY,
+            month: todayM,
+            day: todayD + 1,
+            hour: 0,
+            minute: 0
+        }
+    });
+    /**
+     * 产品抢购或开售倒计时，此处只初始化时请求了一次服务器时间进行时间差比较，要统一每个用户访问的倒计时需要开发者运行在服务器端获取服务器时间做统一倒计时
+     * @param option 该参数是一个对象，包含属性ele:显示倒计时的父容器、time:终止时间设置到分钟，示例如下：
+     * {
+     *    ele: $('#flash-sale-time'),	//父容器
+     *    time: {						//终止时间，包含如下属性：
+                    year: 2017,			//年
+                    month: 8,			//月
+                    day: 28,			//日
+                    hour: 10,			//时
+                    minute: 30			//分
+                }
+     * }
+     */
+    function countdown(option) {
+        document.write('设定时间：'+option.time.year+'年'+option.time.month+'月'+option.time.day+'日'+option.time.hour+'时'+option.time.minute+'分');
+        var limitTime = new Date(option.time.year, option.time.month - 1, option.time.day, option.time.hour, option.time.minute);
+        var show = {
+            days: option.ele.find('.countdown-days'),
+            hours: option.ele.find('.countdown-hours'),
+            minutes: option.ele.find('.countdown-minutes'),
+            seconds: option.ele.find('.countdown-seconds')
+        };
+        var serverDateDiff = getServerDateDiff();   //获取服务器时间与客户端时间差
+        if(limitTime-(new Date()) <= 0) return alert('已过设定时间！');
+        function getServerDateDiff() {
+            return (new Date($.ajax({async: false}).getResponseHeader("Date"))) - (new Date());
+        }
+
+        function checkTime(t) {
+            return t < 10 ? ('0' + t) : t;
+        }
+
+        function countTime() {
+            var diffSeconds = parseInt((limitTime - (new Date()) - serverDateDiff) / 1000);    //因为是倒计时，所以此处仍然该减去时间差，而不是加上时间差(此处很容易想反)
+            var t = {};
+            t.days = checkTime(parseInt(diffSeconds / 60 / 60 / 24));
+            t.hours = checkTime(parseInt(diffSeconds / 60 / 60) % 24);
+            t.minutes = checkTime(parseInt(diffSeconds / 60) % 60);
+            t.seconds = checkTime(diffSeconds % 60);
+            return t;
+        }
+
+        var prevLeftTime, leftTime;
+        prevLeftTime = countTime();
+        show.days.html(prevLeftTime.days);
+        show.hours.html(prevLeftTime.hours);
+        show.minutes.html(prevLeftTime.minutes);
+        show.seconds.html(prevLeftTime.seconds);
+        var timer = setInterval(function () {
+            leftTime = countTime();
+            if (leftTime.seconds !== prevLeftTime.seconds) show.seconds.html(leftTime.seconds);
+            if (leftTime.minutes !== prevLeftTime.minutes) show.minutes.html(leftTime.minutes);
+            if (leftTime.hours !== prevLeftTime.hours) show.hours.html(leftTime.hours);
+            if (leftTime.days !== prevLeftTime.days) show.days.html(leftTime.days);
+            prevLeftTime = leftTime;
+            if (leftTime.days === '00' && leftTime.hours === '00' && leftTime.minutes === '00' && leftTime.seconds === '00') clearInterval(timer);   //到达指定时间时清除定时器
+        }, 500);
+    }
+</script>
+<script>
+    document.getElementById('show-script').innerHTML = document.getElementById('script').innerHTML;
+</script>
+</body>
+</html>

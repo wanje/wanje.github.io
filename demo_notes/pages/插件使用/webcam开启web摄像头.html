@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1">
+    <title>webcam开启web摄像头</title>
+    <link rel="stylesheet" href="../../css/defaultPc.css">
+    <style>
+        [v-cloak] {opacity: 0;}
+        .btn {
+            display: inline-block;
+            width: 160px;
+            height: 64px;
+            line-height: 64px;
+            -webkit-border-radius: 32px;
+            -moz-border-radius: 32px;
+            border-radius: 32px;
+            border: none;
+            outline: none;
+            font-size: 28px;
+            text-align: center;
+            background: rgba(255,255,255,0.2);
+            color: #ffffff;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn:hover { background: rgba(255,255,255,0.3); }
+        .btn-primary {
+            font-weight: bold;
+            background-image: -webkit-linear-gradient(left,#26e2f0 10%, #277dd9);
+            background-image: -o-linear-gradient(left,#26e2f0 10%, #277dd9);
+            background-image: -moz-linear-gradient(left,#26e2f0 10%, #277dd9);
+            background-image: -ms-linear-gradient(left,#26e2f0 10%, #277dd9);
+            background-image: linear-gradient(left,#26e2f0 10%, #277dd9);
+            filter:progid:DXImageTransform.Microsoft.Gradient(GradientType='1',StartColorStr='#ff26e2f0',EndColorStr='#ff277dd9');
+        }
+        .btn-primary:hover {
+            background-image: -webkit-linear-gradient(left,#26e2f0 40%, #277dd9);
+            background-image: -o-linear-gradient(left,#26e2f0 40%, #277dd9);
+            background-image: -moz-linear-gradient(left,#26e2f0 40%, #277dd9);
+            background-image: -ms-linear-gradient(left,#26e2f0 40%, #277dd9);
+            background-image: linear-gradient(left,#26e2f0 40%, #277dd9);
+        }
+        .page-wrap {
+            width: 100vw;
+            height: 100vh;
+            background: #000e22;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .cam-box {
+            width: 580px;
+            height: 380px;
+            margin: 0 auto 20px;
+            border: 1px solid #fff;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+        .cam-box video {
+            background: transparent;
+        }
+    </style>
+</head>
+<body>
+<div class="page-wrap" id="app">
+    <div>
+        <div ref="camera" id="camera-box" class="cam-box"></div>
+        <div class="abs" style="top: 0;right: 0;z-index: 99;" id="ceshi"></div>
+        <div class="tc">
+            <button class="btn btn-primary" @click="takePhoto">拍照</button>
+        </div>
+    </div>
+</div>
+</body>
+<script src="../../plugins/vue2.6.7.min.js"></script>
+<script src="../../plugins/webcamjs/webcam.min.js"></script>
+<script>
+Webcam.set({
+    jpeg_quality: 100
+});
+
+var app = new Vue({
+    el: '#app',
+    data: {
+        username: '',
+        notesId: '',
+        takeNum: 0,  //记录拍照按钮点击次数
+        video: null,
+        canvas: null
+    },
+    computed: {
+        totalBalance: function () {
+            return this.baseBalance + +this.topUp;
+        }
+    },
+    methods: {
+        //拍照
+        takePhoto: function (event) {
+            let el = event.target,
+                cameraBox = this.$refs.camera,
+                whRate = this.video.videoWidth/this.video.videoHeight;
+
+            if (this.takeNum % 2===0){
+                Webcam.freeze();
+                this.canvas = cameraBox.querySelector('canvas');
+                let ctx = this.canvas.getContext('2d'),
+                    canWhRate = this.canvas.width/this.canvas.height;
+
+                ctx.clearRect(0,0,this.canvas.width,this.canvas.height);
+                if (whRate <= canWhRate){
+                    ctx.drawImage(this.video,parseInt((this.canvas.width-this.canvas.height*whRate)/2),0,parseInt(this.canvas.height*whRate),this.canvas.height);
+                }else {
+                    ctx.drawImage(this.video,0,parseInt((this.canvas.height-this.canvas.width/whRate)/2),this.canvas.width,parseInt(this.canvas.width/whRate));
+                }
+                el.innerHTML = '重拍';
+            }else {
+                Webcam.unfreeze();
+                el.innerHTML = '拍照';
+            }
+            this.takeNum++;
+        },
+        //保存照片数据
+        saveImgData: function () {
+            //保存照片数据dataUri
+            const dataUri = this.canvas.toDataURL("image/jpeg");
+        }
+    },
+    mounted: function () {
+        Webcam.attach('#camera-box');   //绑定摄像头
+        this.video = this.$refs.camera.querySelector('video');
+    }
+});
+</script>
+</html>

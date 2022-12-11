@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<button id="mybtn">直接使用事件名</button>
+<button id="mybtn2">bind绑定</button>
+<button id="mybtn3">获取event对象</button>
+
+
+<script src="../jquery-1.11.3.js"></script>
+<script>
+    $(function(){
+        $("#mybtn").click(function(){
+            alert("点点点");
+        });
+        $("#mybtn").mouseover(function(){
+            alert("看灰机~");
+        });
+//        $("#mybtn2").bind("click",function(){
+//            alert("hello~");
+//        });
+
+//        $("#mybtn2").bind("click mouseover",function(){
+//            alert("hello~");
+//        });
+
+        $("#mybtn2").bind({//绑定多个事件
+            "click":test,
+            "mouseover":function(){
+                alert("鼠标移入");
+            }
+        });
+
+
+//        $("#mybtn2").unbind();//取消绑定
+        $("#mybtn2").unbind("click",test);//取消指定事件绑定
+        $("#mybtn2").bind("click",mytest);
+
+        $("#mybtn3").bind("click",function(e){
+            alert(e.target);
+        })
+
+    });
+
+    function test(){
+        alert("我是专业测试");
+    }
+    function mytest(){
+        alert("我才是专业测试");
+    }
+</script>
+</body>
+</html>

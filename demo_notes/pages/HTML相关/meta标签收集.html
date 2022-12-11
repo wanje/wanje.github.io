@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>meta标签集</title>
+    <!-- 让 IE 浏览器运行最新的渲染模式和Chrome -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1">
+    <!-- 禁止网页被非同源站点使用iframe嵌套引用（目前可能有些浏览器已废弃，最好让后端设置响应头只能同源嵌套） -->
+    <meta http-equiv="X-FRAME-OPTIONS" content="DENY">
+    <!--=====================================================================================-->
+    <!-- 设置视口viewport；其中的viewport-fit是为兼容iPhone X，cover表示全屏，默认为contain表示内容显示在安全域之外(会导致头部和底部很大空白) -->
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
+    <style>
+        /*iPhone X适配参考博客：https://blog.csdn.net/yujianxiang666/article/details/80180317
+        * viewport-fit设置为cover时，就可以利用iOS11中的css函数constant()
+        * 和四个预定义的常量：safe-area-inset-left, safe-area-inset-right, safe-area-inset-top, safe-area-inset-bottom，来引用四个方向上的安全区域大小
+        */
+        body {
+            padding-top: constant(safe-area-inset-top);   /*为导航栏+状态栏的高度 88px*/
+            padding-bottom: constant(safe-area-inset-bottom);   /*为底下圆弧的高度 34px*/
+            padding-left: constant(safe-area-inset-left);
+            padding-right: constant(safe-area-inset-right);
+        }
+    </style>
+    <!-- 忽略页面中的数字识别为电话，忽略email和地址识别 -->
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <!-- 针对手持设备优化，主要是针对一些老的不识别viewport的浏览器，比如黑莓 -->
+    <meta name="HandheldFriendly" content="true">
+    <!-- 微软的老式浏览器 -->
+    <meta name="MobileOptimized" content="320">
+    <!-- windows phone 点击无高光 -->
+    <meta name="msapplication-tap-highlight" content="no">
+    <!-- 选择webkit浏览器内核(国内很多浏览器是webkit和trident双内核)，content值：webkit|ie-comp|ie-stand -->
+    <meta name="renderer" content="webkit">
+    <!-- 不让百度转码，该项也用于设置缓存控制 -->
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <!-- 禁用缓存(两者皆可)，参考：https://www.cnblogs.com/everyone/archive/2012/12/04/2801258.html -->
+    <meta http-equiv="Cache-Control" content="no-cache" />
+    <meta http-equiv="pragma" content="no-cache" />
+    <!-- 关闭chrome浏览器下 翻译 插件 -->
+    <meta name="google" value="notranslate" />
+    <!-- 让网页在指定的5秒内，跳转到所指定的页面，比如博客园，或者网页的自动刷新 -->
+    <meta http-equiv="Refresh" content="5; url=https://www.cnblogs.com/everyone/archive/2012/12/04/2801258.html" />
+    <!-- 强制页面在当前窗口中以独立页面显示，防止自己的网页被别人当成一个frame调用。Content选项：_blank、_top、_self、_parent -->
+    <meta http-equiv="windows-Target" content="_top" />
+    <!--=====================================================================================-->
+    <!--================================== 🍎iOS 设备 ========================================-->
+    <!--=====================================================================================-->
+    <!-- 是否启用 WebApp 全屏模式，删除苹果默认的工具栏和菜单栏 -->
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <!-- 设置苹果工具栏颜色，只有在开启WebApp全屏模式时才生效，content的值为default | black | black-translucent  -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <!-- 添加到主屏后的标题 -->
+    <meta name="apple-mobile-web-app-title" content="标题">
+    <!--=====================================================================================-->
+    <!--=================================== QQ浏览器X5内核 ===================================-->
+    <!--=====================================================================================-->
+    <!-- QQ强制竖屏，横屏为landscape -->
+    <meta name="x5-orientation" content="portrait">
+    <!-- QQ强制全屏 -->
+    <meta name="x5-fullscreen" content="true">
+    <!-- QQ应用模式 -->
+    <meta name="x5-page-mode" content="app">
+    <!--=====================================================================================-->
+    <!--====================================== UC浏览器 ======================================-->
+    <!--=====================================================================================-->
+    <!-- UC应用模式，应用模式将默认全屏，长按菜单失效，默认手势失效，标准排版，图片强制显示，禁用夜间模式失效，排版和夜间模式可通过meta开启，可通过js API退出全屏 -->
+    <meta name="browsermode" content="application">
+    <!-- UC强制竖屏，横屏为landscape -->
+    <meta name="screen-orientation" content="portrait">
+    <!-- UC强制全屏 -->
+    <meta name="full-screen" content="yes">
+    <!-- UC缩放后出现滚动条与否，no为与标准浏览器缩放规则一致网页整体缩放，yes为只缩放图片和文字网页大小不变而不出现滚动条 -->
+    <meta name="viewport" content="uc-fitscreen=no|yes"/>
+    <!-- UC强制图片显示，优先级高于用户自己设置的无图模式，且作用于整个页面，若设置单个图片可用<img src="..." show="force"> -->
+    <meta name="imagemode" content="force"/>
+
+</head>
+<body>
+
+</body>
+</html>

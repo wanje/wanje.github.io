@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Emmet语法</title>
+    <style>
+        .code {display: block;white-space: pre;font-family: monospace;}
+    </style>
+    cc:ie6  <!--条件注释，小于IE6使用-->
+    <!--[if lte IE 6]>
+
+    <![endif]-->
+
+    cc:ie  <!--条件注释，IE使用-->
+    <!--[if IE]>
+
+    <![endif]-->
+
+    cc:noie  <!--条件注释，非IE使用-->
+    <!--[if !IE]><!-->
+
+    <!--<![endif]-->
+</head>
+<body>
+<a href="http://docs.emmet.io/cheat-sheet/">Emmet语法缩写官网实例</a>
+<style type="text/css" class="code">
+    /*CSS缩写*/
+    .class{
+        width: 100px;           /*  w100  不带单位则默认px   */
+        height: 10%;            /*  h10p  p表示百分比单位   */
+        margin: 5em;            /*  m5e  e表示em单位   */
+
+        /* trf 非w3c标准的CSS属性，emmet会自动加上前缀，也可手动单个添加  */
+        -webkit-transform:;   /*  -w-trf  w表示webkit  */
+        -moz-transform:;      /*  m表示moz  */
+        -ms-transform:;       /*  s表示ms  */
+        -o-transform:;        /*  o表示o  */
+        transform:;
+        /* trf:r     transform: rotate(angle); */
+        /* trf:rx    transform: rotateX(angle); */
+        /* trf:sc    transform: scale(x,y); */
+        /* trf:scx   transform: scaleX(x); */
+        /* trf:sc3   transform: scale3d(x,y,z); */
+        /* trf:skx   transform: skewX(angle); */
+        /* trf:sky或trf:sk   transform: skewY(angle); */
+        /* trf:t     transform: translate(x,y); */
+        /* trf:tx    transform: translateX(x); */
+        /* trf:t3    transform: translate3d(x,y,z); */
+        /* trs       transition:prop time; */
+
+        /* !    !important */
+        /* t    top */
+        /* r    right */
+        /* b    bottom */
+        /* l    left */
+        /* z    z-index */
+        /* w    width */
+        /* miw  min-width */
+        /* maw  max-width */
+        /* h    height */
+        /* mih  min-height */
+        /* mah  max-height */
+        /* f    font */
+        /* bxsh    box-shadow */
+        /* op   opacity */
+        /* cnt或ct  content */
+
+        position: relative;  /* pos 或 pos:r */
+        position: absolute;  /* pos:a */
+        position: fixed;     /* pos:f */
+        position: static;    /* pos:s */
+
+        float: left;    /* fl 或 fl:l */
+        float: right;   /* fl:r */
+        float: none;    /* fl:n */
+
+        clear: both;    /* cl 或 cl:b */
+        clear: left;    /* cl:l */
+        clear: right;   /* cl:r */
+        clear: none;    /* cl:n */
+
+        display: block; /* d 或 d:b */
+        visibility: hidden; /* v 或 v:h */
+        overflow: hidden;   /* ov 或 ov:h */
+        overflow-x: hidden; /* ovx 或 ovx:h */
+        overflow-y: hidden; /* ovy 或 ovy:h */
+        zoom: 1;    /* zm */
+        clip: rect(top right bottom left);/* cp:r */
+        resize: none;   /* rsz:n */
+        cursor: pointer;    /* cur 或 cur:p */
+
+        /* bxz 或 bxz:bb */
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        /* bxz:cb */
+        -webkit-box-sizing: content-box;
+        -moz-box-sizing: content-box;
+        box-sizing: content-box;
+
+        vertical-align: middle; /* va:m */
+        text-align: center;     /* ta:c */
+        text-align: justify;    /* ta:j 文字两端对齐 */
+        text-decoration: none;  /* td 或 td:n */
+
+        /* tov 或 tov:e */
+        -ms-text-overflow: ellipsis;
+        text-overflow: ellipsis;    /*文字溢出时显示省略号，外加overflow: hidden;，单行文字配合white-space: nowrap;使用*/
+        /*设置多行文本溢出时显示省略号需加上以下语句，只有webkit内核的浏览器适用*/
+        /*display: -webkit-box;             将对象作为弹性伸缩盒子模型显示 */
+        /*-webkit-box-orient: vertical;     设置或检索伸缩盒对象的子元素的排列方式*/
+        /*-webkit-line-clamp: 3;            文本显示行数*/
+
+        background: #000;   /* bg */
+        background: #fff url() 0 0 no-repeat;   /* bg+ */
+
+        color: #000;    /* c */
+        color: rgb(0, 0, 0);    /* c:r */
+        color: rgba(0, 0, 0, 0.5);/* c:ra */
+
+        outline: none;  /* ol:n或oln */
+        border: 1px solid #000; /* bd+ */
+        border: none;   /* bd:n或bdn */
+        -webkit-border-radius: 3px; /* bdrs */
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+
+        list-style: none;   /* lis:n */
+        list-style-type: none;  /* list:n */
+
+        /* 动画调用 */
+        /* anim 或 anim- */
+        -webkit-animation:;
+        -o-animation:;
+        animation:;
+
+    }
+    @font-face {                /*  @f  使用 @f+ 可生成更多内容  */
+        font-family: ;
+        src: url();
+    }
+
+    /* @kf 定义动画 */
+    @-webkit-keyframes identifier {
+        from {  }
+        to {    }
+    }
+    @-o-keyframes identifier {
+        from {  }
+        to {    }
+    }
+    @-moz-keyframes identifier {
+        from {  }
+        to {    }
+    }
+    @keyframes identifier {
+        from {  }
+        to {    }
+    }
+
+    /* @m 或 @media */
+    @media screen {
+
+    }
+
+
+</style>
+<div class="code">
+    后代：>            例：nav>ul>li
+    兄弟：+            例：div+p+bq    (bq是blockquote标签的简写)
+    上级：^            例：div+div>p>span+em^bq    (几个^符号就表示向上几级)
+    分组：()           例：(div>dl>(dt+dd)*3)+footer>p
+    乘法：*            例：ul>li*5
+    自增符号：$        例：h$[title=item$]{Header$}*3      ([]表示属性，{}表示包含的文本内容，$默认从1开始自增，$$表示以两位数显示，前面用0补齐)
+                       例：ul>li.item$@3*5     (从@符号后的3开始自增)
+                       例：ul>li.item$@-*5     (@符号后添加减号"-"表示递减排列，默认递减到1，若减号"-"后跟有数字则递减到此数字，如ul>li.item$@-3*5)
+    ID和类属性：#id .class  例：p.name  创建class名为那么的p标签
+                       自定义属性则用[]括起来，多个属性用空格隔开    例：[a='value1' b="value2"]
+                       文本用{}括起来，不用加引号     例：a{Click me}
+    隐式标签：#id .class像这样不显示地写出要创建的标签，则会根据其上级标签的类型自动生成符合html结构的标签
+                       例：.class会生成div；em>.class会生成span；table>.row>.col会生成tr和td；select>.class会生成option
+
+
+    HTML缩写：         所有未知或不合法的缩写都会原样转换成错误的标签，如：foo → <foo></foo>
+    !或html:5          创建html5文档类型
+    html:4s            创建html4严格文档类型
+    html:4t            创建html4过渡文档类型
+    html:xs            创建XHTML1.0严格文档类型
+    html:xt            创建XHTML1.0过渡文档类型
+    html:xxs           创建XHTML1.1文档类型
+    doc                创建html5文档基本结构，不包含文档类型声明(即doctype部分)
+    doc4               创建html4文档基本结构，不包含文档类型声明(即doctype部分)
+    a                  <a href=""></a>
+    link               <link rel="stylesheet" href=""/>
+    meta:utf           <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+    meta:vp            <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"/>
+    script:src         <script src=""></script>
+    form:get           <form action="" method="get"></form>
+    form:post          <form action="" method="post"></form>
+    input              <input type="text"/>
+    inp                <input type="text" name="" id=""/>
+    input:p            <!--<input type="password" name="" id=""/>-->
+    html:xml           <!--<html xmlns="http://www.w3.org/1999/xhtml"></html>-->
+    bq                 <blockquote></blockquote>
+    fig                <figure></figure>
+    figc               <figcaption></figcaption>
+    ifr                <iframe src="" frameborder="0"></iframe>
+    fst 或 fset        <fieldset></fieldset>
+    leg                <legend></legend>
+    btn                <button></button>
+    btn:b              <button type="button"></button>
+    btn:r              <button type="reset"></button>
+    btn:s              <button type="submit"></button>
+    sect               <section></section>
+    art                <article></article>
+    hdr                <header></header>
+    ftr                <footer></footer>
+    adr                <address></address>
+    str                <strong></strong>
+    prog               <progress></progress>
+    mn                 <main></main>
+    datal              <datalist></datalist>
+    out                <output></output>
+
+</div>
+<script type="text/javascript" charset="UTF-8">
+
+</script>
+</body>
+</html>

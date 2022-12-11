@@ -1,0 +1,126 @@
+-- DQL语言： SELECT 语句来执行查询
+-- 基本语法：
+SELECT	[DISTINCT]	{* | 列名 [别名], …}
+FROM	表名
+[WHERE	过滤条件]
+[ORDER BY 列1,列2…]
+
+--  一、投影操作
+
+
+-- 选择要使用的数据库：
+USE baijie89day2
+-- 1. 查询所有学生的信息
+SELECT * FROM stu
+-- 先执行FROM，加载表到内存； 接着执行投影操作，确定要投影的字段列表。
+-- 2. 显示所有学生的姓名
+SELECT s_name FROM stu -- 查询单个字段
+-- 3. 显示所有学生的姓名、性别、年龄
+SELECT s_name , s_sex,s_age FROM stu -- 查询多个字段时，字段名之间使用逗号分隔。
+
+-- 4. 表的别名、列的别名
+SELECT s_name AS 学生姓名, s_sex '性 别', s_age '年龄' FROM stu
+-- 取别名，可以用as来表示，也可以不用；
+-- 别名一般需要用引号给引起来，特别是名称中用空格分隔的情况。
+
+-- 5. 返回表中的唯一的数据值：DISTINCT
+-- 查询所有性别
+SELECT DISTINCT s_sex FROM stu
+-- 显示班上所有的年龄段
+SELECT DISTINCT s_age AS '年龄段' FROM stu
+
+-- 6. limit ,显示指定行数的数据；
+-- limit 起始行位置， 行数
+-- 显示前五个学生的信息
+SELECT * FROM stu LIMIT 0,5  -- 第1页
+SELECT * FROM stu LIMIT 5,5   -- 第2页
+SELECT * FROM stu LIMIT 10,5   -- 第3页
+
+-- 规律： (page-1)*行数 就是每一页的起始位置。
+
+-- 如果只有一个参数，表示从第一行开始，显示指定行数的数据。这个参数表示行数。
+SELECT * FROM stu LIMIT 3
+-- 如果是2个参数，第1个表示起始位置，第2个表示行数。
+
+SELECT s_name,s_age+10  AS 年龄 FROM stu
+-- 显示这样的格式：张三/34
+SELECT CONCAT(s_name,"/",s_age) AS "姓名/年龄" FROM stu  -- concat(),字符串连接函数。
+
+--   二、选择操作   WHERE	过滤条件
+
+-- 查看王麻子的学生信息
+
+SELECT * FROM stu WHERE s_name='王麻子'
+-- 查看所有年龄大于30岁的学生的姓名、年龄
+
+SELECT s_name,s_age FROM stu WHERE s_age>30  -- 只有一个条件
+
+-- 查看年龄小于20岁的男生信息
+
+SELECT * FROM stu WHERE s_age<20 AND s_sex='男'
+
+-- 查看年龄在20到40岁之间的所有女生信息
+SELECT * FROM stu WHERE s_age>20 AND s_age<29 AND s_sex='女'
+
+-- 查看年龄>=20,<=40岁所有学生信息
+SELECT * FROM stu WHERE s_age>=20 AND s_age<=29
+--- between and 表示范围
+SELECT * FROM stu WHERE s_age BETWEEN 20 AND 29 -- 大于等于最小值，小于等于最大值。
+
+-- 显示年龄为21,23,25,28岁的所有学生信息
+SELECT * FROM stu WHERE s_age =21 OR s_age=23 OR s_age=25 OR s_age=28
+-- 表示集合：IN , NOT IN
+
+SELECT * FROM stu WHERE s_age IN(21,23,25,28) -- 等于其中之一，就为真。
+
+-- 显示年龄不等于21、23、25、28岁的所有学生信息
+SELECT * FROM stu WHERE s_age NOT IN(21,23,25,28) -- 不等于全部时，就为真。
+
+-- 模糊查询： like 通配符；
+-- 通配 符： "_", 表示匹配1个字符长度的字符。
+
+--           "%", 表示匹配0个或任意个字符长度的字符。
+-- 显示所有李姓的学生信息
+SELECT * FROM stu WHERE s_name LIKE '李%'
+
+-- 显示姓名中第2个字是“红”
+
+SELECT * FROM stu WHERE s_name LIKE '_红%'
+--  显示名字中有一个“强”字的学生信息
+
+SELECT * FROM stu WHERE s_name LIKE '%强%'
+-- 中间一个字是“德”的，三个字的姓名
+SELECT * FROM stu WHERE s_name LIKE '_德_'
+
+--  显示没有报到的学生信息
+-- NULL 值的判断，is null, is not null
+SELECT * FROM stu WHERE s_c_name IS NULL
+
+-- 显示所有已经报到的学生信息
+SELECT * FROM stu WHERE s_c_name IS NOT NULL
+
+
+
+--  三、排序操作  order by 子句
+-- 单个字段排序：
+-- 按年龄从小到大显示所有学生的姓名和年龄
+SELECT s_name,s_age FROM stu 
+ORDER BY s_age ASC  -- 排序操作，默认是按升序来排，asc,也可表示升序。
+-- 按年龄从大到小显示所有学生的姓名和年龄
+SELECT s_name,s_age FROM stu 
+ORDER BY s_age DESC  -- desc, 降序
+
+-- 多个字段的排序：
+SELECT s_name,s_age FROM stu 
+ORDER BY s_age DESC ,s_name DESC
+-- 如何把中文字按拼音排序呢？
+-- convert(参与排序的字段名称  using 编码名称)
+-- 按姓氏来排序
+SELECT s_name FROM stu
+ORDER BY CONVERT(s_name USING gb2312)
+SELECT s_name FROM stu
+ORDER BY CONVERT(s_name USING gbk)
+
+-- utf-8的编码，是不能按拼音顺序来排序的。
+
+

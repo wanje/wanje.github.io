@@ -1,0 +1,5 @@
+html5shiv.js 用于ie8及以下版本识别大部分h5新标签；
+
+excanvas.js 用于ie8及以下版本支持canvas绘图；
+
+respond.js 用于ie8及以下版本响应式布局(针对bootstrap不兼容低版本)

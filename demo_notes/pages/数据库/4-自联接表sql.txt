@@ -1,0 +1,14 @@
+SELECT ygb.ename '员工姓名',glyb.ename AS '领导姓名'FROM emp ygb,emp glyb WHERE ygb.mgr=glyb.empno
+
+SELECT * FROM emp ygb,emp glyb WHERE ygb.mgr=glyb.empno
+-- 当投影列中，出现同名字段时，必须指定每个字段来源于哪一些表。
+-- 如果不指定，则报错：
+-- 错误码: 1052
+-- Column 'ename' in field list is ambiguous
+-- 自联接，可以用内联接来做，也可 以用外联接来做。
+
+--- 四张表的表联接
+SELECT * FROM students  s1 JOIN scores s2 ON s1.studentid=s2.studentid JOIN courses c ON c.courseid=s2.courseid
+JOIN teachers t ON t.teacherid=c.teacherid
+SELECT * FROM students s1,scores s2,courses c,teachers t WHERE s1.studentid=s2.studentid AND 
+c.courseid=s2.courseid AND t.teacherid=c.teacherid AND teachername='王五'

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1">
+    <title>HTML零散知识点</title>
+    <link rel="stylesheet" href="../../plugins/highlight/styles/androidstudio.css">
+    <script src="../../plugins/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <style>
+        :not(.scrollbar)::-webkit-scrollbar { display: none; }    /*不显示滚动条*/
+        *{-webkit-box-sizing: border-box;-moz-box-sizing: border-box;-ms-box-sizing:border-box;-o-box-sizing:border-box;box-sizing: border-box;}
+        body,p,ul,pre {margin: 0;padding: 0;}
+        ul{list-style:none;}
+        img {max-width: 100%;vertical-align: top;background: #ffffff;}
+        a { color: #0000ff;}
+        .hide {display: none;}
+        .mg-10 {margin: 10px;}
+        .mgt-15 {margin-top: 15px;}
+        .mgl-30 {margin-left: 30px;}
+        .inline-block {display: inline-block;}
+        .color-white {color: #eeeeee;}
+        .box-wrap {height: 220px;border: 1px solid #dadada;*zoom:1;}
+        .box-wrap:before {content:"";display:table;}
+        .box-wrap:after {clear:both;content:'';display:block;font-size:0;line-height:0;visibility:hidden;height:0;}
+        .left-box,
+        .right-box {float: left;width: 75%;height: 100%;overflow: auto;}
+        .left-box {position: relative;border-right: 1px solid #dadada; width: 25%;}
+        .right-box code {min-height: 100%; margin-left: -6em;}
+        .catalogue-list {position: -webkit-sticky;position: sticky;top: 0;z-index: 9;background: #ffffff;}
+        .to-top {position: fixed;width: 50px;height: 50px;line-height: 50px;right: 30px;bottom: 20px;border-radius: 100%;text-align: center;background: #bbb;color: #ffffff!important;text-decoration: none;font-weight: bold;}
+        .to-top:hover {background: #888888;}
+    </style>
+</head>
+<body>
+<a href="#" class="to-top">Top</a>
+<p class="catalogue-list">目录：
+    <a href="#input_refresh">输入框中按回车键当前页面被刷新问题</a>
+    <!--<a class="mgl-30" href="#线性渐变">线性渐变</a>-->
+</p>
+<ul class="mgt-15">
+    <li id="input_refresh">输入框中按回车键当前页面被刷新问题 <a href="https://blog.csdn.net/WINGZINGLIU/article/details/88682091" class="mgl-30">参考文章</a>
+        <div class="box-wrap">
+            <div class="left-box">
+                <form action="" class="mg-10"><input type="text" placeholder="请输入"> 默认回车刷新页面</form>
+                <div class="mg-10"><input type="text" placeholder="请输入"> div替换form元素</div>
+                <form action="" class="mg-10"><input type="text" placeholder="请输入"><input type="text" style="display: none;"> 添加隐藏input</form>
+                <form action="" class="mg-10"><input type="text" placeholder="请输入" onkeydown="if(event.keyCode===13 || event.key==='Enter') return false;"> input上阻止回车键盘事件</form>
+                <form action="" class="mg-10" onsubmit="return false;"><input type="text" placeholder="请输入"> form上阻止提交事件</form>
+            </div>
+            <pre class="right-box"><code class="js js_showCode" contenteditable="true"></code></pre>
+            <div class="js_factCode hide">
+                问题描述：在一个form表单中，若只有一个可输入input，则按回车键会出现当前页面被刷新的问题。（注意是`form`元素包裹的情况，其他元素包裹并不会）
+
+                原因：form元素中只有一个可输入input时，按回车键会触发表单自动提交导致页面被刷新，当form中存在多个input时并不会出现该情况。
+
+                解决方案：
+                1、直接将`form`元素换成其他元素布局，但是在移动端下因为若要唤起一些特殊键盘模式(如iOS下搜索)而必须使用`form`元素包裹，这时就不能使用该方案。
+                2、因为一个`input`才会出现自动提交，所以可以多加一个`input`并隐藏。须注意的是不能使用`type`为`hidden`的`input`，这样不会生效，
+                   `form`不认可为`hidden`的`input`，所以只能使用`display:none`的方式隐藏一个可输入`input`。
+                3、给`input`加上回车键盘事件直接`return false`。在`input`加上键盘事件：οnkeydοwn="if(event.keyCode===13 || event.key==='Enter') return false;" 。
+                4、直接阻止`form`表单的提交，在`form`元素上加入提交事件：οnsubmit="return false;"。
+            </div>
+        </div>
+    </li>
+
+</ul>
+</body>
+
+<script src="../../js/jquery-1.11.3.min.js"></script>
+<script>
+  $(function () {
+
+    $('.js_factCode').each(function (index, el) {
+      let _this = $(el);
+      _this.closest('li').find('.js_showCode').html(_this.html());
+    });
+
+      /*实时响应*/
+    $('.js_showCode').on('keyup',function () {
+      let _this = $(this);
+      _this.closest('li').find('.js_factCode').html(_this.text());
+    });
+
+  });
+</script>
+</html>

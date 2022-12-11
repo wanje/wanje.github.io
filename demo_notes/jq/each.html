@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<input type="checkbox" name="mycheckbox" value="a"/>aa
+<input type="checkbox" name="mycheckbox" value="b"/>bb
+<input type="checkbox" name="mycheckbox" value="c"/>cc
+<input type="checkbox" name="mycheckbox" value="e"/>ee
+<input type="checkbox" name="mycheckbox" value="f"/>ff
+<input type="checkbox" name="mycheckbox" value="g"/>gg
+<!--<input type="button"/>-->
+<script src="../jquery-1.11.3.js"></script>
+<script>
+    var alist=$("input[type='checkbox']");
+    $.each(alist,function(i,n){
+
+        console.log(n);
+        console.log(n.value);//原生dom对象
+        $(alist[i]).css({"width":"50px","height":"50px"});
+        if(i==3){
+            return false;
+        }
+    })
+</script>
+</body>
+</html>

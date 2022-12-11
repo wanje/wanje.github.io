@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1">
+    <title>svg.js</title>
+    <link rel="stylesheet" href="../plugins/highlight/styles/androidstudio.css">
+    <script src="../plugins/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <style type="text/css">
+        body {margin: 0;}
+        ul {list-style: none;padding: 0;}
+    </style>
+</head>
+<body>
+<ul>
+    <li id="test1"></li>
+    <li id="test2"></li>
+</ul>
+<pre><code class="css" id="show-script"></code></pre>
+<script src="../plugins/svg.min.js"></script>
+<script type="text/javascript" charset="UTF-8" id="script">
+
+    if(SVG.supported){
+        console.log(SVG.supported,'属性返回浏览器是否支持svg');
+    }
+
+    /* 创建一个svg，SVG()中的参数为容器id，size()方法指定svg宽高 */
+    var draw = SVG('test1').size(600, 150);
+
+    /* rect()方法定义矩形，attr()方法设置相关属性 */
+    var rect = draw.rect(100, 100).attr({ fill: '#f06'});
+
+    var draw2 = SVG('test2').fixSubPixelOffset()
+
+
+
+</script>
+<script>
+    document.getElementById('show-script').innerHTML = document.getElementById('script').innerHTML;
+</script>
+</body>
+</html>

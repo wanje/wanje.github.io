@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1">
+    <title>笔记目录</title>
+    <style>
+        * { margin: 0; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        /*::-webkit-scrollbar-track { background: none; }*/
+        .pub-row { display: block; }
+        .pub-row:before, .pub-row:after { content: ""; display: table; clear: both; }
+        .pub-row>[class^="col-"] { float: left; min-height: 1px; }
+        .col-2 { width: 16.66666667%; }
+        .col-3 { width: 25%; }
+        .col-4 { width: 33.33333333%; }
+        .col-5-1 { width: 20%; }
+        .col-5-2 { width: 40%; }
+        .col-5-3 { width: 60%; }
+        .col-5-4 { width: 80%; }
+        .col-6 { width: 50%; }
+        .col-12 { width: 100%; }
+        .code {display: block;white-space: pre;font-family: monospace;}
+        ul {padding-left: 30px;font-size: 14px;}
+        ul ul {padding-left: 0;line-height: 2;}
+        ul ul ul {padding-left: 18px;}
+        a {display: inline-block;color: #3385ff;text-decoration: none;vertical-align: top;position: relative;}
+        a:after {content: '';position: absolute;left: 100%; /*还可以用left: auto;right: 0;*/
+            bottom: 0;width: 0;border-bottom: 2px solid #3385ff;transition: width 0.3s ease, left 0.3s ease;}
+        a:hover:after {left: 0;width: 100%;transition: width 0.3s ease;}
+        .menu-level1 { height: calc(100vh - 30px); overflow: auto; }
+    </style>
+</head>
+<body>
+<ul class="pub-row">
+    <li class="col-5-1">
+        <h3>HTML</h3>
+        <ul class="menu-level1">
+            <li><a target="_blank" href="pages/HTML相关/H5新标签.html">H5新标签</a></li>
+            <li><a target="_blank" href="pages/HTML相关/a标签的各种用途.html">a标签的各种用途</a></li>
+            <li><a target="_blank" href="pages/HTML相关/meta标签收集.html">meta标签收集</a></li>
+            <li><a target="_blank" href="pages/HTML相关/data-自定义标签属性.html">data-自定义标签属性</a></li>
+            <li><a target="_blank" href="pages/HTML相关/音频和视频.html">音频和视频</a></li>
+            <li><a target="_blank" href="./pages/HTML相关/object元素.html">object元素</a></li>
+            <li>
+                <a target="_blank" href="Canvas-SVG-CSS3绘图/canvas绘图.html">canvas/WebGL绘图/动画</a>
+                <ul>
+                    <li><a target="_blank" href="Canvas-SVG-CSS3绘图/createjs绘图.html">createjs绘图</a></li>
+                    <li><a target="_blank" href="Canvas-SVG-CSS3绘图/WebGL绘图.html">WebGL绘图</a></li>
+                    <li><a target="_blank" href="Canvas-SVG-CSS3绘图/threejs.html">threejs绘图</a></li>
+                    <li><a target="_blank" href="创意demo/canvas-矩阵文字效果&百分比加载进度圆.html">矩阵文字效果&百分比加载进度圆</a></li>
+                    <li><a target="_blank" href="创意demo/canvas-迸发的彩球.html">迸发的彩球</a></li>
+                    <li><a target="_blank" href="创意demo/canvas-知乎原子图.html">原子图</a></li>
+                    <li><a target="_blank" href="创意demo/绚丽倒计时/canvas-course5-2/index.html">绚丽倒计时</a></li>
+                    <li><a target="_blank" href="Canvas-SVG-CSS3绘图/canvas学写一个字demo/index.html">学写一个字</a></li>
+                </ul>
+            </li>
+            <li>
+                <a target="_blank" href="Canvas-SVG-CSS3绘图/SVG绘图.html">SVG绘图/动画</a>
+                <ul>
+                    <li><a target="_blank" href="Canvas-SVG-CSS3绘图/svgjs绘图.html">svgjs绘图</a></li>
+                    <li><a target="_blank" href="Canvas-SVG-CSS3绘图/Snap.svg绘图.html">Snap.svg绘图</a></li>
+                    <li><a target="_blank" href="Canvas-SVG-CSS3绘图/SVG奇思妙想.html">SVG奇思妙想</a></li>
+                    <li><a target="_blank" href="Canvas-SVG-CSS3绘图/走进SVG/chapter2-code/viewbox.html">ViewBox使用演示</a></li>
+                </ul>
+            </li>
+            <li>
+                <a target="_blank" href="Vue/README.md">Vue</a>
+                <ul>
+                    <li><a target="_blank" href="Vue/page/Vue浅试.html">Vue浅试</a></li>
+                    <li><a target="_blank" href="Vue/page/vue-router.vue">vue-router</a></li>
+                    <li><a target="_blank" href="Vue/page/Vuex.js">Vuex</a></li>
+                    <li><a target="_blank" href="https://segmentfault.com/a/1190000016786254">vue修饰符</a></li>
+                </ul>
+            </li>
+            <li><a target="_blank" href="pages/HTML相关/HTML零散收集.html">HTML零散收集</a></li>
+        </ul>
+    </li>
+    <li class="col-5-1">
+        <h3>CSS</h3>
+        <ul class="menu-level1">
+            <li><a target="_blank" href="scss/scss.scss">scss语法</a></li>
+            <li><a target="_blank" href="css/defaultPc.css">defaultPc.css</a></li>
+            <li><a target="_blank" href="css/defaultMb.css">defaultMb.css</a></li>
+            <li><a target="_blank" href="css/bootstrap栅格(float).css">bootstrap栅格(float)</a></li>
+            <li><a target="_blank" href="css/bootstrap栅格(flex).css">bootstrap栅格(flex)</a></li>
+            <li><a target="_blank" href="css/element-ui栅格.css">element-ui栅格</a></li>
+            <li><a target="_blank" href="css/border.css">移动端1像素边框</a></li>
+            <li><a target="_blank" href="css/defaultMb网易版.css">defaultMb网易版.css</a></li>
+            <li><a target="_blank" href="css/网易移动适配.css">网易移动适配核心代码.css</a></li>
+            <li><a target="_blank" href="pages/CSS相关/CSS3变换.html">CSS3变换</a></li>
+            <li><a target="_blank" href="pages/CSS相关/css-hack-ms-moz-webkit-o.html">cssHack-ms/moz/webkit/o</a></li>
+            <li><a target="_blank" href="pages/CSS相关/IE滤镜.html">IE滤镜</a></li>
+            <li><a target="_blank" href="pages/CSS相关/css-secret.html">css-secret</a></li>
+            <li><a target="_blank" href="Canvas-SVG-CSS3绘图/CSS3奇思妙想.html">CSS3奇思妙想</a></li>
+            <li><a target="_blank" href="pages/CSS相关/flex弹性布局.html">flex弹性布局</a></li>
+            <li><a target="_blank" href="pages/CSS相关/columns多列布局.html">columns多列布局(报刊图文排版)</a></li>
+            <li><a target="_blank" href="pages/CSS相关/grid网格布局.html">grid网格布局（待完成）</a></li>
+            <li><a target="_blank" href="pages/CSS相关/水平垂直居中.html">水平垂直居中</a></li>
+            <li><a target="_blank" href="pages/CSS相关/清除浮动防止浮动溢出方法.html">清除浮动防止浮动溢出方法</a></li>
+            <li><a target="_blank" href="pages/综合/自定义单复选框、三角边框.html">自定义单复选框、三角边框</a></li>
+            <li><a target="_blank" href="pages/CSS相关/表单控件默认样式重置.html">表单控件默认样式重置</a></li>
+            <li><a target="_blank" href="pages/CSS相关/文本截断显示省略号.html">文本截断显示省略号</a></li>
+            <li><a target="_blank" href="pages/CSS相关/渐变色.html">渐变色</a></li>
+            <li><a target="_blank" href="pages/CSS相关/CSS零散收集.html">CSS零散收集</a></li>
+        </ul>
+    </li>
+    <li class="col-5-1">
+        <h3>JavaScript</h3>
+        <ul class="menu-level1">
+            <li><a target="_blank" href="pages/JS相关/数据类型概览.html">数据类型概览</a></li>
+            <li><a target="_blank" href="pages/JS相关/字符串String.html">字符串String</a></li>
+            <li><a target="_blank" href="pages/JS相关/对象Object.html">对象Object</a></li>
+            <li><a target="_blank" href="pages/JS相关/数组Array.html">数组Array</a></li>
+            <li><a target="_blank" href="pages/JS相关/计算Math.html">计算Math</a></li>
+            <li><a target="_blank" href="pages/JS相关/动态日历.html">动态日历(Date对象)</a></li>
+            <li><a target="_blank" href="pages/JS相关/BOM浏览器对象模型.html">BOM浏览器对象模型</a></li>
+            <li><a target="_blank" href="pages/JS相关/DOM访问与操作.html">DOM访问与操作</a></li>
+            <li><a target="_blank" href="pages/JS相关/原生JS兼容写法.js">原生JS兼容写法</a></li>
+            <li><a target="_blank" href="pages/JS相关/File文件API.html">File文件API</a></li>
+            <li><a target="_blank" href="pages/JS相关/Function.prototype.bind()方法.html">Function.prototype.bind</a></li>
+            <li><a target="_blank" href="pages/插件使用/jQuery应用总结.html">jQuery应用总结</a></li>
+            <li><a target="_blank" href="pages/JS相关/JS方法收集.js">JS方法收集</a></li>
+            <li><a target="_blank" href="pages/JS相关/Web存储.html">Web存储(Storage)</a></li>
+            <li><a target="_blank" href="#">Ajax攻略（待完成）</a></li>
+            <li><a target="_blank" href="pages/JS相关/设计模式.html">设计模式</a></li>
+            <li><a target="_blank" href="http://demo.nimius.net/debounce_throttle/">节流与防抖的区别(可视化示例)</a></li>
+            <li>
+                <a target="_blank" href="pages/JS相关/ES6+/ES6.js">ES6+语法</a>
+                <ul>
+                    <li><a target="_blank" href="pages/JS相关/ES6+/class类.js">class类</a></li>
+                    <li><a target="_blank" href="pages/JS相关/ES6+/Promise对象.js">Promise对象</a></li>
+                </ul>
+            </li>
+            <li>
+                <a target="_blank" href="pages/JS相关/事件event.js">事件event</a>
+                <ul>
+                    <li><a target="_blank" href="pages/JS相关/自定义&模拟事件.js">自定义&模拟事件</a></li>
+                    <li><a target="_blank" href="pages/JS相关/事件JS兼容.js">事件JS兼容</a></li>
+                    <li><a target="_blank" href="知识点截图/浏览器事件.png">浏览器事件.png</a></li>
+                </ul>
+            </li>
+            <li>
+                <a target="_blank" href="pages/通信/iframe.html">通信</a>
+                <ul>
+                    <li><a target="_blank" href="pages/通信/postMessage.html">window.postMessage</a></li>
+                    <li><a target="_blank" href="pages/通信/WebSockets-API.html">WebSockets全双工通信API</a></li>
+                </ul>
+            </li>
+            <li>
+                <a target="_blank" href="node">Node</a>
+                <ul>
+                    <li><a target="_blank" href="node/CommonJS规范.js">CommonJS规范</a></li>
+                </ul>
+            </li>
+        </ul>
+    </li>
+    <li class="col-5-1">
+        <h3>兼容性</h3>
+        <ul class="menu-level1">
+            <li><a target="_blank" href="pages/综合/兼容问题.html">兼容问题</a></li>
+            <li><a target="_blank" href="pages/综合/易错点汇总.html">易错点汇总</a></li>
+            <li>
+                <a target="_blank" href="node">知识点截图</a>
+                <ul>
+                    <li><a target="_blank" href="知识点截图/JSDOM基本操作.gif">JSDOM基本操作.gif</a></li>
+                    <li><a target="_blank" href="知识点截图/盒模型及各种距离.png">盒模型及各种距离.png</a></li>
+                    <li><a target="_blank" href="知识点截图/URL编码与解码分析.png">URL编码与解码分析.png</a></li>
+                    <li><a target="_blank" href="知识点截图/http连接7步骤.png">http连接7步骤.png</a></li>
+                    <li><a target="_blank" href="知识点截图/ieCssHack符号.png">ieCssHack符号.png</a></li>
+                    <li><a target="_blank" href="知识点截图/keycode键盘码表.jpg">keycode键盘码表.jpg</a></li>
+                </ul>
+            </li>
+        </ul>
+    </li>
+    <li class="col-5-1">
+        <h3>其他</h3>
+        <ul class="menu-level1">
+            <li><a target="_blank" href="pages/其他/Markdown语法.md">Markdown语法</a></li>
+            <li><a target="_blank" href="pages/综合/综合笔记.html">综合笔记</a></li>
+            <li><a target="_blank" href="易体验/pc/pub-page/易体验.html">易体验</a></li>
+            <li><a target="_blank" href="主框架.html">主框架嵌套iframe及生成tab标签</a></li>
+            <li><a target="_blank" href="pages/其他/Emmet语法.html">Emmet语法</a></li>
+            <li><a target="_blank" href="https://juejin.im/post/5c23993de51d457b8c1f4ee1">九种跨域方式实现原理（完整版）</a></li>
+            <li>
+                <a target="_blank" href="./">插件使用</a>
+                <ul>
+                    <li><a target="_blank" href="pages/插件使用/axios.js">axios使用</a></li>
+                    <li><a target="_blank" href="pages/插件使用/Mockjs使用.html">Mockjs使用</a></li>
+                    <li><a target="_blank" href="pages/其他/ESLint使用.html">ESLint使用</a></li>
+                    <li><a target="_blank" href="pages/插件使用/artDialog.html">artDialog</a></li>
+                    <li><a target="_blank" href="pages/图表绘制/Highcharts图表.html">Highcharts图表</a></li>
+                    <li><a target="_blank" href="pages/图表绘制/antv-g2图表可视化.html">antv-g2图表可视化</a></li>
+                    <li><a target="_blank" href="gulpfile.js">gulp</a></li>
+                    <li><a target="_blank" href="./pages/插件使用/jsPlumb&html2canvas.html">jsPlumb&html2canvas使用</a></li>
+                    <li><a target="_blank" href="Canvas-SVG-CSS3绘图/anime动画.html">anime.js动画库</a></li>
+                    <li><a target="_blank" href="Canvas-SVG-CSS3绘图/Splitting字符分割.html">Splitting字符分割</a></li>
+                    <li><a target="_blank" href="https://github.com/maxwellito/vivus">vivus：svg线型图形绘制流动画库</a></li>
+                    <li><a target="_blank" href="./pages/插件使用/webcam开启web摄像头.html">webcamjs开启web摄像头</a></li>
+                </ul>
+            </li>
+            <li>
+                <a target="_blank" href="./">文章收藏</a>
+                <ul>
+                    <li><a target="_blank" href="https://www.zhangxinxu.com/wordpress/2011/09/cssom视图模式cssom-view-module相关整理与介绍/">CSS中各种视图尺寸总结</a></li>
+                    <li><a target="_blank" href="https://www.zhangxinxu.com/wordpress/2019/01/css-typewriter-effect/">纯CSS实现打字动画效果</a></li>
+                    <li><a target="_blank" href="https://juejin.im/post/5c35953ce51d45523f04b6d2">纯CSS实现滚动进度指示条</a></li>
+                    <li><a target="_blank" href="https://www.zhangxinxu.com/wordpress/2019/01/js-quiz-27/">正则：由掘金翻译排版格式分析正则使用</a></li>
+                    <li><a target="_blank" href="http://ewind.us/2017/nano-vdom/">自制前端框架之50行的虚拟DOM</a></li>
+                    <li><a target="_blank" href="https://juejin.im/post/6861501624993447950">CSS八种让人眼前一亮的HOVER效果</a></li>
+                </ul>
+            </li>
+        </ul>
+    </li>
+</ul>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        #main{
+            border: 1px solid red;
+            height: auto;
+        }
+
+    </style>
+</head>
+<body>
+<div id="main">
+    main
+</div>
+
+<h2>这是内部插入节点</h2>
+<p>这是p元素</p>
+<button onclick="myAppend()">插入节点到后面</button>
+<button onclick="myAppendTo()">移动节点到后面</button>
+<button onclick="myPrepend()">插入节点到前面</button>
+
+<h2>外部插入节点</h2>
+<button onclick="myAfter()">节点后插入</button>
+<button onclick="myBefore()">节点前插入</button>
+
+<h1>包裹节点</h1>
+<button onclick="myWrap()">包裹节点</button>
+<button onclick="removeWrap()">移除包裹节点</button>
+
+<h2>复制 删除 替换</h2>
+<button onclick="myClone()">克隆节点</button>
+<button onclick="myRemove()">删除节点</button>
+<button onclick="myReplace()">替换节点</button>
+
+<script src="../jquery-1.11.3.js"></script>
+<script>
+
+function myAppend(){
+//    var newBox=;
+    $("#main").append("<div>彭浩将插入到main</div>").css("width","700px");
+}
+
+    function myAppendTo(){
+        $("p").appendTo("#main");
+    }
+
+    function myPrepend(){
+//        $("#main").prepend("<span>周鑫贱被插入到前面</span>");
+        $("<span>周鑫贱被插入到前面</span>").prependTo("#main");
+    }
+
+    function myAfter(){
+//        $("#main").after($("<span>周鑫贱被插入到后面</span>"));
+
+        $("<span>江涛主动被</span>").insertAfter($("#main"));
+    }
+
+    function myBefore(){
+        $("#main").before("<span>肖烈还没睡着~！</span>");
+    }
+
+    function myWrap(){
+//        $("span").wrap("<div></div>");
+        $("span").wrapAll("<div></div>");
+    }
+
+    function removeWrap(){
+        $("span").unwrap().unwrap();
+    }
+
+    function myClone(){
+        $("#main").before($("p").clone());
+    }
+
+    function myRemove(){
+        $("p").remove();
+    }
+
+    function myReplace(){
+        $("p").replaceWith("<h1>替换p的h1</h1>");
+    }
+</script>
+</body>
+</html>

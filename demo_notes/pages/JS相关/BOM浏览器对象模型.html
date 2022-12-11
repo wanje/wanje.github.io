@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BOM浏览器对象模型</title>
+    <link rel="stylesheet" href="../../plugins/highlight/styles/androidstudio.css">
+    <script src="../../plugins/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <style type="text/css">
+        body,pre {margin: 0;}
+        img{max-width: 100%;}
+        .code {display: block;white-space: pre;font-family: monospace;}
+    </style>
+</head>
+<body>
+<pre><code class="css" id="show-script"></code></pre>
+<div>
+    <img src="../../知识点截图/location对象URL解析.png" title="location对象URL解析">
+    <img src="../../知识点截图/navigator对象.png" title="navigator对象">
+    <img src="../../知识点截图/window对象.gif" title="window对象">
+</div>
+<script id="script">
+    /**================================================================================================================*/
+    /**================================================== window对象 ==================================================*/
+    /**================================================================================================================*/
+    /**===窗口位置（相对屏幕边缘的位置）===
+    * 属性保存在screenLeft、screenTop中，Firefox中为screenX、screenY（Safari、Chrome和Opera也支持，但Opera中其值与screenLeft、screenTop不对应，所以建议在Opera中不要使用screenX、screenY），
+    * */
+    /*跨浏览器写法*/
+    var leftPos = (typeof window.screenLeft == "number") ? window.screenLeft : window.screenX;
+    var topPos = (typeof window.screenTop == "number") ? window.screenTop : window.screenY;
+    console.log(leftPos,topPos);
+
+    /**===窗口移动===
+    * 使用moveTo()或moveBy()方法可将浏览器窗口进行移动，两个方法都接受两个参数，
+    * moveTo()方法接受新位置的x、y坐标值，而moveBy()方法接受在水平和垂直方向上的移动的像素数，
+    * 注意这两个方法在大多浏览器在默认是禁用的，但对用window.open()打开的窗口大多有用，且该方法不适用于框架，而只能对最外层window使用
+    * */
+    window.moveTo(100,200);
+    window.moveBy(100,200);
+
+    /**===窗口或视口或页面大小===*/
+    //对于IE9+、Chrome、Firefox、Opera 以及 Safari：
+    window.innerHeight;//浏览器窗口的内部高度
+    window.innerWidth;// 浏览器窗口的内部宽度
+    //对于IE8及以下：
+    document.documentElement.clientWidth;//获取浏览器页面宽度
+    document.documentElement.clientHeight;//获取浏览器页面高度
+    //或者：
+    document.body.clientHeight;
+    document.body.clientWidth;
+    //实用的 JavaScript 方案（涵盖所有浏览器）：
+    var w=window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+    var h=window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+
+    /**===窗口大小改变===
+    * 使用resizeTo()或resizeBy()方法可改变浏览器窗口大小，两个方法都接受两个参数，
+    * resizeTo()方法接受新大小的宽高值，而resizeBy()方法接受新旧窗口的宽高差值，
+    * 注意这两个方法与窗口移动一样，在大多浏览器在默认是禁用的，且该方法不适用与框架，而只能对最外层window使用
+    * */
+    window.resizeTo(1000,600);
+    window.resizeBy(50,50);
+
+    /**===导航与打开窗口===
+    * window.open()方法既可以导航到一个特定的URL，也可以打开一个新的浏览器窗口，该方法接受4个参数：URL、窗口目标(功能等同a标签中的target属性)、一个特性字符串、一个表示新页面是否取代浏览器历史记录中当前加载页面的布尔值；
+    * 一般只需传递第一个参数，最后一个参数只在不打开新窗口的情况下使用，
+    * 该方法会返回一个指向新窗口的引用，也就是新窗口的window对象
+    * 调用close()方法可以关闭新打开的窗口，该方法只能关闭open()方法打开的窗口，浏览器主窗口在未得到用户同意时是不能关闭的，弹出窗口倒是可以调用top.close()方法不经用户同意就关闭，
+    * 弹出窗口关闭之后，窗口的引用仍然还在，但除了可以检测其closed属性外已没其他用，
+    * 新创建的window对象有一个opener属性，其中保存着打开它的原始窗口对象，该属性只在弹出窗口的最外层window对象(top)中有定义，而且指向调用window.open()方法的那个窗口或框架
+    * */
+//    var newWin = window.open('url','_blank','width=1000,height=400,top=80,left=100',true);
+//    newWin.resizeTo(500,500);
+
+    /**系统对话框，调用alert、confirm、prompt、find、print等方法出现的对话框*/
+//    window.print(); //打印对话框
+//    window.find();  //搜索对话框，在浏览器中测试无效果
+    //alert方法接受字符串参数，若不是字符串其默认会在后台调用参数的toString()方法得到其字符串形式
+
+    /**================================================================================================================*/
+    /**================================================= location对象 =================================================*/
+    /**================================================================================================================*/
+    /*location对象比较特别，它既是window对象的属性，也是document对象的属性，即window.location与document.location引用的是同一个对象
+    * location对象不仅保存着当前文档的信息，还保存着对URL解析后的片段，详细可参考上方截图，
+    * location对象解析URL的功能与a标签解析URL的功能类似，该部分也可参考[ a标签的各种用途.html ]中的总结
+    * */
+    function parseWinURL(){
+        var a = window.location;
+        return {
+            source: decodeURIComponent(window.location.href),   //decodeURIComponent方法将URL中编码过的字符进行解码(如汉字等)
+            protocol: a.protocol.replace(':',''),   // protocol属性返回当前 URL 的协议（前面的http、https等，原本包含:号）
+            host: a.hostname,   // hostname属性返回当前 URL 的主机名
+            port: a.port||'80', // port属性返回当前 URL 的端口号
+            path: decodeURIComponent(a.pathname), // 返回当前 URL 的路径部分（即主机名后的文件路径）
+            file: (decodeURIComponent(a.pathname).match(/\/([^\/?#]+)$/i) || [,''])[1], //当前页文件名
+            hash: decodeURIComponent(a.hash).replace('#',''),   // hash属性返回从井号 (#) 开始的 URL（锚）(原本包含#号)，与hash相关的还有hashchange事件(IE8+)
+            query: decodeURIComponent(a.search).replace('?',''),     // search属性返回从问号 (?) 开始的 URL（查询部分）(原本包含?号)
+            params: (function(){    //查询字段与相应值解析
+                var ret = {},
+                    seg = decodeURIComponent(a.search).replace('?','').split('&'),
+                    s;
+                for (var len=seg.length,i=0;i<len;i++) {
+                    if (!seg[i]) continue;
+                    s = seg[i].split('=');
+                    ret[s[0]] = s[1];
+                }
+                return ret;
+            })()
+        }
+    }
+    console.log(parseWinURL());
+
+    /* hashchange事件绑定在window上，当前窗口 URL 的锚部分(#开始，即hash)发生改变时触发 */
+
+    /**===浏览器地址操作===
+    * 使用assign()方法传入一个URL可改变浏览器地址，直接将location.href或window.location设置一个URL地址时也会自动以该值调用assign()方法，所以三种方法效果都一样，
+    * 最常用的就是设置location.href，通过改变location提供的URL片段属性也可改变地址，
+    * 这些方法修改的地址在浏览器中都会形成新的历史记录，通过前进后退可以找回原页面（经测加载页面直接跳转的并无历史记录，而手动触发改变地址或加载页面后有一段间隔时间再跳转的情况都适用），
+    * 若要禁用生成历史记录，则可以使用replace(url)方法，使用该方法原页面将不会存在历史记录中，所以不能通过前进或后退找到，
+    * ===页面重加载===
+    * 使用reload()方法可对页面进行重加载，不传参时页面将以最优方式加载（即页面没改变则从缓存中重加载，否则从服务器上重加载），若要强制从服务器重加载，则传入参数true，
+    * 因受网络或资源的影响，因而写在reload()方法之后的代码段不确定能否被执行，所以最好将reload()放在代码的最后一行
+    * */
+    document.onclick = function (event) {
+//        location.assign('http://localhost:8080/学习笔记/a标签的各种用途.html');
+//        location.replace('http://localhost:8080/学习笔记/a标签的各种用途.html');
+//        location.reload();
+    };
+
+    /**================================================================================================================*/
+    /**=========================================== navigator对象与screen对象 ===========================================*/
+    /**================================================================================================================*/
+    //可参见知识点截图，screen对象的应用性并不强
+
+    /**================================================================================================================*/
+    /**================================================== history对象 ==================================================*/
+    /**================================================================================================================*/
+    /* go()方法可在用户的历史记录中任意跳转，传入负数则表示后退几页，正数则表示前进几页，0或不传则将刷新当前页，传入字符串则跳转到历史记录中包含该字符串的最近的一个页面(既可能后退也可能前进)
+    * back()和forward()方法表示后退或前进一页，是go(-1)和go(1)的简写，
+    * length属性保存着历史记录的数量（注意所谓历史记录是当前标签页访问过的记录，不是浏览器的整个历史记录，每个标签页的历史记录是分离的）
+    * */
+    !function () {
+        history.go(-2); //后退二个页面
+        history.back(); //后退一个页面
+        history.forward(); //前进一个页面
+        console.log('当前标签访问过的页面历史记录条数：',history.length); //返回当前标签访问过的页面历史记录数量
+    }();
+    /** HTML5中新增加的history对象API(IE10+): pushState、replaceState、popstate event
+     * 可用于点击浏览器前进后退按钮时窗口作不重新加载界面的回退或前进(就像ajax局部刷新的界面若直接回退将重加载之前的界面，而不是会退到ajax请求前的状态；也可用于弹窗的收起，而不是直接回到前一个界面)
+     * 可参考例①https://github.com/zhaoqize/blog/issues/20；例②https://www.zhangxinxu.com/wordpress/2013/06/html5-history-api-pushstate-replacestate-ajax/
+     * */
+    !function () {
+        //向历史中加入一条记录
+        history.pushState({p1:'一个状态对象，可以多个属性记录想记录的信息'}, '参数2为一个可选标题，可以为空字符串', '参数3为需要修改的URL地址，并未一定要是url，一个关键特点也行，如直接一个hash');
+        //替换当前记录
+        history.replaceState('参数同pushState，只是该方法用于替换当前状态');
+        //qinnjin/后退都会触发该事件，第一次打开标签加载完界面后也会触发
+        window.addEventListener('popstate',function (event) {
+            console.log(event.state);   //若当前标签不是第一次打开，则事件中state属性就会保存当前页状态信息，此时直接通过 history.state 也可以访问到
+        });
+    }();
+
+
+</script>
+<script>
+    document.getElementById('show-script').innerText = document.getElementById('script').innerText;
+</script>
+</body>
+</html>

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1">
+    <title>CSS零散知识点</title>
+    <link rel="stylesheet" href="../../plugins/highlight/styles/androidstudio.css">
+    <script src="../../plugins/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <style>
+        :not(.scrollbar)::-webkit-scrollbar { display: none; }    /*不显示滚动条*/
+        *{-webkit-box-sizing: border-box;-moz-box-sizing: border-box;-ms-box-sizing:border-box;-o-box-sizing:border-box;box-sizing: border-box;}
+        body,p,ul,pre {margin: 0;padding: 0;}
+        ul{list-style:none;}
+        img {max-width: 100%;vertical-align: top;background: #ffffff;}
+        a { color: #0000ff;}
+        .mgt-15 {margin-top: 15px;}
+        .mgl-30 {margin-left: 30px;}
+        .inline-block {display: inline-block;}
+        .color-white {color: #eeeeee;}
+        .box-wrap {height: 220px;border: 1px solid #dadada;*zoom:1;}
+        .box-wrap:before {content:"";display:table;}
+        .box-wrap:after {clear:both;content:'';display:block;font-size:0;line-height:0;visibility:hidden;height:0;}
+        .left-box,
+        .right-box {float: left;width: 75%;height: 100%;overflow: auto;}
+        .left-box {position: relative;border-right: 1px solid #dadada; width: 25%;}
+        .right-box code {min-height: 100%; margin-left: -6em;}
+        .catalogue-list {position: -webkit-sticky;position: sticky;top: 0;z-index: 9;background: #ffffff;}
+        .to-top {position: fixed;width: 50px;height: 50px;line-height: 50px;right: 30px;bottom: 20px;border-radius: 100%;text-align: center;background: #bbb;color: #ffffff!important;text-decoration: none;font-weight: bold;}
+        .to-top:hover {background: #888888;}
+    </style>
+</head>
+<body>
+<a href="#" class="to-top">Top</a>
+<p class="catalogue-list">目录：
+    <a href="#sticky">粘性定位position:sticky</a>
+    <a href="#scroll-behavior">平滑滚动scroll-behavior:smooth;</a>
+    <!--<a class="mgl-30" href="#线性渐变">线性渐变</a>-->
+</p>
+<ul class="mgt-15">
+<li id="sticky">粘性定位position:sticky <a href="https://www.zhangxinxu.com/wordpress/2020/03/position-sticky-rules/" class="mgl-30">参考文章</a>
+    <div class="box-wrap" style="height: 570px;">
+        <style class="js_styleCode">
+            /* 粘性定位 */
+            /* 其定位值是相对距离最近的可滚动祖先元素的，也就是下面所说的“流盒”
+             * position:sticky有个非常重要的特性，那就是sticky元素效果完全受制于其父级元素们，也就是其始终是包含在父元素中的，
+             * 若父元素滚出粘性限制位置的边缘，则粘性元素将不再继续停留在边界而也会跟着滚走
+             */
+            /* 流盒：指粘性定位元素距离最近的可滚动祖先元素(overflow属性值不为visible的元素)盒子，若没有可滚动元素，则表示浏览器视窗盒子(注意是视窗，并非body)*/
+            .flow-box {
+                height: 100%;
+                width: 100%;
+                border: 3px solid currentColor;
+                color: rgba(0, 0, 0, 0.5);
+                overflow: auto;
+            }
+            /* 粘性约束矩形：指粘性定位元素的包含块(父元素)与流盒的交集部分(sticky元素的定位边线到其父元素对立边线之间的区域)*/
+            /* 由于滚动的时候，流盒不变(流盒大小不变，是其内部在滚动)，而粘性定位元素的包含块(父元素)跟着滚动，因此粘性约束矩形随着滚动的进行是实时变化的 */
+            .limit-box {
+                width: 70%;
+                height: 70%;
+                margin: 30px auto 0;
+                border: 3px solid currentColor;
+                color: rgba(0, 0, 255, 0.5);
+            }
+            .sticky-tag {
+                position: sticky;
+                top: 20px; /* bottom、left、top值同理 */
+                background: rgba(255,0,0,0.5);
+                color: #ffffff;
+            }
+            /* 注意点：
+             * 1、sticky父元素不能有任何`overflow:visible`以外的overflow设置，否则没有粘滞效果。因为改变了滚动容器（即使没有出现滚动条）。
+             * 2、父级元素设置和粘性定位元素等高的固定的height高度值，或者高度计算值和粘性定位元素高度一样，也没有粘滞效果（因为这样粘性约束矩形没有多余的空间让其停留，会直接跟着父元素滚走）。
+             * 3、同一个父容器中的sticky元素，如果定位值相等，则到达限定位置时会重叠；如果属于不同父元素，且这些父元素正好首尾紧密相连，则会鸠占鹊巢，依次挤开原来的元素，形成依次占位的效果。
+             * 4、sticky定位，不仅可以设置top，基于滚动容器上边缘定位；还可以设置bottom，也就是相对底部粘滞。如果是水平滚动，也可以设置left和right值。
+             */
+
+            /* 辅助样式，无关 */
+            .demo-box {
+                height: 80%;
+                width: 80%;
+                margin: 10px auto 0;
+                position: relative;
+            }
+            .demo-box i {
+                display: block;
+                border-top: 3px solid #f00;
+                margin-bottom: -3px;
+                position: sticky;
+                top: 20px;
+            }
+            .cont {
+                height: 200%; /*这里只是当做滚动容器中的其他内容，以便体现滚动效果*/
+            }
+            [data-tag] { position: relative; }
+            [data-tag]:before {
+                content: attr(data-tag);
+                font-size: 10px;
+                line-height: 1;
+                position: absolute;
+                left: 0;
+                bottom: 0;
+            }
+        </style>
+        <div class="left-box">
+            <div class="demo-box">
+                <div class="flow-box scrollbar" data-tag="流盒(黑框，其内部可滚动)">
+                    <div class="limit-box" data-tag="粘性约束矩形(上面红线到该底部的区域)"><i></i>
+                        <p class="sticky-tag">粘性定位元素</p>
+                    </div>
+                    <p class="cont"></p>
+                </div>
+            </div>
+        </div>
+        <pre class="right-box"><code class="css js_showCode" contenteditable="true"></code></pre>
+    </div>
+</li>
+
+<li id="scroll-behavior">平滑滚动scroll-behavior:smooth <a href="https://developer.mozilla.org/zh-CN/docs/Web/CSS/scroll-behavior" class="mgl-30">说明文档</a>
+    <div class="box-wrap">
+        <style class="js_styleCode">
+            /* 平滑滚动 */
+            /*
+             当用户手动导航或者 CSSOM scrolling API 触发滚动操作时，CSS属性`scroll-behavior`为一个滚动框指定滚动行为，`smooth`表示平滑滚动，默认为`auto`立即滚动
+             其他任何的滚动，例如那些由于用户行为而产生的滚动，不受这个属性的影响。
+             */
+            .smooth {
+                height: 120px;
+                line-height: 120px;
+                border: 1px solid lightgray;
+                margin: 0 20px;
+                font-size: 30px;
+                text-align: center;
+                overflow: auto;
+                scroll-behavior: smooth;  /* 关键属性，注意：IE和Safari不支持，iOS版Safari也不支持，安卓浏览器较高版本支持 */
+            }
+        </style>
+        <div class="left-box">
+            <a class="mgl-30" href="#A">A</a><a class="mgl-30" href="#B">B</a><a class="mgl-30" href="#C">C</a>
+            <ul class="smooth">
+                <li id="A">A</li>
+                <li id="B">B</li>
+                <li id="C">C</li>
+            </ul>
+        </div>
+        <pre class="right-box"><code class="css js_showCode" contenteditable="true"></code></pre>
+    </div>
+</li>
+
+</ul>
+</body>
+
+<script src="../../js/jquery-1.11.3.min.js"></script>
+<script>
+$(function () {
+
+    $('.js_styleCode').each(function (index, el) {
+        let _this = $(el);
+        _this.closest('li').find('.js_showCode').html(_this.html());
+    });
+
+    /*实时响应*/
+    $('.js_showCode').on('keyup',function () {
+        let _this = $(this);
+        _this.closest('li').find('.js_styleCode').html(_this.text());
+    });
+
+});
+</script>
+</html>

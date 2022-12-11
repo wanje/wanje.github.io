@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>自定义单选框、复选框</title>
+    <style>
+        .code {display: block;white-space: pre;font-family: monospace;}
+    </style>
+</head>
+<body>
+<div>
+    <p>PC端适用</p>
+    <!--常规单选框-->
+    <i class="btn-radio"><input type="radio" name="pay-way" value="和包" checked="checked"/></i>
+    <i class="btn-radio"><input type="radio" name="pay-way" value="在线支付"/></i>
+    <i class="btn-radio"><input type="radio" name="pay-way" value="支付宝"/></i>
+    <i class="btn-radio"><input type="radio" name="pay-way" value="快捷支付"/></i>
+
+    <!--常规复选框-->
+    <i class="btn-checkbox"><input type="checkbox" name="payment" checked="checked"/></i>
+    <i class="btn-checkbox"><input type="checkbox" name="payment"/></i>
+    <i class="btn-checkbox"><input type="checkbox" name="payment"/></i>
+
+    <!--大复选框-->
+    <i class="big-checkbox"><input type="checkbox" name="assets" value="现金" checked="checked"/></i>
+    <i class="big-checkbox"><input type="checkbox" name="assets" value="积分"/></i>
+    <i class="big-checkbox"><input type="checkbox" name="assets" value="流量"/></i>
+
+    <hr/>
+    <p>移动端适用</p>
+    <input type="radio" name="sex" value="male" checked="checked"/>男
+    <input type="radio" name="sex" value="female"/>女
+
+    <input type="checkbox" name="habit" checked="checked"/>
+    <input type="checkbox" name="habit"/>
+    <input type="checkbox" name="habit"/>
+
+    <hr/>
+    <p class="rel" style="border-top: 1px solid #fce399;">三角边框
+        <i class="triangle-up"></i>
+    </p>
+
+</div>
+<style type="text/css" class="code">
+    .rel {position: relative;}
+    /*宽高根据图标大小进行设置，图标最好将选中状态放在前，未选中状态放在后（在同一张图上不管两个图表横着还是竖着放）*/
+
+    /*移动端*/
+    input[type="radio"],
+    input[type="checkbox"] {-webkit-appearance: none;-moz-appearance: none;appearance: none;display: inline-block;width: 12px;height: 12px;border: 1px solid #ff5d5b;border: none\9;border-radius: 2px;outline: none;vertical-align: -1px;cursor: pointer;position: relative;}
+    input[type="radio"] {border-radius: 100%;}
+    /*用背景图方法*/
+    input[type="radio"]:checked {background: #ffffff url(../../images/arc-dot.png) center 0 no-repeat;}
+    input[type="checkbox"]:checked {background: #ffffff url(../../images/right-red.png) center center no-repeat;}
+    /*用before或者after添加圆点或对勾方法*/
+    /*input[type="radio"]:checked:before {content: '';display: inline-block;width: 6px;height: 6px;border-radius: 100%;background: #ff5d5b;position: absolute;left: 2px;top: 2px;}*/
+    /*input[type="checkbox"]:checked:before {*/
+    /*content: '✔';display: inline-block;width: 100%;height: 100%;line-height: 1;-webkit-text-size-adjust: 100%;font-size: 12px;*/
+    /*font-weight: bold;text-align: center;color: #ff5d5b;position: absolute;left: 0;top: 0;*/
+    /*-webkit-transform: scale(0.8);*/
+    /*-moz-transform: scale(0.8);*/
+    /*-ms-transform: scale(0.8);*/
+    /*-o-transform: scale(0.8);*/
+    /*transform: scale(0.8);}*/
+
+    /*PC端，兼容IE8*/
+    /*首先去除用户代理设置的外边距*/
+    input[type="radio"],
+    input[type="checkbox"] {margin: 0;}
+
+    .btn-checkbox {display: inline-block;width: 14px;height: 14px;margin-right: 5px;cursor: pointer;background: url(../../images/btn-checkbox.png) 0 -18px no-repeat;vertical-align: middle;position: relative;}
+    .big-checkbox {display: inline-block;width: 29px;height: 26px;cursor: pointer;background: url(../../images/checkbox-icon.png) 0 -49px no-repeat;vertical-align: middle;position: relative;}
+    .btn-radio {display: inline-block;width: 12px;height: 12px;margin-right: 5px;cursor: pointer;background: url(../../images/radio-icon.png) -16px 0 no-repeat;vertical-align: middle;position: relative;}
+    .btn-checkbox.checked,
+    .big-checkbox.checked,
+    .btn-radio.checked {background-position: 0 0;}
+    .btn-checkbox input[type="checkbox"],
+    .big-checkbox input[type="checkbox"],
+    .btn-radio input[type="radio"] {display: inline-block;width: 100%;height: 100%;border: none;outline: none;cursor: pointer;position: absolute;top: 0;left: 0;filter: alpha(opacity=0);opacity: 0;}
+
+    /*三角边框——此处示例三角朝上*/
+    .triangle-up {position: absolute;top: -24px;left: 115px;}
+    .triangle-up:before,
+    .triangle-up:after {content: '';display: inline-block;border-style: solid;border-width: 12px 8px;border-color: transparent transparent #fce399 transparent;}
+    .triangle-up:after {border-bottom-color: #ffffff;position: absolute;left: 0;top: 2px;}
+</style>
+<hr>
+<script src="../../js/jquery-1.11.3.js"></script>
+<script type="text/javascript" charset="UTF-8" class="code">
+    /*以下都是适用于PC端，用一个元素包裹一个input的自定义方法*/
+    /*初始化*/
+    $(function(){
+        //自定义复选框 btn-checkbox 初始化
+        $('.btn-checkbox input').each(function(){
+            this.checked ? $(this).parent().addClass('checked') : $(this).parent().removeClass('checked');
+        });
+
+        //自定义复选框 big-checkbox 初始化
+        $('.big-checkbox input').each(function(){
+            this.checked ? $(this).parent().addClass('checked') : $(this).parent().removeClass('checked');
+        });
+
+        //自定义单选框 btn-radio 初始化
+        $('.btn-radio input').each(function(){
+            this.checked ? $(this).parent().addClass('checked') : $(this).parent().removeClass('checked');
+        });
+    });
+
+    /*自定义复选框 btn-checkbox */
+    $('.btn-checkbox').on('click','input',function(){
+        this.checked ? $(this).parent().addClass('checked') : $(this).parent().removeClass('checked');
+    });
+
+    /*自定义复选框 big-checkbox */
+    $('.big-checkbox').on('click','input',function(){
+        this.checked ? $(this).parent().addClass('checked') : $(this).parent().removeClass('checked');
+    });
+
+    /*自定义单选框框 btn-radio */
+    $('.btn-radio').on('click','input',function(){
+        var name = this.name;
+        if(this.checked){
+            $('input[type="radio"][name='+name+']').each(function(){
+                this.checked = false;
+                $(this).parent().removeClass('checked');
+            });
+            this.checked = true;
+            $(this).parent().addClass('checked');
+        }
+    });
+</script>
+</body>
+</html>

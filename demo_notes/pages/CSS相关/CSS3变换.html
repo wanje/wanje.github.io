@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CSS3变换</title>
+    <link rel="stylesheet" href="../../plugins/google-code-prettify/skins/sons-of-obsidian.css">
+    <style>
+        *{-webkit-box-sizing: border-box;-moz-box-sizing: border-box;-ms-box-sizing:border-box;-o-box-sizing:border-box;box-sizing: border-box;}
+        body {margin: 0;}
+        ol{padding-left: 25px;}
+        .fl {float: left;}
+        .fz-30 {font-size: 30px;}
+        .clearfix{*zoom:1;}
+        .clearfix:before {content:"";display:table;}
+        .clearfix:after {clear:both;content:' ';display:block;font-size:0;line-height:0;visibility:hidden;height:0;}
+        .box-wrap{height: 300px;border: 1px solid #dadada;}
+        .left-box,
+        .code {float: left;width: 50%;height: 100%;overflow-y: scroll;}
+        .left-box {position: relative;}
+        .code {width: 50%;height: 100%;box-sizing: border-box;font-size: 14px;background: #ffe;display: block;float: right;padding: 1em 0;font-family: Consolas, Monaco, monospace;white-space: pre;color: #333;}
+        /*pre {height: 4em;overflow: auto; transition: all 0.2s;}*/
+        /*pre:hover {height: 100vh;}*/
+
+        div{
+            -webkit-backface-visibility: visible;
+            -moz-backface-visibility: visible;
+            -ms-backface-visibility: visible;
+            backface-visibility: visible;
+        }
+    </style>
+</head>
+<body>
+    <pre>
+        2D变化IE9+支持，3D变换IE10+支持(部分属性支持性还不好)
+
+        变换对非inline元素才有效
+
+        舞台元素：变形元素们的共同父元素；
+
+        长度 != 百分比，长度仅用于指带单位的具体值；
+
+        不管是2D还是3D空间，都是建立在平面直角坐标系或空间直角坐标系中的，物体上的每个点都有一个坐标，所有变换都可以通过这些点映射得到；
+
+        transform属性有以下变形函数，默认值为none；
+        在有多个参数的方法中，可在最后传入一个基数变换值，而在前面传入每个方向上的倍数因子；
+        使用多个变换函数时，每个函数之间用空格隔开：
+            平移：
+                translate();
+                translate3d();
+                translateX();
+                translateY();
+                translateZ();
+            放缩：
+                scale();                //若参数为负值，则会先将元素翻转后再进行放缩相应倍数
+                scale3d();
+                scaleX();
+                scaleY();
+                scaleZ();
+            旋转：
+                rotate(+/-60deg);       //正值顺时针旋转，负值逆时针旋转，deg为角度单位
+                rotate3d(x,y,z,deg);    //4个参数，前面三个为过原点的方向向量[x,y,z]，最后一个参数才为旋转角度deg
+                rotateX();
+                rotateY();
+                rotateZ();
+            扭曲：
+                skew();                 //注意：正值往负方向倾斜，负值往正方向倾斜，扭曲时宽度或高度并不会变(不同于我们实际中将一个长方形倾斜后高度会变化的原则)
+                skewX();
+                skewY();
+            矩阵：
+                matrix(a,b,c,d,e,f);       //6个参数，映射后的新坐标(x',y')与原始坐标(x,y)之间的映射关系为：x'=ax+cy+e，y'=bx+dy+f
+                matrix3d();                //16个参数
+            透视：
+                perspective();  //该函数接受长度值参数，此处是作为函数用在当前变形元素上，另一种是作为perspective属性用于舞台元素
+
+        transform-origin，该属性指定元素的变换中心位置，默认为图形几何中心(Z轴为0)，其值为三个参数，分别为x、y、z方向的值：
+            X轴值类型：left|center|right|百分比|长度
+            Y轴值类型：top|center|bottom|百分比|长度
+            Z轴值类型：只能长度
+            可写1/2/3个值，省略的值则为原默认位置
+
+        transform-style，该属性用于舞台元素，设定其内部元素在二维还是三维空间中呈现，有两个值：
+            flat：默认值，表示2D平面呈现
+            preserve-3d：表示3D空间呈现，该值是展示3D效果的重要属性值之一
+        注意：若将值设置为preserve-3d，就不能为了防止子元素溢出容器而设置overflow值为hidden，overflow:hidden将迫使3D模式失效，效果与flat一样
+
+        perspective，该属性用于舞台元素，设置透视距离，产生景深效果，即一个视觉深度(越远的物体看着越小)，是3D效果的重要属性值之一：
+            理解perspective：将电脑屏幕看作一个幕布，屏幕上的物体是在屏幕后面紧挨着屏幕的一个实物，perspective设置的距离就是眼睛到屏幕的距离；
+                3D：幕布后实物上每个点直接同眼睛之间的连线与幕布形成交点，这些所有交点的连线就是我们看到幕布上的实际画面；
+                2D：实物直接在幕布上进行垂直投影(原理同CAD制图，平行光源照射，而非点光源)形成的画面；
+                二维是直接在屏幕上垂直投影，三维是实物轮廓边缘点与眼睛位置连线形成的椎体被屏幕截断的画面(各层面使用一定透明度就体现出立体感)
+            perspective值类型：none|长度，值为无限大或0时效果与none一样。
+
+        perspective()函数与perspective属性，两者都可以激活3D空间：
+            perspective()函数，用在当前变形元素上，可与其他transform函数一起使用；
+            perspective属性，用在舞台元素上，即变形元素们的共同父元素；
+            内部就一个变换元素时，两者效果一样，但多元素时两者区别就显现出来了，作用于舞台元素并非是将效果过渡到每个子元素上，而是将舞台元素内部看作一个整体，
+            内部多余一个变换元素时，将舞台元素设置perspective属性，与将每个子元素设置perspective()函数两者效果是不一样的。
+
+        perspective-origin，该属性表示我们眼睛在那个方向看过去，即视线出发方向，看向对立方向，默认是在舞台正面窗口平面中间，例如进入房间在左下角，目光将看向里面的右上角：
+            有X方向和Y方向两个参数，默认中间：
+                X轴值类型：left|center|right|百分比|长度
+                Y轴值类型：top|center|bottom|百分比|长度
+                可写1/2值，省略的值则为原默认位置
+        注意：该属性要设置在舞台元素上，且要与perspective属性一起使用
+
+        backface-visibility，设置元素旋转到背面是否可见，有两个值可选：
+            visible：默认值，表示可见
+            hidden：隐藏，即不可见
+
+
+
+
+
+        -webkit-transform:matrix(1,0,0,1,50,0);/*矩阵式变换*/
+
+    </pre>
+
+<ol>
+<li>标题在这里
+<div class="box-wrap clearfix">
+    <div class="left-box fz-30">
+        文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字
+        <div class="translucent-border">background-clip</div>
+    </div>
+    <style class="code" contenteditable="true">
+        .translucent-border {
+            border: 15px solid rgba(255, 0 ,255, 0.5);
+            background: #00ff00;
+            -webkit-background-clip: padding-box;
+            -moz-background-clip: padding-box;
+            background-clip: padding-box;   /*关键，背景剪裁，默认为border-box*/
+
+            width: 200px;
+            height: 200px;
+            position: absolute;
+            top: calc(50% - 100px);
+            left: calc(50% - 100px);
+        }
+    </style>
+</div>
+</li>
+</ol>
+
+
+
+
+<script src="../../js/jquery-1.11.3.min.js"></script>
+<script src="../../plugins/google-code-prettify/prettify.js"></script>
+<script>
+  $(function () {
+    var pre = $('pre');
+    pre.addClass('prettyprint linenums');
+    pre.each(function () {
+      var newHtml = this.innerHTML.replace(/</g,'&lt;').replace(/&lt;img/g,'<img');
+      this.innerHTML = newHtml;
+
+    });
+
+    prettyPrint();
+  });
+</script>
+</body>
+</html>

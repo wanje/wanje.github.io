@@ -1,0 +1,66 @@
+-- 查询学生的姓名和班级名称
+--  不使用子查询
+SELECT DISTINCT s_name ,c_name FROM t_student s JOIN t_class c ON  s.S_C_ID=c.C_ID
+
+-- 子查询：
+SELECT DISTINCT s_NAME,(SELECT C_NAME FROM t_class C WHERE C.C_ID=S.S_C_ID) FROM t_student S
+
+SELECT * FROM t_student s JOIN t_class c ON  s.S_C_ID=c.C_ID
+
+-- 表联接的分类：
+-- 1. 内联接： select * from 表1 inner join 表2 on 表1.字段=表2.字段，INNER是可以省略。
+-- !!! 内联接是指使用比较运算符根据每个表共有的列的值匹配两个表中的行。
+-- !!! 注意：它只返回条件匹配的行。
+-- 另一种语法： select * from 表1 , 表2 where 表1.字段=表2.字段，
+
+SELECT DISTINCT s_name ,c_name FROM t_student,t_class WHERE t_student.s_C_ID=t_class.C_ID
+
+-- 显示出一班的所有学生信息
+SELECT * FROM t_student s INNER JOIN t_class c ON  s.S_C_ID=c.C_ID WHERE c_name="t01"
+
+-- 2. 外联接：
+-- 	a.左外联接: select * from 表1 left outer join 表2 on 表1.字段=表2.字段，
+-- 	b.右外联接:select * from 表1 right outer join 表2 on 表1.字段=表2.字段，
+-- 		!!! outer是可以省略的。 left join ...on/right join ...on
+/*		!!!外联接是指不管有没有匹配，被定义了外联接的表的数据行都要出现在结果中。
+没有被定义为外联接的表，只返回匹配的数据行。
+
+左外联接，那么在JOIN左边的表就被定义为外联接表，那么此表中所有数据都会出现在查询结果中。
+右外联接则是JOIN右边的表为外联接表。
+全外联接就是JOIN左右两张表都是外联接表。
+*/
+
+-- 显示所有学生信息和班级名称
+SELECT * FROM t_student LEFT JOIN t_class ON t_student.s_c_id=t_class.C_ID
+
+SELECT * FROM t_class RIGHT JOIN t_student ON t_student.s_c_id=t_class.C_ID
+
+
+-- 查看当前的班级学生报到情况
+SELECT * FROM t_student RIGHT JOIN t_class ON t_student.s_c_id=t_class.C_ID
+
+-- 3. 全联接：
+-- ！！！ MYSQL中不支持全联接。
+
+SELECT * FROM t_student FULL JOIN t_class ON t_student.s_c_id=t_class.C_ID
+
+
+-- MYSQL :联合，纵向联接。  表联接都是横向联接。
+-- union
+SELECT s_id,s_name FROM t_student
+UNION
+SELECT c_id,c_name FROM t_class
+
+-- union ,在联合时，排除重复的数据， 第一张表投影出的字段的数量及数据类型，决定了后边所有要联合的表的字段数量及
+-- 数据类型。
+-- 要求，后边所有要联合 的表中投影出来的字段的数据类型必须相同或相似。
+
+-- union all
+SELECT s_id,s_name FROM t_student
+UNION ALL
+SELECT c_id,c_name FROM t_class
+-- union all ,不排除重复的数据。
+-- 记住，能用表联接，决不用子查询；
+-- 能用非相关子查询的，决不用相关子查询。
+-- 最后，万般无奈下，用相关子查询。
+ 

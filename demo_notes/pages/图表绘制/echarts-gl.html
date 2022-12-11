@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>echarts-GL</title>
+    <style type="text/css">
+        body {
+            margin: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        .e-page-view {
+            width: 1440px;
+            height: 820px;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            overflow: hidden;
+            border: 1px solid #2D7FFF;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate3d(-50%, -50%, 0);
+        }
+        #chart1 {
+            width: 100%;
+            height: 100%;
+        }
+        .svg-code {
+            copyright: si-tech;
+            width: 100px;height: 100px;background: url('') center center no-repeat;
+            background-image: url("data:image/svg+xml;charset=utf-8;copyright=sitech;Y29weXJpZ2h0=c2l0ZWNo;base64,PHN2ZyB2ZXJzaW9uPScxLjAnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZycgeG1sbnM6eGxpbms9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsnIHdpZHRoPSc2MHB4JyBoZWlnaHQ9JzYwcHgnIHZpZXdCb3g9JzAgMCA2MCA2MCcgZmlsbD0ncmVkJz48ZGVmcz48cGF0aCBpZD0nYnJhY2UnIGQ9J00yNC45LDM2LjNjLTIuNywwLTQuNy0wLjctNi0xLjljLTEuMy0xLjMtMi0zLjMtMi02LjF2LTQuOWMwLTEuMy0wLjMtMi4zLTAuOS0zYy0wLjYtMC43LTEuNi0xLTMtMWgtMS4yIHYtMy43aDEuMmMwLjcsMCwxLjMtMC4xLDEuOC0wLjJjMC41LTAuMiwwLjktMC40LDEuMi0wLjdjMC4zLTAuMywwLjUtMC43LDAuNy0xLjJjMC4xLTAuNSwwLjItMS4xLDAuMi0xLjdWOC41IGMwLTEuMywwLjItMi41LDAuNS0zLjVjMC4zLTEsMC44LTEuOSwxLjQtMi41YzAuNy0wLjcsMS41LTEuMiwyLjUtMS41YzEuMS0wLjMsMi4zLTAuNSwzLjctMC41aDEuNnYzLjZoLTEuMiBjLTAuNiwwLTEuMiwwLjEtMS43LDAuMmMtMC41LDAuMi0wLjksMC40LTEuMywwLjdjLTAuNCwwLjMtMC42LDAuOC0wLjgsMS4zYy0wLjIsMC41LTAuMywxLjItMC4zLDJ2My40YzAsMC45LTAuMSwxLjgtMC4yLDIuNSBjLTAuMiwwLjctMC40LDEuMi0wLjcsMS43Yy0wLjMsMC41LTAuNywwLjgtMS4zLDEuMWMtMC41LDAuMi0xLjEsMC40LTEuOCwwLjVjMS40LDAuMiwyLjQsMC43LDMuMSwxLjZjMC43LDAuOSwxLDIuMywxLDQuMnY0LjkgYzAsMC44LDAuMSwxLjUsMC4zLDIuMWMwLjIsMC41LDAuNSwxLDAuOCwxLjNjMC40LDAuMywwLjgsMC42LDEuMywwLjdjMC41LDAuMSwxLjEsMC4yLDEuNywwLjJoMS4ydjMuN0gyNC45eicvPjxwYXRoIGlkPSdzd29yZCcgZD0nTTU4LjgsNTMuNUw1OCw1My40Yy0wLjUtMC4xLTAuOSwwLjItMSwwLjdsLTcuOC0xLjVsMC42LTIuOGwwLjgsMC4yYzAuMiwwLDAuNC0wLjEsMC41LTAuM2wwLjEtMC42IGMwLTAuMi0wLjEtMC40LTAuMy0wLjVMNDguNyw0OGMtMC4yLDAtMC40LDAuMS0wLjUsMC4zbC0wLjEsMC42YzAsMC4xLDAsMC4yLDAsMC4zbC0wLjUsMi4zQzE2LjcsNDUsMTIuMSwzOS42LDYuNSwzMS4xIEMzLjEsNDcuNiwzMy40LDUyLjksNDYuOSw1NS43bC0wLjQsMS45bC0wLjgtMC4yYy0wLjIsMC0wLjQsMC4xLTAuNSwwLjNsLTAuMSwwLjZjMCwwLjIsMC4xLDAuNCwwLjMsMC41bDIuMSwwLjQgYzAuMiwwLDAuNC0wLjEsMC41LTAuM2wwLjEtMC42YzAtMC4xLDAtMC4yLDAtMC4ybDAuNi0yLjlsNy45LDEuNmwwLDAuMWMtMC4xLDAuNSwwLjIsMC45LDAuNywxTDU4LDU4YzAuNSwwLjEsMC45LTAuMiwxLTAuNyBsMC41LTIuN0M1OS42LDU0LDU5LjMsNTMuNiw1OC44LDUzLjV6Jy8+PC9kZWZzPjx1c2UgeGxpbms6aHJlZj0nI3N3b3JkJyAvPjx1c2UgeGxpbms6aHJlZj0nI2JyYWNlJyAvPjxnIHRyYW5zZm9ybT0nc2NhbGUoLTEsMSkgdHJhbnNsYXRlKC02MCwwKSc+PHVzZSB4bGluazpocmVmPScjc3dvcmQnIC8+PHVzZSB4bGluazpocmVmPScjYnJhY2UnIC8+PC9nPjx0ZXh0PiBjb25zb2xlLmxvZygnc2l0ZWNoJyk7IDwvdGV4dD48L3N2Zz4g");
+        }
+        body::after {
+            content: 'copyright:si-tech';
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: -10;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<section class="e-page-view" id="page_view">
+    <div id="chart1"></div>
+</section>
+<p class="svg-code"></p>
+<script type="text/javascript" charset="UTF-8" src="../../js/jquery-1.11.3.min.js"></script>
+<!-- <script type="text/javascript" charset="UTF-8" src="http://172.18.231.116:28888/js/jquery-1.11.3.min.js"></script> -->
+<script type="text/javascript" charset="UTF-8" src="../../plugins/echarts/echarts-4.9.0.min.js"></script>
+<script type="text/javascript" charset="UTF-8" src="../../plugins/echarts/echarts-gl-1.1.2.min.js"></script>
+<script type="text/javascript" charset="UTF-8" src="../../plugins/echarts/map/sichuan.js"></script>
+<script type="text/javascript" charset="UTF-8">
+    var scaleData = {
+        scale: 1,
+        scaleRate: 1
+    };
+    function flexSize(chart, w = 1440, h = 820, container = document.getElementById('page_view')) {
+        const winW = window.innerWidth;
+        const winH = window.innerHeight;
+        const winRate = winW / winH;
+        const viewRate = w / h;
+        console.log(winW, winH, container.offsetHeight);
+        if (winRate >= viewRate) {
+            scaleData.scale = +(winH/h).toFixed(3);
+            console.log(winH, h, winH/h);
+            // container.style.height = winH + 'px';
+            // container.style.width = parseInt(winH*viewRate) + 'px';
+        } else {
+            scaleData.scale = +(winW/w).toFixed(3);
+            console.log(winW, w, scaleData.scale);
+            // container.style.width = winW + 'px';
+            // container.style.height = parseInt(winW/viewRate) + 'px';
+        }
+        scaleData.scaleRate = +(1/scaleData.scale).toFixed(3);
+        container.style.transform = `translate3d(-50%,-50%,0) scale(${scaleData.scale})`;
+        // chart && chart.setOption({
+        //     geo3D: {
+        //         viewControl: {
+        //             rotateSensitivity: scaleData.scaleRate,
+        //             zoomSensitivity: scaleData.scaleRate,
+        //             panSensitivity: scaleData.scaleRate
+        //         } 
+        //     }
+        // });
+        chart && chart.resize();
+    }
+    flexSize();
+    function scaleTransform(size) {
+        return size * scaleData.scaleRate;
+    }
+    function renderChart(el, option) {
+        // 初始化echarts实例
+        var myChart = echarts.init(el);
+        // 显示图表
+        myChart.setOption(option);
+        // 窗口变化自适应大小
+        $(window).on('resize', function() {
+            flexSize(myChart);
+        });
+        console.log(myChart);
+        return myChart;
+    }
+    const geo3DOption = {
+        map: 'sichuan',
+        boxHeight: 20,
+        // regionHeight: 3,
+        // environment: '../../images/datav/env.png', // 环境贴图，指的是空间四周的纹理，支持全景图、纯色、渐变
+        environment: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                offset: 0, color: '#00aaff' // 天空颜色
+            }, {
+                offset: 0.7, color: '#998866' // 地面颜色
+            }, {
+                offset: 1, color: '#998866' // 地面颜色
+            }],
+            false
+        ),
+        groundPlane: { // 地面
+            show: true,
+            color: '#998866',
+            // lambertMaterial: {
+            //     detailTexture: '../../images/datav/bottom.png',
+            // },
+        },
+        label: {
+            show: true, // 设置了true后面的emphasis效果就无效了？是由于geo3D是地理坐标系，坐标系并没有这些交互，而在series-map3D中就有效
+            textStyle: {
+                fontSize: 8,
+                fontWeight: 'lighter',
+                color: '#fff',
+                backgroundColor: 'transparent'
+            },
+        },
+        itemStyle: {
+            color: '#093D85',
+            borderWidth: 1,
+            borderColor: '#2D7FFF'
+        },
+        emphasis: {
+            // label: {
+            //     show: false // 实测该属性默认为 true，移入时会显示各地理区块的标签名
+            // },
+            itemStyle: {
+                color: '#01275E',
+                // opacity: 0.9,
+            },
+        },
+        regions: [
+            {
+                name: '新津县',
+                // height: 6, // regionHeight 属性无效
+                itemStyle: {
+                    color: '#104EA5',
+                    // borderWidth: 3,
+                    borderColor: '#58FFFF' // 无效？
+                },
+                emphasis: {
+                    itemStyle: {
+                        borderWidth: 2, // 无效？
+                        borderColor: '#58FFFF', // 无效？
+                    },
+                },
+            },
+            {
+                name: '锦江区',
+                itemStyle: {
+                    color: '#01275E',
+                },
+            },
+            {
+                name: '成华区',
+                itemStyle: {
+                    color: '#104EA5',
+                },
+            },
+            {
+                name: '龙泉驿区',
+                itemStyle: {
+                    color: '#022F6F',
+                },
+            },
+            {
+                name: '金牛区',
+                itemStyle: {
+                    color: '#104EA5',
+                },
+            },
+            {
+                name: '青羊区',
+                itemStyle: {
+                    color: '#104EA5',
+                },
+            },
+            {
+                name: '新都区',
+                itemStyle: {
+                    color: '#01275E',
+                },
+            },
+            {
+                name: '双流县',
+                itemStyle: {
+                    color: '#01275E',
+                },
+            },
+            {
+                name: '温江区',
+                itemStyle: {
+                    color: '#104EA5',
+                },
+            },
+            {
+                name: '青白江区',
+                itemStyle: {
+                    color: '#104EA5',
+                },
+            },
+            {
+                name: '都江堰市',
+                itemStyle: {
+                    color: '#022F6F',
+                },
+            },
+            {
+                name: '彭州市',
+                itemStyle: {
+                    color: '#104EA5',
+                },
+            },
+            {
+                name: '崇州市',
+                itemStyle: {
+                    color: '#286CCB',
+                },
+            },
+            {
+                name: '大邑县',
+                itemStyle: {
+                    color: '#01275E',
+                },
+            },
+            {
+                name: '邛崃市',
+                itemStyle: {
+                    color: '#093D85',
+                },
+            },
+            {
+                name: '蒲江县',
+                itemStyle: {
+                    color: '#022F6F',
+                },
+            },
+        ],
+        // shading: 'lambert', // 着色效果，默认lambert
+        // lambertMaterial: {
+        //     detailTexture: '../../images/datav/index.jpg', // 应用在地图上
+        // },
+        light: {
+            main: {
+                shadow: true,
+                shadowQuality: 'high',
+                alpha: 50,
+                beta: 220
+            }
+        },
+        postEffect: {
+            enable: true,
+            colorCorrection: {
+                enable: true
+            }
+        },
+        viewControl: {
+            panMouseButton: 'right',
+            // alpha: 40, // 视角
+            // beta: 0, // 视角
+        }
+    };
+    const option1 = {
+        // geo3D 的配置项很多与 series-map3D 相同，series-map3D 中的地图会覆盖这的地图
+        // geo3D: geo3DOption,
+        // tooltip: {
+        //     formatter: function(item) {
+        //         return `${item.seriesName}：${item.value[2]}`
+        //     }
+        // },
+        color: ['#093D85'],
+        series: [
+            {
+                type: 'map3D',
+                ...geo3DOption
+            },
+            /* {
+                type: 'bar3D',
+                name: '各市GDP',
+                coordinateSystem: 'geo3D',
+                minHeight: 1,
+                itemStyle: {
+                    color: [0.99, 0.73, 0, 0.5],
+                },
+                label: {
+                    formatter: '{b}',
+                    textStyle: {
+                        fontSize: scaleTransform(12)
+                    }
+                },
+                emphasis: {
+                    itemStyle: {
+                        color: [1, 0.8, 0.1, 0.5]
+                    },
+                },
+                shading: 'realistic',
+                // realisticMaterial: {
+                //     detailTexture: '../../images/datav/grass.jpg',
+                // },
+                data: [
+                    {
+                        name: '成华区',
+                        value: [104.15,30.7,257],
+                    },
+                    {
+                        name: '崇州市',
+                        value: [103.6,30.7,57]
+                    },
+                    {
+                        name: '大邑县',
+                        value: [103.4,30.6,157]
+                    },
+                ]
+            } */
+        ]
+    };
+    // renderChart($('#chart1')[0], option1);
+    $.getJSON('../../plugins/echarts/map/china-main-city/an_510100.json', function(cdJson) {
+        echarts.registerMap('chengdu', cdJson);
+        // option1.geo3D.map = 'chengdu';
+        option1.series[0].map = 'chengdu';
+        renderChart($('#chart1')[0], option1);
+    });
+</script>
+</body>
+</html>

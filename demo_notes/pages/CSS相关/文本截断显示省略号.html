@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1">
+    <title>文本截断显示省略号</title>
+    <link rel="stylesheet" href="../../plugins/highlight/styles/androidstudio.css">
+    <script src="../../plugins/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <style>
+        *{-webkit-box-sizing: border-box;-moz-box-sizing: border-box;-ms-box-sizing:border-box;-o-box-sizing:border-box;box-sizing: border-box;}
+        body,h4,p,ul,pre {margin: 0;}
+        .mgl-10 {margin-left: 10px;}
+        .mgt-30 { margin-top: 30px;}
+        .clearfix{*zoom:1;}
+        .clearfix:before {content:"";display:table;}
+        .clearfix:after {clear:both;content:' ';display:block;font-size:0;line-height:0;visibility:hidden;height:0;}
+        .left-box,
+        .right-box {float: left;width: 50%;height: 100vh;overflow: auto;}
+        .left-box {position: relative;padding: 10px;}
+        code {min-height: 100%;}
+        img {max-width: 100%;vertical-align: top;background: #ffffff;}
+        .btn-run {position: fixed;top: 5px;right: 5px;width: 50px;height: 30px;background: #0076bc;color: #ffffff;font-size: 16px;border: none;border-radius: 5px;cursor: pointer;outline: none;}
+        .btn-run:hover {background: #0076ff;}
+        .btn-run:active {transform: scale(0.9);}
+    </style>
+</head>
+<body>
+
+<div class="box-wrap clearfix">
+    <button class="btn-run" id="btnRun">Run</button>
+    <div class="left-box">
+        <a href="https://github.com/happylindz/blog/issues/12" target="_blank">参考文章</a>
+        <a class="mgl-10" href="http://hai.li/2017/03/08/css-multiline-overflow-ellipsis.html" target="_blank">详细</a>
+        <a class="mgl-10" href="https://segmentfault.com/a/1190000008649988" target="_blank">备用</a>
+        <p class="text-over mgt-30">单行文本截断
+            单行文本截断单行文本截断单行文本截断单行文本截断单行文本截断单行文本截断单行文本截断单行文本截断单行文本截断单行文本截断
+            单行文本截断单行文本截断单行文本截断单行文本截断单行文本截断单行文本截断单行文本截断单行文本截断单行文本截断单行文本截断
+            单行文本截断单行文本截断单行文本截断单行文本截断单行文本截断单行文本截断单行文本截断单行文本截断单行文本截断单行文本截断
+        </p>
+        <p class="text-over2 mgt-30">webkit浏览器多行文本截断
+            webkit浏览器多行文本截断webkit浏览器多行文本截断webkit浏览器多行文本截断webkit浏览器多行文本截断
+            webkit浏览器多行文本截断webkit浏览器多行文本截断webkit浏览器多行文本截断webkit浏览器多行文本截断
+            webkit浏览器多行文本截断webkit浏览器多行文本截断webkit浏览器多行文本截断webkit浏览器多行文本截断
+        </p>
+        <div class="text-wrap mgt-30">
+            <p>使用浮动制作多行文本截断
+                使用浮动制作多行文本截断使用浮动制作多行文本截断使用浮动制作多行文本截断使用浮动制作多行文本截断使用浮动制作多行文本截断
+                使用浮动制作多行文本截断使用浮动制作多行文本截断使用浮动制作多行文本截断使用浮动制作多行文本截断使用浮动制作多行文本截断
+                使用浮动制作多行文本截断使用浮动制作多行文本截断使用浮动制作多行文本截断使用浮动制作多行文本截断使用浮动制作多行文本截断
+            </p>
+        </div>
+        <div class="mgt-30">
+            <p>2.main内容不同高度时3.end的位置</p>
+            <img src="../../images/浮动文本截断1.png">
+            <p>使用相对定位(图中错写成了绝对定位)后在上述两种情况下3.end的位置(图中4.realend的位置)，实际应用中可用伪元素代替1.prop和3.end</p>
+            <img src="../../images/浮动文本截断2.png">
+        </div>
+    </div>
+    <pre class="right-box"><code class="css" id="showCode" contenteditable="true"></code></pre>
+</div>
+
+<style id="styleCode">
+    /*单行文本截断*/
+    .text-over {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    /*多行文本截断，只对webkit浏览器有效*/
+    .text-over2 {
+        text-align: justify;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;       /*下面这三条是重点*/
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+    }
+
+    /*使用浮动方式，兼容性好*/
+    .text-wrap {
+        line-height: 1.5;   /*定义一个行高以便设置同样的高度去遮挡结尾位置*/
+        height: 3em;        /*需要设置文本显示高度，这样才能使用溢出隐藏，且高度应是行高的倍数，这样可表示显示几行，不能使用max-height代替，因为before中的高度不会以max-height为参照*/
+        overflow: hidden;
+        text-align: justify;    /*两端对其的目的一是整齐，二是保证结尾处最后一个字是贴边的，这样就可以固定使用一个字宽度的(...)符号去遮挡*/
+    }
+    .text-wrap:before {
+        content: '';
+        float: left;    /*前面左浮*/
+        width: 1em;     /*值与文本内容标签的margin-left和:after的padding-right关联*/
+        height: 100%;   /*高度等于外层容器高度*/
+    }
+    .text-wrap p {
+        float: right;       /*文本内容右浮*/
+        margin-left: -1em;  /*使得显示位置与:before不占用空间时相同*/
+        width: 100%;    /*设定宽度为外层容器宽度*/
+    }
+    .text-wrap:after {
+        content: '...';
+        float: right;       /*结尾省略号也右浮*/
+        text-align: right;  /*是的结尾处省略号贴边*/
+        width: 1.1em;   /*设置宽度，尽量刚好能盖住最后一个字*/
+        height: 1.5em;
+        background: #fff;   /*背景色应使用文本段的底色*/
+        position: relative;     /*相对定位，根据省略号的位置不同结果就不同*/
+        top: -1.5em;        /*超过设定行高时省略号会掉落到下一行before下面的位置，所以要向上移一行*/
+        left: 100%;         /*移到最右边*/
+        margin-left: -1.1em;    /*在边界外，所以要弥补自身宽度*/
+        padding-right: 1em;     /*因文本时右对齐，所以需要向左推出before的宽度*/
+    }
+
+</style>
+</body>
+
+<script>
+    var showCode = document.getElementById('showCode'),
+        styleCode = document.getElementById('styleCode'),
+        btnRun = document.getElementById('btnRun');
+
+    showCode.innerHTML = styleCode.innerHTML;
+
+    btnRun.addEventListener('click',function () {
+        styleCode.innerHTML = showCode.innerText;
+    });
+
+    /*实时响应*/
+    showCode.addEventListener('keyup',function () {
+        styleCode.innerHTML = showCode.innerText;
+    });
+
+</script>
+</html>

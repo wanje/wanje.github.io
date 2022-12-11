@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1">
+    <title>grid网格布局</title>
+    <link rel="stylesheet" href="../../plugins/highlight/styles/androidstudio.css">
+    <script src="../../plugins/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <style>
+        /*::-webkit-scrollbar { display: none; }    !*不显示滚动条*!*/
+        *{-webkit-box-sizing: border-box;-moz-box-sizing: border-box;-ms-box-sizing:border-box;-o-box-sizing:border-box;box-sizing: border-box;}
+        body,p,ul,pre {margin: 0;padding: 0;}
+        ul{list-style:none;}
+        img {max-width: 100%;vertical-align: top;background: #ffffff;}
+        .tj {text-align: justify;}
+        .box-wrap {display: flex;height: calc(100vh - 63px);border: 1px solid #dadada;*zoom:1;}
+        .left-box,
+        .right-box {overflow: auto;}
+        .right-box {-webkit-flex: 1;-ms-flex: 1;flex: 1;}
+        .left-box {position: relative;width: 40%;}
+        .right-box code {min-height: 100%;}
+        .col-resize {width: 4px;cursor: col-resize;}
+    </style>
+</head>
+<body>
+
+<h3>grid网格布局是真正的多列布局，而不是像columns那样用于图文排版</h3>
+<ul>
+<li>
+<div class="box-wrap">
+<style class="js_styleCode">
+    /* 待完成 */
+</style>
+<div class="left-box">
+    可参考：
+    <ul>
+        <li><a href="https://www.zhangxinxu.com/wordpress/2018/11/display-grid-css-css3/">写给自己看的display: grid布局教程</a></li>
+        <li><a href="https://www.html.cn/archives/8510">CSS Grid 布局完全指南</a></li>
+    </ul>
+</div>
+<i class="col-resize"></i>
+<pre class="right-box"><code class="css js_showCode" contenteditable="true"></code></pre>
+</div>
+</li>
+</ul>
+
+</body>
+<script src="../../js/jquery-1.11.3.min.js"></script>
+<script>
+$(function () {
+
+    /*左右两侧容器宽度调整*/
+    $('.col-resize').mousedown(function (e) {
+        let leftBox = $(this).prev('.left-box'),
+            w = leftBox.width(),
+            x = e.clientX;
+
+        $(document).on('mousemove.resize',function (e) {
+            let dx = e.clientX - x;
+            leftBox.width(w + dx);
+        });
+
+    }).mouseup(function () {
+        $(document).off('mousemove.resize')
+    });
+
+    $('.js_styleCode').each(function (index, el) {
+        let _this = $(el);
+        _this.closest('li').find('.js_showCode').html(_this.html());
+    });
+
+    /*实时响应*/
+    $('.js_showCode').on('keyup',function () {
+        let _this = $(this);
+        _this.closest('li').find('.js_styleCode').html(_this.text());
+    });
+
+});
+</script>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>水平垂直居中</title>
+    <style>
+        section>div{
+            width: 200px;height: 200px;
+            margin-right: 50px;
+            float: left;
+            border: 1px solid black;
+        }
+        div>div{
+            width: 100px;height: 100px;
+            background-color: red;
+            font-size: 2em;
+            color: white;
+        }
+        .code {display: block;white-space: pre;font-family: monospace;}
+    </style>
+</head>
+<body>
+    <section style="overflow: hidden;">
+        <div id="parent1"><div>1</div></div>
+        <div id="parent2"><div>2</div></div>
+        <div id="parent3"><div>3</div></div>
+        <div id="parent4"><div>4</div></div>
+        <div id="parent5"><div>5</div></div>
+    </section>
+    <a target="_blank" href="http://www.zhangxinxu.com/wordpress/2009/08/大小不固定的图片、多行文字的水平垂直居中/">大小不固定的图片、多行文字的水平垂直居中实现总结</a>
+    <style type="text/css" class="code">
+        /*===================方法1===================*/
+        #parent1{
+            position: relative;
+        }
+        #parent1 div{
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%,-50%);/*也可用下面的margin来做，原理是一样的*/
+            /*margin: -50px 0 0 -50px;*//*用margin的缺点是它的值要是具体的自身宽高的一半(与父元素使用相同的单位标尺，都为px或百分比)，不能用于不知道宽高或者宽高会变的情况*/
+        }
+        /*===================方法2===================IE7不支持此方法*/
+        #parent2{
+            display: table-cell;/*显示为表格单元格模式，此模式就会使前面的margin失效，因为表格单元格没有此属性*/
+            vertical-align: middle;/*垂直居中，在此要设置display为table-cell才有效，对block元素无效*/
+            text-align: center;/*此属性对其子元素为行内(块)元素或者文字图片有效*/
+            float: none;/*此方法父元素不能浮动*/
+        }
+        #parent2 div{
+            display: inline-block;/*显示为行内块模式，这样父元素设置的水平居中属性text-align:center;才有效*/
+        }
+        /*===================方法3===================*/
+        #parent3{
+            display: table-cell;/*显示为表格单元格模式*/
+            vertical-align: middle;/*垂直居中，再次要设置display为table-cell才有效*/
+            float: none;/*此方法父元素不能浮动*/
+        }
+        #parent3 div{
+            margin: 0 auto;
+        }
+        /*===================方法4===================此法IE11及以下几乎都有bug*/
+        #parent4{
+            display: flex;/*弹性盒模型，此方法不需要设置子元素，但是要求子元素只有一个*/
+            justify-content: center;/*水平居中*/
+            align-items: center;/*垂直居中*/
+        }
+        /*==================方法5===================*/
+        #parent5{
+            position: relative;
+        }
+        #parent5 div{   /*让绝对定位的元素居中，top，left，bottom，right的值设为相同(不论多少[但前提是此元素有固定宽高，否则会确定四角，盒子中间大小将根据就近定位祖先元素大小自适应])*/
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            bottom: 10px;
+            right: 10px;
+            margin: auto;   /*此时会水平垂直居中；margin：0 auto;会水平居中；margin：auto 0;会垂直居中*/
+        }
+    </style>
+</body>
+</html>

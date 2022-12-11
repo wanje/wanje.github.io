@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,user-scalable=no">
+    <title>File文件API</title>
+    <link rel="stylesheet" href="../../plugins/highlight/styles/androidstudio.css">
+    <script src="../../plugins/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <style>
+        .code { display: block; white-space: pre; font-family: monospace; }
+        .mgt-10 { margin-top: 10px;}
+    </style>
+</head>
+<body>
+  <a target="_blank" href="https://developer.mozilla.org/zh-CN/docs/Web/API/File/Using_files_from_web_applications">File文件API应用示例</a>
+    <div class="mgt-10">
+        <label for="myFile">文件</label>
+        <!--加上 multiple 属性可选择多个文件-->
+        <input type="file" name="myFile" multiple id="myFile">
+        <!-- Android 和 iOS 中都能调用相机和文件系统选择文件，但选择相机时 Android 只有拍照界面，而 iOS 拍照和录像可以切换 -->
+    </div>
+
+    <p>通过file调用手机摄像头或录音，capture 为捕获的系统设备，accept 为相应设备的文件类型</p>
+    <p>Firefox本地和服务器上都可打开摄像头；Chrome和Safari能在本地打开摄像头，在服务器上是需要https协议</p>
+    <div class="mgt-10">
+        <label for="cameraFile">拍照</label>
+        <input type="file" name="cameraFile" accept="image/*" capture="camera" id="cameraFile">
+        <!-- Android 和 iOS 中都直接调用相机拍照 -->
+    </div>
+    <div class="mgt-10">
+        <label for="camcorderFile">摄像</label>
+        <input type="file" name="camcorderFile" accept="video/*" capture="camcorder" id="camcorderFile">
+        <!-- Android 和 iOS 中都直接调用相机录像 -->
+    </div>
+    <div class="mgt-10">
+        <label for="microphoneFile">录音</label>
+        <input type="file" name="microphoneFile" accept="audio/*" capture="microphone" id="microphoneFile">
+        <!-- Android 会打开录音界面，而 iOS 打开的仍然是拍照和录像界面 -->
+    </div>
+
+    <div>
+        <!--video用于显示媒体设备的视频流，自动播放-->
+        <video src="" id="video" autoplay style="width: 160px;height: 240px;border: 1px solid #CCCCCC;"></video>
+        <!--描绘video截图-->
+        <canvas id="canvas" width="160" height="240" style="border: 1px solid #CCCCCC;"></canvas>
+        <!--拍照按钮-->
+        <div>
+            <button id="openCapture">开启摄像头</button>
+            <button id="capture">拍照</button>
+        </div>
+    </div>
+
+<div id="msg"></div>
+<pre><code id="show-script"></code></pre>
+
+<script type="text/javascript" charset="UTF-8" id="script">
+    var myFile = document.querySelector('#myFile');
+    var msg = document.querySelector('#msg');
+    myFile.addEventListener('change', function () {
+        var that = this;
+        var fileList = that.files;    //files属性是保存各选中文件File对象的一个FileList集合，通过下标可访问到每个文件的File对象
+        var file = fileList[0];
+        console.log(that.files, file);
+        console.log(file.name);     //name属性表示文件名
+        console.log(file.type);     //type属性表示文件MIME类型
+        console.log(file.size);     //size属性表示文件字节大小
+        console.log(file.lastModifiedDate || file.lastModified);     //lastModifiedDate属性表示文件上一次被修改的时间，lastModified属性是显示修改时间距离1970年1月1日0点的毫秒数
+
+        /*文件读取，读取文件时需要一定时间的*/
+        var reader = new FileReader();      //FileReader类型包含一种异步文件读取机制
+//            reader.readAsText(file,'gbk');              //readAsText方法以纯文本形式读取文件，并将读取到的文本保存在FileReader的result属性中，第二个参数表示编码类型，默认采用utf-8和ASCII解析，可省略
+//            reader.readAsDataURL(file);                 //readAsDataURL方法读取文件并将文本以URL的形式保存在result属性中（该URL是base64形式）
+//            reader.readAsBinaryString(file);            //readAsBinaryString方法读取文件并将一个字符串保存在result属性中，字符串中每个字符表示一字节
+//            reader.readAsArrayBuffer(file);             //readAsArrayBuffer方法读取文件并将一个包含文件内容的ArrayBuffer保存在result属性中
+
+        /**在异步读取文件过程中FileReader提供了几个事件分别是：
+         * 1、progress（是否又读取了新数据，即过程中，每50ms左右会触发一次该事件，通过事件对象可以获得一些读取进度信息(属性)：lengthComputable、loaded、total；
+         * 2、abort（暂停事件，由abort()方法触发）；
+         * 3、error（出错，错误信息将保存在error属性中，该属性保存一个对象，但该对象也只有一个错误码属性code(即只有reader.error.code），
+         *    错误码1表示未找到文件，2表示安全性错误，3表示读取中断，4表示文件不可读，5表示编码错误；
+         * 4、load（读取完成，文件成功加载完时触发）；
+         * 5、loadend（读文件操作结束，不管暂停、出错还是读完最后都会触发该事件）。
+         * */
+        var type = 'default';
+        //判断文件是属于图片类型还是文本类型（这里没有区分所有文件类型，大致分为图片和文本两类）
+        if (/image/.test(file.type)) {
+            // reader.readAsDataURL(file);
+            type = 'image';
+        } else {
+            reader.readAsText(file, 'gbk');
+            type = 'text';
+        }
+        //出错事件
+        reader.onerror = function (e) {
+            console.log(e, reader.error.code);
+        };
+        //过程中
+        reader.onprogress = function (e) {
+            console.log(e);
+            if (e.lengthComputable) {
+                msg.innerHTML += '读取进度：' + e.loaded + '/' + e.total + '\n';
+            }
+        };
+        //加载完成
+        reader.onload = function (e) {
+            console.log(e);
+            switch (type) {
+                case 'image':
+                    msg.innerHTML += '<img src="' + reader.result + '"/>';
+                    break;
+                case 'text':
+                    msg.innerHTML += '<pre>' + reader.result + '</pre>';
+                    break;
+            }
+            console.log(reader.result.split('\r\n'));
+        };
+
+        /**======读取部分内容======
+         * File对象还支持一个slice()方法用来读取文件的一部分内容，而非全部，
+         * 该方法在Chrome中的实现叫webkitSlice()，在Firefox中的实现叫mozSlice()，
+         * slice()方法接收两个参数：1起始字节、2要读取的字节数(可省略)，该方法返回一个Blob的实例，Blob是File类型的父类型，
+         * Blob类型有一个size属性和一个type属性，而且它也支持slice()方法，FileReader也可以从Blob中读取数据(把Blob当做File)
+         * */
+        //兼容写法
+        function fileSlice(file, startByte, length) {
+            if (file.slice) {
+                return file.slice(startByte, length);
+            } else if (file.webkitSlice) {
+                return file.webkitSlice(startByte, length);
+            } else if (file.mozSlice) {
+                return file.mozSlice(startByte, length);
+            } else {
+                return null;
+            }
+        }
+
+        /**========对象URL========IE10+支持
+         * 对象URL也被称为blob URL，指的是引用保存在File或Blob中数据的URL，
+         * 使用对象URL的好处是可以不必把文件内容读取到JavaScript中而直接使用文件内容*，为此只要在需要文件内容的地方提供对象URL即可（例如图像文件），
+         * 要创建对象URL，可以使用window.URL.createObjectURL()方法，并传入File或Blob对象，该方法在Chrome中的实现叫window.webkitURL.createObjectURL(),
+         * 该方法的返回值是一个字符串，指向一块内存地址，因为这个字符串是URL，所以在DOM中也能使用。
+         * =================
+         * 如果不再需要相应的数据，最好释放它占用的内容，但只要有代码在引用对象URL，内存就不会释放，要手动释放内存，
+         * 可以把对象URL传给window.URL.revokeObjectURL()方法，Chrome中是window.webkitURL.revokeObjectURL()
+         * */
+        //兼容写法
+        function createObjectURL(file) {
+            if (window.URL) {
+                return window.URL.createObjectURL(file);
+            } else if (window.webkitURL) {
+                return window.webkitURL.createObjectURL(file);
+            } else {
+                return null;
+            }
+        }
+
+        function revokeObjectURL(url) {
+            if (window.URL) {
+                return window.URL.revokeObjectURL(url);
+            } else if (window.webkitURL) {
+                return window.webkitURL.revokeObjectURL(url);
+            }
+        }
+
+        /**========读取拖放的文件========
+         *
+         * */
+        function dropFile() {
+
+        }
+
+    }, false);
+
+    /**================================================== 读取文件信息 ==================================================*/
+
+
+
+</script>
+<script>
+
+    /**======================================== getUserMedia API调用硬件媒体设备 ========================================*/
+    !function () {
+        // 老的浏览器可能根本没有实现 mediaDevices，所以我们可以先设置一个空的对象
+        if (!navigator.mediaDevices) {
+            navigator.mediaDevices = {};
+        }
+
+        // 一些浏览器部分支持 mediaDevices。我们不能直接给对象设置 getUserMedia
+        // 因为这样可能会覆盖已有的属性。这里我们只会在没有getUserMedia属性的时候添加它。
+        if (!navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia = function(constraints) {
+
+                // 首先，如果有getUserMedia的话，就获得它
+                let getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+
+                // 一些浏览器根本没实现它 - 那么就返回一个error到promise的reject来保持一个统一的接口
+                if (!getUserMedia) {
+                    return Promise.reject(new Error('getUserMedia is not implemented in this browser'));
+                }
+
+                // 否则，为老的navigator.getUserMedia方法包裹一个Promise
+                return new Promise(function(resolve, reject) {
+                    getUserMedia.call(navigator, constraints, resolve, reject);
+                });
+            }
+        }
+    }();
+
+    //访问用户媒体设备的兼容方法
+    function getUserMedia(constrains,success,error){
+        if(navigator.mediaDevices.getUserMedia){
+            //最新标准API
+            navigator.mediaDevices.getUserMedia(constrains).then(success).catch(error);
+        } else if (navigator.webkitGetUserMedia){
+            //webkit内核浏览器
+            navigator.webkitGetUserMedia(constrains).then(success).catch(error);
+        } else if (navigator.mozGetUserMedia){
+            //Firefox浏览器
+            navigator.mozGetUserMedia(constrains).then(success).catch(error);
+        } else if (navigator.getUserMedia){
+            //旧版API
+            navigator.getUserMedia(constrains).then(success).catch(error);
+        }
+    }
+
+    var video = document.getElementById("video");
+    let canvas = document.getElementById("canvas");
+    let context = canvas.getContext("2d");
+
+    //成功的回调函数
+    function success(stream){
+        if ("srcObject" in video) {
+            video.srcObject = stream;
+        } else {
+            //兼容webkit内核浏览器
+            let CompatibleURL = window.URL || window.webkitURL;
+            //将视频流设置为video元素的源
+            video.src = CompatibleURL.createObjectURL(stream);
+        }
+        //播放视频
+        video.onloadedmetadata = function(e) {
+            video.play();
+        };
+    }
+
+    //异常的回调函数
+    function error(error){
+//        console.error("访问用户媒体设备失败：",error.name,error.message);
+        msg.innerHTML = "访问用户媒体设备失败：" + error.name + error.message;
+    }
+    function openCamera() {
+        //调用用户媒体设备，访问摄像头
+        navigator.mediaDevices.getUserMedia({
+//            video: {width:480,height:320}
+            video: true,
+            audio: true
+        }).then(success).catch(error);
+    }
+
+    //开启摄像头
+    document.getElementById("openCapture").addEventListener("click", openCamera, false);
+    //注册拍照按钮的单击事件
+    document.getElementById("capture").addEventListener("click",function(){
+        //绘制画面
+        context.drawImage(video,0,0,480,320);
+    });
+
+
+
+</script>
+<script>
+    document.getElementById('show-script').innerHTML = document.getElementById('script').innerHTML;
+</script>
+
+<!--==================================================== 调用相机 ====================================================-->
+    <input type="button" title="开启摄像头" value="开启摄像头" onclick="getMedia();" /><br />
+    <video height="120px" autoplay="autoplay" id="video2"></video><hr />
+    <input type="button" title="拍照" value="拍照" onclick="getPhoto();" /><br />
+    <canvas id="canvas1" height="120px" ></canvas><hr />
+    <input type="button" title="视频" value="视频" onclick="getVedio();" /><br />
+    <canvas id="canvas2" height="120px"></canvas>
+
+    <script type="text/javascript">
+        var video = document.querySelector('#video2');
+        var audio, audioType;
+
+        var canvas1 = document.getElementById('canvas1');
+        var context1 = canvas1.getContext('2d');
+
+        var canvas2 = document.getElementById('canvas2');
+        var context2 = canvas2.getContext('2d');
+
+        navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+        window.URL = window.URL || window.webkitURL || window.mozURL || window.msURL;
+
+        var exArray = []; //存储设备源ID
+        MediaStreamTrack.getSources(function (sourceInfos) {
+            for (var i = 0; i != sourceInfos.length; ++i) {
+                var sourceInfo = sourceInfos[i];
+                //这里会遍历audio,video，所以要加以区分
+                if (sourceInfo.kind === 'video') {
+                    exArray.push(sourceInfo.id);
+                }
+            }
+        });
+
+        function getMedia() {
+            if (navigator.getUserMedia) {
+                navigator.getUserMedia({
+                    'video': {
+                        'optional': [{
+                            'sourceId': exArray[1] //0为前置摄像头，1为后置
+                        }]
+                    },
+                    'audio':true
+                }, successFunc, errorFunc);    //success是获取成功的回调函数
+            }
+            else {
+                alert('Native device media streaming (getUserMedia) not supported in this browser.');
+            }
+        }
+
+        function successFunc(stream) {
+            //alert('Succeed to get media!');
+            if (video.mozSrcObject !== undefined) {
+                //Firefox中，video.mozSrcObject最初为null，而不是未定义的，我们可以靠这个来检测Firefox的支持
+                video.mozSrcObject = stream;
+            }
+            else {
+                video.src = window.URL && window.URL.createObjectURL(stream) || stream;
+            }
+
+            //video.play();
+
+            // 音频
+            audio = new Audio();
+            audioType = getAudioType(audio);
+            if (audioType) {
+                audio.src = 'polaroid.' + audioType;
+                audio.play();
+            }
+        }
+        function errorFunc(e) {
+            alert('Error！'+e);
+        }
+
+
+        // 将视频帧绘制到Canvas对象上,Canvas每60ms切换帧，形成肉眼视频效果
+        function drawVideoAtCanvas(video,context) {
+            window.setInterval(function () {
+                context.drawImage(video, 0, 0,90,120);
+            }, 60);
+        }
+
+        //获取音频格式
+        function getAudioType(element) {
+            if (element.canPlayType) {
+                if (element.canPlayType('audio/mp4; codecs="mp4a.40.5"') !== '') {
+                    return ('aac');
+                } else if (element.canPlayType('audio/ogg; codecs="vorbis"') !== '') {
+                    return ("ogg");
+                }
+            }
+            return false;
+        }
+
+        // vedio播放时触发，绘制vedio帧图像到canvas
+        //        video.addEventListener('play', function () {
+        //            drawVideoAtCanvas(video, context2);
+        //        }, false);
+
+        //拍照
+        function getPhoto() {
+            context1.drawImage(video, 0, 0,90,120); //将video对象内指定的区域捕捉绘制到画布上指定的区域，实现拍照。
+        }
+
+        //视频
+        function getVedio() {
+            drawVideoAtCanvas(video, context2);
+        }
+
+    </script>
+</body>
+</html>

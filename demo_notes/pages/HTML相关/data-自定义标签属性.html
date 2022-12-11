@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1">
+    <title>data-自定义html属性</title>
+</head>
+<body>
+<pre>
+
+    html5中data-自定义属性(IE11+才支持dataset API)：一个元素上可以设置任意多个data-自定义属性，一般都是用来存储简单数据方便使用(或者用于CSS属性选择器)；
+    data-自定义属性的存取：
+    1、利用 getAttribute、setAttribute 存取 dataset，此法所做出的任何更改，都是可以实时反映到元素data-属性上的，但此方法每次执行只能获取或设置一个属性。
+            获取：document.getElementById("idName").getAttribute("data-属性");
+            设置：document.getElementById("idName").setAttribute("data-属性","属性值");
+    2、利用 jQuery中attr 方法存取 dataset，用法与元素其他自带属性一样，并且所做出的任何更改，也都是可以实时反映到元素data-属性上的。
+    3、利用 dataset API 存取 dataset，此法可方便地获取元素的所有data字段，并以对象的方式返回，方便存取和遍历，所做出的任何更改，也都是可以实时反映到元素data-属性上的。
+            获取对象：var dataObj = document.getElementById("idName").dataset; //以对象形式返回该元素上的所有data-属性
+            存取属性：dataObj.name;  //存取方法与对象中的属性一样，注意用此法存取时不加data-前缀，直接是后面的name，若name中带有连字符-，则用驼峰命名方式访问。
+    4、利用 jQuery中data 方法存取 dataset，注意用此法存取时也是不加data-前缀的，而且此法对data数据做出的更改，不会反映到HTML元素data属性上，而只是保存在jQuery对象中。
+            获取：obj.data("name");
+            设置：obj.data("name","value");  //此时该jQuery对象中的该name属性值已改变，但是该元素对应的html文档中的data-name属性值并未变，若采用上面其他方法访问得到的将仍是原来的属性值，而obj.data方法可以获取到现在的值
+            另外jQuery中data方法可以解析元素上dataset的JSON信息：其可以很聪明的从data里提取出json信息转换为对象，例如：
+                HTML：<span id="song-info" data-meta='{"name":"Latch", "album":"Disclosure", "date":"2013"}'>Latch (feat. Sam Smith)</span>
+                JS：var songInfo = $("#song-info").data("meta"); //将data-meta属性的JSON格式值转化为对象形式返回
+                    songInfo.date;  //此时可通过对象的形式进行访问
+
+</pre>
+</body>
+</html>

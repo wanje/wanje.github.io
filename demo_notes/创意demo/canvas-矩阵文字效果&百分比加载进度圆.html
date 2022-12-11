@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>canvas绘图实例</title>
+    <style type="text/css">
+
+    </style>
+</head>
+<body>
+<canvas id="myCanvas" width="1300" height="640" style="border: 1px solid silver;">你的浏览器不支持canvas，请升级或更换浏览器！</canvas>
+<canvas id="myCanvas2">你的浏览器不支持canvas，请升级或更换浏览器！</canvas>
+<script type="text/javascript" charset="UTF-8">
+
+    window.onload = function(){
+        var canvas = document.getElementById('myCanvas');  //获取canvas元素
+        var ctx = canvas.getContext('2d');  //获取画图环境，指明为2d
+
+        /*==============================================绘制百分比加载进度圆===============================================================================================================*/
+        !function(){
+            var canvas2 = document.getElementById('myCanvas2');  //获取canvas元素
+            var ctx = canvas2.getContext('2d');  //获取画图环境，指明为2d
+            canvas2.width = 120;
+            canvas2.height = 120;
+
+            var arcX = 55,   //圆心x轴坐标
+                arcY = 55,  //圆心y轴坐标
+                rad = Math.PI * 2 / 100, //将360度分成100份，那么每一份就是rad度
+                progress = 0, //初始进度
+                speed = 0.1; //加载的快慢
+
+            //绘制描边外圈
+            function blueCircle(n) {
+                ctx.save();//保存当前环境的状态(save和restore可以保证样式属性只运用于该段canvas元素)
+                ctx.strokeStyle = "#49f"; //设置描边样式
+                ctx.lineWidth = 5; //设置线宽
+                ctx.beginPath(); //路径开始
+                ctx.arc(arcX, arcY, 50, -Math.PI / 2, -Math.PI / 2 + n * rad, false); //用于绘制圆弧ctx.arc(圆心x坐标，圆心y坐标，半径，起始角度，终止角度，顺时针/逆时针)
+                ctx.stroke(); //绘制
+                ctx.closePath(); //路径结束
+                ctx.restore();//返回之前保存过的路径状态和属性
+            }
+
+            //绘制黑色外圈
+            function whiteCircle() {
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = "#000";
+                ctx.arc(arcX, arcY, 50, 0, Math.PI * 2, false);
+                ctx.stroke();
+                ctx.closePath();
+                ctx.restore();
+            }
+
+            //百分比文字绘制
+            function text(n) {
+                ctx.save();
+                ctx.strokeStyle = "#000"; //设置描边样式
+                ctx.font = "20px Arial"; //设置字体大小和字体
+                //绘制字体，并且指定位置
+                ctx.strokeText(n.toFixed(0) + "%", arcX - 15, arcY + 10);//toFixed方法将数字型变量n转换为十进制形式的字符串，可选参数表示保留小数的位数，有效值在0-20间
+                ctx.stroke(); //执行绘制
+                ctx.restore();
+            }
+
+            //动画循环
+            function drawFrame() {
+                var loading = window.requestAnimationFrame(drawFrame);//requestAnimationFrame作用与setTimeout/setInterval一样，不同的是它会根据浏览器的刷新频率自动调整动画的时间间隔，requestAnimationFrame兼容IE10+。
+                ctx.clearRect(0, 0, canvas2.width, canvas2.height);
+
+                whiteCircle();
+                text(progress);
+                blueCircle(progress);
+
+                if (progress > 100) {
+                    progress = 0;
+                    window.cancelAnimationFrame(loading);//取消上面的loading动画
+                } else {
+                    progress += speed;
+                }
+            }
+            drawFrame();//启动动画，这里方便注释，也可将上面的函数直接写成立即执行形式
+        }();
+
+        /*===========================================黑客帝国Matrix矩阵动画================================================================================================================*/
+        !function() {
+            var w = canvas.width,
+                    h = canvas.height;
+            //初始化
+            var clearColor = 'rgba(0, 0, 0, 0.1)', //用于绘制渐变阴影
+                    wordColor = "#33ff33", //文字颜色
+                    words = "0123456789qwertyuiopasdfghjklzxcvbnm,./;'\\[]QWERTYUIOP{}ASDFGHJHJKL:ZXCVBBNM<>?",
+                    wordsArr = words.split(''), //将文字拆分进一个数组
+                    font_size = 16,  //字体大小
+                    clumns = w / font_size, //文字降落的列数
+                    drops = [];
+            for (var i = 0; i < clumns; i++) {
+                drops[i] = 1;
+            }
+            function draw() {
+                ctx.save();
+                ctx.fillStyle = wordColor;
+                ctx.font = font_size + "px arial";
+                //核心
+                for (var i = 0; i < drops.length; i++) {
+                    var text = wordsArr[Math.floor(Math.random() * wordsArr.length)];
+                    ctx.fillText(text, i * font_size, drops[i] * font_size);
+                    if (drops[i] * font_size > h && Math.random() > 0.98) { //加上Math.random()随机数条件主要是为了让文字出现的位置出现差异化，以免都在同一行
+                        drops[i] = 0;
+                    }
+                    drops[i]++;
+                }
+                ctx.restore();
+            }
+            //动画循环
+            function drawFrame() {
+                window.requestAnimationFrame(drawFrame);
+                ctx.fillStyle = clearColor;//每执行一次就在画布上绘制一层蒙版，从而制造出阴影效果
+                ctx.fillRect(0, 0, w, h);
+                draw();
+            }
+            drawFrame();//启动动画
+            //resize
+            function resize() {
+                w = canvas.width = document.body.clientWidth;
+                h = canvas.height = document.body.clientHeight;
+            }
+            window.addEventListener("resize", resize);
+        }();
+    }
+</script>
+</body>
+</html>

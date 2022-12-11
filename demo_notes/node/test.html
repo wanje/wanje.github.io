@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <title>测试</title>
+    <script src="math.js"></script>
+    <style>
+        .flex-container {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+        }
+        .flex-item {
+            -webkit-box-flex: 1;
+            -ms-flex: 1;
+            flex: 1;
+        }
+        .flex-item {
+            -webkit-box-ordinal-group: 1;
+            -ms-flex-order: 1;
+            order: 1;
+        }
+        .box-sizing {
+            box-sizing: border-box;
+        }
+        .transition {
+            -webkit-transition: all 0.3s ease;
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body class="testclass">
+    <span class="fd">是的</span>
+    <customer-tag>自定义标签</customer-tag>
+    <ul data-class-data="ul" class="ulclass">
+        <li class="liclass" data-class-data="li"><input type="text" class="ipt" data-class="input"/>webpack模板的项目包时 <code>npm
+            run dev</code>
+            因webpack版本不同导致一些文件已替换<code class="color-blue">npm install</code>
+            再执行 npm run dev 时即成功，新版不会自动打开浏览器，可在config/index.js中将 <code>autoOpenBrowser</code> 修改为 true
+        </li>
+        <li class="color-blue">注意：指令和插值表达式中没加引号的都被认为是变量(<span class="color-black font-bold">都被认为是vue实例下的属性或方法</span>，
+            加了引号才表示字符串，数组单元格和对象属性值也一样，只要是显式写在行内的都遵循此规则
+        </li>
+        <li><code>v-cloak</code>指令用于隐藏数据渲染完成前的双花括号，可在css中设置 <code>[v-cloak] {display: none;}</code>样式</li>
+        <li>在模块化开发中用到样式<code>scoped</code>限制作用域时，有时效果无法深入到子元素中(尤其在修改第三方样式时)</li>
+    </ul>
+</body>
+<script>
+  const a = 1;
+</script>
+</html>

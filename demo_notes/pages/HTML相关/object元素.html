@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>内嵌iframe</title>
+    <style type="text/css">
+        .layout-box {height: 100vh;}
+        .code-area {overflow: auto;background: #282b2e;}
+        .code {white-space: pre;color: #ffffff;padding-left: 1em;}
+    </style>
+</head>
+<body>
+<div id="app" class="layout-box">
+    <pre>
+    < object> 标签用于包含对象，比如图像、音频、视频、Java applet小程序、ActiveX、PDF 以及 Flash等。
+    type 与 data 属性至少要指定一个，若data指向的对象MIME类型不是浏览器所支持的，则将显示 object 标签内的内容。
+    param 是单标签，用于定义 object 的一些参数，可省略。
+    < embed> 标签也用于在页面嵌入外部应用，但一般是浏览器插件。
+    </pre>
+    <h3>图片</h3>
+    <object data="../../知识点截图/object元素可用属性.jpg" width="600"></object>
+    <h3>Excel文档</h3>
+    <object data="../../file/个人review项目资料.xlsx" width="600">
+        <p>对不起，该浏览器不支持 object 元素显示Excel文档</p>
+    </object>
+    <h3>PPT</h3>
+    <object data="../../file/试用期阶段评估模板.ppt" width="600">
+        <p>对不起，该浏览器不支持 object 元素显示PPT</p>
+    </object>
+    <h3>Word</h3>
+    <object data="../../file/正式员工-劳动合同三方协议.docx" width="600">
+        <p>对不起，该浏览器不支持 object 元素显示word文档</p>
+    </object>
+    <h3>JS文件文本</h3>
+    <object data="../../过渡板.js" width="600">
+        <p>对不起，该浏览器不支持 object 元素JS文件文本</p>
+    </object>
+    <h3>音频</h3>
+    <object data="../../assets/audio/五月天-突然好想你.mp3"></object>
+    <h3>视频</h3>
+    <object data="../../assets/video/Summer_Night.mp4">
+        <param name="autostart" value="1">
+    </object>
+    <h3>HTML页面</h3>
+    <object data="../插件使用/jsPlumb&html2canvas.html"></object>
+    <h3>Flash</h3>
+    <object data="../../plugins/webcamjs/webcam.swf"></object>
+    <h3>PDF</h3>
+    <object data="../../file/爱康体检报告.pdf"></object>
+    <iframe width="100%" height="600" src="https://view.officeapps.live.com/op/view.aspx?src=http://yi.teamshub.com/vi-source/PPT-2019-客户版.pptx"></iframe>
+</div>
+</body>
+</html>

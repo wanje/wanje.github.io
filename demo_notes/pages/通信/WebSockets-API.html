@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,user-scalable=no">
+    <title>WebSocket</title>
+    <link rel="stylesheet" href="../../plugins/highlight/styles/androidstudio.css">
+    <script src="../../plugins/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <style>
+        body,pre { margin: 0; }
+        .code { display: block; white-space: pre; font-family: monospace; }
+        .pd-10 { padding: 10px;}
+    </style>
+</head>
+<body>
+    <div class="pd-10">
+        <textarea name="text" id="text" cols="30" rows="3"></textarea>
+        <button id="btn_send">发送</button>
+    </div>
+<div id="msg"></div>
+<pre><code id="show-script"></code></pre>
+
+<script type="text/javascript" charset="UTF-8" id="script">
+
+/**====== WebSocket实例的创建及其与WebSocket服务器的连接 ======
+ * new WebSocket(url [,protocol]) 创建WebSocket实例，参数url为希望连接的对端的地址，第二个可选参数表示可使用的通信协议(可以是一个字符串，也可以是一个字符串数组表示多个协议)
+ * 注意参数url的前缀为`ws://`或`wss://`分别表示WebSocket连接和安全的WebSocket连接
+ * */
+const ws = new WebSocket('ws://localhost:3000');
+
+/**====== WebSocket实例上的事件监听 ======
+ * 实例上有四个事件可监听：open(连接建立)、close(连接关闭)、message(收到消息)、error(出现错误)
+ * */
+ws.onopen = function () {
+  console.log('WebSocket连接建立了！')
+};
+ws.onmessage = function (e) {
+  console.log('接受到消息了：' + e.data)
+};
+ws.onclose = function (e) {
+  console.log('WebSocket连接关闭了！', e)
+};
+ws.onerror = function (e) {
+  console.log('出现错误了：', e)
+};
+
+const msgInput = document.querySelector('#text');
+const bufferThreshold = 2000;
+document.querySelector('#btn_send').onclick = function () {
+  /**====== WebSocket实例其他属性 ======
+   * bufferedAmount：该属性表示已在WebSocket上发送但尚未写入网络(未到服务器)的字节数，即在发送缓冲区中的数据量
+   * readyState：该属性表示当前WebSocket的连接状态，0(还未连接)、1(已连接，可通信)、2(正在关闭连接)、3(连接已关闭或无法连接)
+   * */
+  console.log(ws.bufferedAmount, ws.readyState);
+  if (ws.bufferedAmount < bufferThreshold) {  //若缓冲区的数据量小于最大阈值就允许发送(以调节发送速率)
+    /**====== WebSocket发送消息 ======
+     * 实例上的`send()`方法发送消息
+     * */
+    ws.send(msgInput.value);    //除了发送字符串，WebSocket也支持发送二进制数据
+  }
+};
+
+// 当前窗口关闭前断开WebSocket连接
+window.onbeforeunload = function () {
+  /** 实例上的`close()`方法关闭当前连接 */
+  ws.close();
+}
+
+
+
+</script>
+<script>
+    document.getElementById('show-script').innerHTML = document.getElementById('script').innerHTML;
+</script>
+</body>
+</html>

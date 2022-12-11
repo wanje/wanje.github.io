@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- 让 IE 浏览器运行最新的渲染模式 -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1">
+    <!-- 选择webkit浏览器内核(多核) -->
+    <meta name="renderer" content="webkit">
+    <!----------------移动端--------------->
+    <!-- QQ强制竖屏 -->
+    <meta name="x5-orientation" content="portrait">
+    <!-- QQ应用模式 -->
+    <meta name="x5-page-mode" content="app">
+    <!-- UC强制竖屏 -->
+    <meta name="screen-orientation" content="portrait">
+    <!-- UC应用模式 -->
+    <meta name="browsermode" content="application">
+    <!--========================================================================-->
+    <title>兼容问题</title>
+    <!-- 条件注释，IE 浏览器加载 -->
+    <!--[if IE]>
+
+    <![endif]-->
+    
+    <!-- 非 IE 浏览器加载 -->
+    <!--[if !IE]>
+
+    <![endif]-->
+
+    <!-- ie9以下加载，gt大于、gte大于等于、lt小于、lte小于等于 -->
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="../../plugins/ieonly/html5shiv.js"></script>
+    <script type="text/javascript" src="../../plugins/ieonly/respond.js"></script>
+    <script type="text/javascript" src="../../plugins/ieonly/excanvas.js"></script>
+    <![endif]-->
+    <style type="text/css">
+        /*============= 滚动条 =============*/
+        /* Chrome中滚动条样式修改 */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }    /*滚动条容器样式（宽高分别对应垂直和横向滚顶条）*/
+        ::-webkit-scrollbar-track { background: none; }   /*滚动条滑槽样式*/
+        ::-webkit-scrollbar-thumb { border-radius: 5px; background: #26e2f0; }  /*滚动条滑块样式*/
+        ::-webkit-scrollbar-thumb:active { background: #26e2f0; }       /*滚动条滑块激活时(点住时)样式*/
+        ::-webkit-scrollbar-corner { }  /*纵横滚动条拐角处样式*/
+        /*取消或隐藏滚动条*/
+        ::-webkit-scrollbar { display: none; width: 0; } /* Chrome Safari */
+        html,body {
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE 10+ */
+        }
+
+        /* iOS🍎中iframe嵌套页面无法滚动问题解决：将iframe用div包裹，并对该div设置成可滚动，保险起见可再将其滚动条隐藏 */
+        .iframe-box {
+            -webkit-overflow-scrolling: touch;
+            overflow-y: scroll;
+        }
+        .iframe-box::-webkit-scrollbar {
+             display: none; /* Chrome Safari */
+             width: 0;
+         }
+
+        /* IE8下设置背景透明要用滤镜，且重叠的div上层mouseover鼠标事件会穿透到其下层，可设置background: url(about:blank)，当要设置背景色时则分开写background-image: url(about:blank);如下所示： */
+        .app1 {background-color: rgba(0,0,0,0.5);background-image: url(about:blank);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#88000000,endColorstr=#88000000);}/*后6位是背景色，前2位是透明度(两位16进制)，可用下面的transposition()函数将10进制转换为16进制*/
+        /* opacity属性在IE8下无效，IE8下设置元素透明用滤镜filter */
+        .app1-1 {opacity: 0.7;filter: progid:DXImageTransform.Microsoft.Alpha(opacity=70);}/*opacity=70就表示透明度为0.7*/
+
+        /* IE8下table中使用文字溢出省略时，文字虽被截断省略，但仍占据着表格空间，需要设置表格为固定布局才有效，但这时就失去了表格自动根据内容分配单元格宽度的灵活性了，需要自己设置每列的宽度 */
+        .app1-2 {table-layout: fixed;}
+
+        /* 设置多行文本溢出显示省略号(目前只有webkit内核支持私有方法) */
+        .app2 {
+            overflow: hidden; text-overflow: ellipsis; /*加上white-space: nowrap;属性则为单行文本溢出省略，支持多浏览器*/
+            display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical; /*这几个是webkit私有的属性，加上上面的属性即可在webkit浏览器下实现多行文本溢出省略*/
+        }
+
+        /* 线性渐变 */
+        .gradient {
+            background-image: -webkit-linear-gradient(left,#f5157c, #5a19d4);   /*颜色值后面可空格隔开再写一个百分比，表示该颜色值的分界点*/
+            background-image: -o-linear-gradient(left,#f5157c, #5a19d4);
+            background-image: -moz-linear-gradient(left,#f5157c, #5a19d4);
+            background-image: -ms-linear-gradient(left,#f5157c, #5a19d4);
+            background-image: linear-gradient(left,#f5157c, #5a19d4);
+            filter:progid:DXImageTransform.Microsoft.Gradient(GradientType='1',StartColorStr='#fff5157c',EndColorStr='#ff5a19d4'); /* GradientType为1时表示水平方向(此时可不设置该属性)，为0时表示垂直方向，颜色值中前两位表示透明度*/
+        }
+
+        /* 渐变色文字 */
+        .gradient-text{                                         /*实际就是只透过文字看到背景色*/
+            -webkit-background-clip: text !important;           /*背景剪裁设为文字*/
+            -webkit-text-fill-color: transparent !important;    /*设置文字填充颜色*/
+            color: #21acd2;                                     /*回退文字颜色*/
+            background: -webkit-gradient(linear,left bottom,right top,color-stop(0%,#78d9d8),color-stop(1000%,#1c94f5));
+            background: linear-gradient(60deg, #78d9d8, #1c94f5);
+        }
+
+        /* 在移动端使用FontAwesome字体图标时，使用字体设置粗细只有加粗有效，变细无效，若要变细可使用webkit私有属性 text-stroke，表示字体描边 */
+        .light { -webkit-text-stroke: 1px #d13600; }    /* 第一个值表示描边宽度，第二个值表示描边颜色，使用该属性合理控制颜色对字体进行加粗和变细均可 */
+
+        /* 禁止页面文字被选择复制，在安卓系统中目前无效 */
+        *{
+            -webkit-touch-callout:none;  /*系统默认菜单被禁用，对🍎iOS设备有效*/
+            -webkit-user-select:none;   /*webkit浏览器，但在🍎iOS中会使input输入框无法输入了，解决办法是对input元素单独设置：-webkit-user-select:auto;*/
+            -khtml-user-select:none;    /*早期浏览器*/
+            -moz-user-select:none;      /*火狐*/
+            -ms-user-select:none;       /*IE10*/
+            user-select:none;
+        }
+
+        /*在🍎iOS中 :active 伪类会失效，要激活它需要绑定一个touchstart或touchend事件，使用一个空回调即可*/
+
+        /*在使用CSS3中的transform变换时，translate出现闪烁的问题，将translate改为translate3d形式实现可解决闪烁*/
+        .no-twinkle {
+            -webkit-transform: translate3d(-50%, -50%, 0);
+            -moz-transform: translate3d(-50%, -50%, 0);
+            -ms-transform: translate3d(-50%, -50%, 0);
+            -o-transform: translate3d(-50%, -50%, 0);
+            transform: translate3d(-50%, -50%, 0);
+        }
+
+    </style>
+</head>
+<body>
+<div id="page-wrap">
+    <h1>option+command+U 查看源文件</h1>
+    label和表单控件(如input)垂直居中
+    1. 为表单控件(如input)元素设置vertical-align:middle;
+    2. 为label元素设置vertical-align:middle;display:inline-block;
+
+    在IE6下使用png背景透明图片时，要使用png8，不能使用png24
+
+    在使用 <input type="search"> 搜索输入框时，在安卓系统中获得焦点会调出搜索模式键盘，但在🍎iOS系统中并不会，
+    要在🍎iOS中想调出搜索模式键盘要用如下结构，要使用form表单元素包裹，同时form元素上要有action属性：<form action=""><input type="search"></form>
+
+    在🍎iOS中，若输入框的上层有弹层覆盖，当输入框获得焦点时，光标会奇怪地出现在弹层之上，可在输入框上加一个focus事件，获得焦点时就立即失去焦点
+    <input type="text" value="" onfocus="this.blur()"/>
+
+</div>
+<script src="../../js/jquery-1.11.3.js"></script>
+<script type="text/javascript" charset="UTF-8">
+
+    //==================================================================================================================
+    /**================================================= 🍎iOS兼容问题 =================================================*/
+    //==================================================================================================================
+
+    /**在iOS中 :active 伪类会失效，要激活它需要绑定一个touchstart或touchend事件，使用一个空回调即可*/
+    document.body.addEventListener('touchstart', function(){ /*此处不用加任何代码*/ });
+
+    /**在iOS10+中，使用meta标签禁止用户缩放页面会失效，这是iOS新系统特性，只能添加脚本阻止默认行为*/
+    /*对于高版本浏览器，添加在根元素和body上的阻止默认事件行为event.preventDefault();会被忽略，所以若要阻止整个页面放缩，就应将页面内容包裹在一个div或section中，将阻止默认事件行为绑定在该元素上*/
+    document.getElementById('page-wrap').addEventListener('touchstart', function () {   /* touchstart 或 touchmove 都可以 */
+        var event = event || window.event;
+        if (event.touches.length > 1) {
+            event.preventDefault();
+        }
+    }, false);
+    var lastTouchEnd = 0;
+    document.getElementById('page-wrap').addEventListener('touchend', function (event) {
+        var now = Date.now();
+        if (now - lastTouchEnd <= 300) {
+            event.preventDefault();
+        }
+        lastTouchEnd = now;
+    },false);
+
+
+    //==================================================================================================================
+    //====================================================== 其他 ======================================================
+    //==================================================================================================================
+
+    /** 当目标元素内部有节点增加时可用jQuery监听'DOMNodeInserted'事件(IE9+，及其他主流)，但这些DOM变动事件在DOM3级事件规范中已被移除 */
+    $(document).on('DOMNodeInserted',function(){ });
+
+    /** 鼠标滚动事件；注意滚动事件scroll与鼠标滚动事件mousewheel/DOMMouseScroll不一样，滚动事件只要绑定对象有滚动就会触发，而鼠标滚动事件只有通过鼠标相关设备触发滚动时才触发(例如拖动滚动条就只会触发滚动事件，而不会触发鼠标滚动事件) */
+    $(document).on('mousewheel DOMMouseScroll',function(event){  //鼠标滚动监听mousewheel事件，但是在Firefox下却是DOMMouseScroll事件
+        //jquery中，最终传入事件处理程序的 event 其实已经被 jQuery 做过标准化处理，其原有的事件对象则被保存于 event 对象的 originalEvent 属性之中
+        //可根据滚动事件中的wheelDelta属性(Firefox中为detail属性)的正负来判断滚动条是向上滚动还是向下滚动的，因为这两个属性是原生事件对象中的，jQuery标准化改造后的event对象中并不包含这两个属性，所以需要用到原生事件对象
+        var e = event.originalEvent || window.event.originalEvent;
+        console.log('鼠标在滚动，触发' + e.type +'事件！',e.wheelDelta>0, e.detail>0);
+    });
+    document.addEventListener('mousewheel',function(event){ //非Firefox中鼠标滚动监听mousewheel事件
+        var e = event || window.event;
+//        console.log('鼠标在滚动，触发' + e.type +'事件！',e.wheelDelta>0);//非Firefox浏览器中wheelDelta属性值大于0表示向上滚动，小于0则表示向下滚动，与Firefox中的detail属性刚好相反
+    });
+    document.addEventListener('DOMMouseScroll',function(event){ //Firefox中鼠标滚动监听DOMMouseScroll事件
+        var e = event || window.event;
+//        console.log('鼠标在滚动，触发' + e.type +'事件！',e.detail>0);//Firefox中detail属性值大于0表示向下滚动，小于0则表示向上滚动，与其他浏览器中的wheelDelta属性刚好相反
+    });
+
+    /** 移动端input输入框放在下半屏时，获取焦点弹出虚拟键盘在部分浏览器中输入框会被键盘遮挡，而不是理想中的出现在键盘纸上，可尝试使用scrollIntoView方法使其进入可视区 */
+    function scrollIntoView(el) {
+        setTimeout(function(){
+            if (el.scrollIntoView) el.scrollIntoView([bAlignToTop]);   //参数bAlignToTop为布尔型(可选)：true/false，默认参数不传则为true。true:对象的顶端与当前窗口的顶部对齐；false:对象的底端与当前窗口的顶部对齐；一般用true
+            else if (el.scrollIntoViewIfNeeded) el.scrollIntoViewIfNeeded([bAlignToTop]);   //scrollIntoView方法的变体，默认参数不传则为true。true:对象在可视窗口居中对齐；false:对象与可视窗口最近的边缘对齐；一般用true
+        },300);
+    }
+
+    /** 进制转换，不传入基数base则默认转换为16进制，可用于IE滤镜是计算透明度*/
+    function transposition(num, base) {
+//        var dataStore = [],
+//            remainder = 0;
+//        base = base || 16;
+//        num = Math.floor(num);
+//        do {
+//            switch(num % base){
+//                case 10: remainder = 'A';break;
+//                case 11: remainder = 'B';break;
+//                case 12: remainder = 'C';break;
+//                case 13: remainder = 'D';break;
+//                case 14: remainder = 'E';break;
+//                case 15: remainder = 'F';break;
+//                default: remainder = num % base;
+//            }
+//            dataStore.push(remainder);
+//            num = Math.floor(num/base);
+//        }while(num>0);
+//
+//        if(dataStore.length>0){
+//            return dataStore.reverse().join('');
+//        }
+
+        //原生简单实现
+        num = Math.floor(num);
+        base = base || 16;
+        return num.toString(base);
+    }
+    console.log(transposition(255*0.4));
+
+    /** 移动端rem单位转px，及字号适配 */
+    //px 字体适配
+    function pxChange(px){
+        var dpr = parseInt($('html').data('dpr'));
+        return dpr*px;
+    }
+    // rem to px
+    function rem2px(rem){
+        var rootFontSize = parseInt($('html').css('font-size'));
+        return rootFontSize * rem;
+    }
+
+    /** ================ iframe框架应用知识小结==================== */
+    // 当页面有多个iframe做显示隐藏切换时，隐藏或删除当前显示的iframe时，浏览器会自动选择一个未显示的iframe显示(但各浏览器选择哪个情况不同，可用js控制显示哪个)，但删除时，js控制需要设置一个定时器延迟一会儿才能覆盖浏览器的这项自主操作
+    // 根据其页面内容高度来动态设置iframe的高度
+    // 1、在当前页面中设置父窗中链接当前页面的iframe高度
+    function setFrameH(){
+        var fileName = decodeURI((window.location.pathname.match(/\/([^\/?#]+)$/i) || [,''])[1]); //JavaScript中 decodeURI(str)函数可解码页面路径中的汉字
+        var pageHeight = document.body.offsetHeight;
+        var iframe = $(window.parent.document).find('iframe[src="'+fileName+'"]');
+        iframe.attr('height',pageHeight).load(function(){   //两次设置用于保险
+            iframe.attr('height',pageHeight);
+        });
+    }
+    // 2、在父页面中设置iframe框架的高度
+    function setInnerFrameH(iframe){    //此处iframe形参为jQuery对象
+        var iHeight = iframe.contents().find('body')[0].offsetHeight; //contents()返回匹配元素的所有子节点，iframe则会返回其内部文档结构
+        iframe.attr('height',iHeight);
+    }
+    /**
+     * 在使用iframe框架时，若需要在菜单中点击一个连接而在当前页面中的iframe中打开这个链接时，不用每次生成一个iframe标签，
+     * 可使用a标签<a href="url" target="框架名">XXX</a>，target为打开该链接的目标位置，这样也可只在父页面动态设置iframe的高度，
+     * 此方法可作为project11：四川广电统一运维平台项目中的替换优化方案
+     */
+
+    //* 释放iframe内存，避免内存泄漏 
+    function releaseIframe(iframe) {
+        var doc = iframe.contentDocument;
+        iframe.src = 'about:blank;';
+        doc.write('');
+        try {
+            doc.clear();
+        } catch(err) {}
+        iframe.contentWindow.close();
+        iframe.parentNode.removeChild(iframe);
+        iframe = null; // 若数据是放在对象的某个属性上的，则也可以delete删除该属性(delete是删除对象属性，不能删除整个变量)
+        if (window.CollectGarbage) window.CollectGarbage(); // IE特有的垃圾回收方法
+    }
+
+
+    /** =================解决tab键对页面焦点的影响================= */
+    $(document).on('keydown', function (e) {
+        if (e.keyCode == 9) {
+            e.preventDefault();
+        }
+    });
+
+    /** ============检测设备是否为💻移动设备📱或Android或iOS🍎============ */
+    !function isMobile(){
+        var userAgent = window.navigator.userAgent;
+        var isAndroid = userAgent.match(/android/gi);
+        var isIPhone = userAgent.match(/iphone/gi);
+        if(userAgent.match(/Mobile/gi)){
+            //可去掉移动设备判断，而直接进行下面的Android和iOS设备判断
+            if (isAndroid){
+                console.log('Android设备');
+            }else if (isIPhone){
+                console.log('iOS设备');
+            }
+        }else{
+            console.log('PC设备');
+        }
+    }();
+
+    /** ===============获取设备DPI(每英寸点的个数)================ */
+    function getDPI() {
+        var arrDPI = [];
+        if (window.screen.deviceXDPI != undefined) {
+            arrDPI[0] = window.screen.deviceXDPI;
+            arrDPI[1] = window.screen.deviceYDPI;
+        } else {
+            var tmpNode = document.createElement("div");
+            tmpNode.style.cssText = "width:1in;height:1in;position:absolute;left:0px;top:0px;z-index:99;visibility:hidden";
+            document.body.appendChild(tmpNode);
+            arrDPI[0] = parseInt(tmpNode.offsetWidth);
+            arrDPI[1] = parseInt(tmpNode.offsetHeight);
+            tmpNode.parentNode.removeChild(tmpNode);
+        }
+        return arrDPI;
+    }
+    console.log(getDPI());
+
+    /** DOM对象的getBoundingClientRect()方法获取对应元素的包围框的位置和大小信息，返回的对象中除了width和height，其他left、top、right和bottom属性值都是相对于视口的左上角位置而言，即窗口原点，IE9+支持 */
+
+    /** =====================移动端📱屏幕旋转====================== */
+    window.addEventListener('orientationchange',function () {
+        //orientationchange 为移动端屏幕旋转事件
+        console.log(window.orientation);
+        //在移动设备中根据 orientation 属性值可判断设配是横屏还是竖屏
+        //须注意的是：Android中其值为0或180时表示竖屏，为90或-90时表示横屏
+        //而🍎iOS中刚好相反0或180时表示横屏，为90或-90时表示竖屏
+    },false);
+
+
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1">
+    <title>音视频</title>
+    <style>
+        body {margin: 0;}
+        audio,
+        video {outline: none; width: 100%;}
+        button { padding: 5px; margin: 10px 0 10px 10px; outline: none;border: 1px solid #8ac007; border-radius: 5px; background: none; color: #8ac007; cursor: pointer; }
+        button:hover { background: #8ac007; color: #ffffff; }
+        button:active { transform: scale(0.9); }
+    </style>
+</head>
+<body>
+    <!--可以直接在video元素上用‘src’属性指定资源文件-->
+    <!--<video controls loop id="my-video" src="./assets/video/Summer_Night.mp4" poster="./images/stone-art.jpg">-->
+    <video controls loop id="my_video" poster="../../images/stone-art.jpg">
+        <!--使用source可指定不同格式的视频资源文件，浏览器将选择支持的格式进行播放-->
+        <!--<source src="https://blz-videos.nosdn.127.net/1/HearthStone/f6cd63b590d416821d3e27e0.mp4" type="video/mp4">-->
+        <source src="../../assets/video/Summer_Night.mp4" type="video/mp4">
+        <!--<source src="./assets/video/mov_bbb.mp4" type="video/mp4">-->
+        <!--<source src="./assets/video/mov_bbb.ogg" type="video/ogg">-->
+        <p>该浏览器不支持HTML5视频播放，为了更好的体验请升级浏览器！</p>
+    </video>
+    <div id="fn_btn">
+        <button id="btn1">播放/暂停</button>
+        <button id="btn2">后退</button>
+        <button id="btn3">快进</button>
+    </div>
+    <audio controls id="my_audio" src="../../assets/audio/幺妹儿冯宝宝-青谈.mp3">
+        <!--使用source可指定不同格式的音频资源文件，浏览器将选择支持的格式进行播放-->
+        <!--<source src="horse.mp3" type="audio/mpeg">-->
+        <!--<source src="horse.ogg" type="audio/ogg">-->
+        在不设置controls属性(html和DOM都不设置)时，audio元素是没有任何视觉外观的。
+    </audio>
+    <img src="../../知识点截图/audio&video标签可选属性.jpg">
+    <img src="../../知识点截图/audio&video元素DOM参考.jpg">
+</body>
+<script>
+    /*
+    * 就像可以使用 Image() 构造函数创建一张屏幕外图片一样，H5中媒体API也允许使用 Audio() 构造函数创建音频，并将媒体源url作为参数，来创建一个屏幕外音频元素。
+    * Audio()构造函数返回的值与在文档中获取到的audio元素以及使用document.createElement('audio')创建的audio元素都是同一类对象。
+    * 注意：没有对应的Video()构造函数可以使用，但document.createElement('video')还是可以的。
+    * */
+    new Promise(function (resolve, reject) {
+      let cusAudio = new Audio('./assets/audio/五月天-突然好想你.mp3');
+      setTimeout(function () {
+        resolve(cusAudio);
+      });
+
+    }).then(function (cusAudio) {
+//      cusAudio.play();
+    });
+
+    var video = document.getElementById('my_video');
+    var audio = document.getElementById('my_audio');
+
+    document.getElementById('fn_btn').addEventListener('click', function (event) {
+      var target = event.target;
+
+      switch (target.id) {
+        case 'btn1': {
+          video.paused ? video.play() : video.pause();
+          break;
+        }
+        case 'btn2': {
+          video.currentTime -= 5;    //实测发现：Chrome中视频资源要放在服务器(路径http/https开头)的情况下，播放位置设置才有效，而Firefox本地就可以
+          break;
+        }
+        case 'btn3': {
+          video.currentTime += 5;
+          break;
+        }
+      }
+    });
+
+
+</script>
+</html>

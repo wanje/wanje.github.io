@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>内嵌iframe</title>
+    <link rel="stylesheet" href="../../css/defaultPc.css">
+    <link rel="stylesheet" href="../../plugins/highlight/styles/androidstudio.css">
+    <script src="../../plugins/vue2.6.7.min.js"></script>
+    <script src="../../plugins/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <style type="text/css">
+        body,pre {margin: 0;}
+        .code {display: block;white-space: pre;font-family: monospace;}
+    </style>
+</head>
+<body>
+<pre id="app">
+    /*==========================*/
+    /*== window.postMessage() ==*/
+    /*==========================*/
+    <span>收到父页面发来的消息：{{ message }}</span><br>
+    <textarea placeholder="请输入" v-model="msg"></textarea>
+    <button @click="sendMsg">发送/回复</button>
+
+
+</pre>
+<!--<pre><code class="js" id="show-script"></code></pre>-->
+<script type="text/javascript" charset="UTF-8" id="script">
+    new Vue({
+      el: '#app',
+      data: {
+        msg: '',
+        message: ''
+      },
+      mounted() {
+        window.addEventListener('message', function (e) {
+          console.log('iframe收到postMessage消息');
+          if (e.origin !== location.origin) return;
+          console.log(`iframe收到来自${location.origin}的消息:`, e.data);
+          // 自动回复
+          e.source.postMessage('我是iframe，已收到你的消息。', e.origin);
+        }, false);
+      },
+      methods: {
+        sendMsg() {
+          // 给父页面发送消息
+          top.postMessage(this.msg, location.origin)
+        }
+      }
+    });
+</script>
+<script>
+//    document.getElementById('show-script').innerHTML = document.getElementById('script').innerHTML;
+</script>
+</body>
+</html>

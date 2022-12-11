@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1">
+    <title>Web存储</title>
+    <style>
+        .code {display: block;white-space: pre;font-family: monospace;}
+    </style>
+</head>
+<body>
+<pre>
+    HTML5中web Storage下方法：
+    1、localStorage对象本身带有方法有：(sessionStorage也有)
+    　　添加键值对：localStorage.setItem(key,value)
+    　　获取键值：localStorage.getItem(key)
+    　　删除键值对：localStorage.removeItem(key)
+    　　清除所有键值对：localStorage.clear()
+    　　获取localStorage的属性名称（键名称）：localStorage.key(index)  <!--其中index是各键值对对应的下标-->
+    还有一个和普通对象不一样的属性length：获取localStorage中保存的键值对的数量：localStorage.length。
+    localStorage也可用一般对象添加改变键值对的方法，即localStorage.key=value;
+    在iPhone/iPad上有时调用setItem()时会出现诡异的QUOTA_EXCEEDED_ERR错误。解决方法是在setItem之前先removeItem()。
+    所以从这个兼容问题来看，貌似使用对象添加/删除键值对更方便一些，兼容也更强一些。
+
+    须注意：写代码时给localStorage、sessionStorage保存数据可使用不同数据类型进行赋值，但它们在实际保存数据时都是以字符串的形式保存的，所以在取出使用时应再转换成要应用的数据类型；
+    我们可以使用 JSON.stringify(obj) 来存储对象数据，JSON.stringify 可以将对象转换为字符串；使用 JSON.parse(objstr) 方法将字符串转换为 JSON 对象
+</pre>
+<div>
+    <div style="border: 2px dashed #ccc;width:320px;text-align:right;">
+        <label for="keyname">别名(key):</label>
+        <input type="text" id="keyname" name="keyname" class="text"/>
+        <br/>
+        <label for="sitename">网站名：</label>
+        <input type="text" id="sitename" name="sitename" class="text"/>
+        <br/>
+        <label for="siteurl">网 址：</label>
+        <input type="text" id="siteurl" name="siteurl"/>
+        <br/>
+        <input type="button" onclick="save()" value="新增记录"/>
+        <hr/>
+
+        <label for="search_site">输入别名(key)：</label>
+        <input type="text" id="search_site" name="search_site"/>
+        <br/>
+        <input type="button" onclick="find()" value="查找网站"/>
+        <p id="find_result"></p>
+
+        <label for="delete_site">输入别名(key)：</label>
+        <input type="text" id="delete_site" name="delete_site"/>
+        <br/>
+        <input type="button" onclick="remove()" value="删除网站"/>
+        <p id="delete_result"></p>
+    </div>
+    <div id="list"></div>
+</div>
+<pre>
+<script class="code">
+    //检测当前浏览器是否支持Storage：
+    if(window.localStorage){
+        // 是的! 支持 localStorage  sessionStorage 对象!
+        // 一些代码.....
+    } else {
+        // 抱歉! 不支持 web 存储。
+    }
+
+    //保存数据
+    function save(){
+        var site = new Object;
+        site.keyname = document.getElementById("keyname").value;
+        site.sitename = document.getElementById("sitename").value;
+        site.siteurl = document.getElementById("siteurl").value;
+        var str = JSON.stringify(site); // 将对象转换为字符串
+        sessionStorage.setItem(site.keyname,str);
+        alert("保存成功");
+    }
+    //查找数据
+    function find(){
+        var search_site = document.getElementById("search_site").value;
+        var str = sessionStorage.getItem(search_site);
+        var find_result = document.getElementById("find_result");
+        var site = JSON.parse(str);
+        find_result.innerHTML = search_site + "的网站名是：" + site.sitename + "，网址是：" + site.siteurl;
+    }
+
+    //将所有存储在localStorage中的对象提取出来，并展现到界面上
+    // 确保存储的 keyname 对应的值为转换对象，否则JSON.parse会报错
+    function loadAll(){
+        var list = document.getElementById("list");
+        if(sessionStorage.length>0){
+            var result = "<table border='1'>";
+            result += "<tr><td>别名</td><td>网站名</td><td>网址</td></tr>";
+            for(var i=0;i<sessionStorage.length;i++){
+                var keyname = sessionStorage.key(i);
+                var str = sessionStorage.getItem(keyname);
+                var site = JSON.parse(str);
+                result += "<tr><td>"+site.keyname+"</td><td>"+site.sitename+"</td><td>"+site.siteurl+"</td></tr>";
+            }
+            result += "</table>";
+            list.innerHTML = result;
+        }else{
+            list.innerHTML = "数据为空...";
+        }
+    }
+
+    //删除数据
+    function remove(){
+        var delete_site = document.getElementById("delete_site").value;
+        var siteurl = sessionStorage.getItem(delete_site);
+        var delete_result = document.getElementById("delete_result");
+        if(typeof siteurl !== 'undefined'){
+            delete_result.innerHTML = delete_site + "的网址是：" + siteurl;
+            sessionStorage.removeItem(delete_site);
+            //删除后刷新数据列表
+            loadAll();
+        }else {
+            delete_result.innerHTML = '不存在此网址';
+        }
+    }
+</script>
+</pre>
+</body>
+</html>

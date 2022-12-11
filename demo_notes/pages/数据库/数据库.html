@@ -1,0 +1,205 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta charset="UTF-8">
+<title></title>
+<style type="text/css">
+</style>
+</head>
+<body>
+<div>
+    数据库：数据组织、存储、管理的仓库
+    数据库模型：层次(树状)模型、网状模型、关系模型、对象模型、半结构化
+    DB：database，数据库
+    RDB：Relational Database，关系数据库
+    DBMS：(Database Management System，数据库管理系统
+    RDBMS：Relational Database Management System，关系数据库管理系统
+    MySQL：关系数据库管理系统，SQL server家族，Oracle，db2，sybase，MySQL。
+    table：表。表是数据库的核心单元。
+    行，是所有记录的名称，表示一个真实的实体。列，是行的一个数据域，也就是实体的一个属性。
+    多行、多列构成了表。多表构成了数据库。
+    主键：是一行数据唯一的区别。
+    外键：在数据库设计时。从表中的外键需要与主表中的主键进行关联
+    SQL：Structured Query Language，结构化查询语言，它是一种非过程式语言，只关心结果，不能独立开发成应用程序，只能通过宿主语言来执行SQL语句后实现应用程序的开发。如在JAVA/PHP/C++/JS等语言中
+    必须掌握的三种SQL语言：DDL(Data Definition Language)数据定义语言，DML(data manipulation language)数据操作语言，DQL(Data QueryLanguage)数据查询语言，另外有DCL(Data Control Language)数据控制语言，TPL事务处理语言，CCL指针控制语言
+    多对多关系至少需要三个表
+
+    SQLyog中单行注释用- -，多行注释用/**/
+    CREATE DATABASE 数据库名 <!--创建数据库-->
+    USE 数据库名<!--连接使用数据库-->
+    DROP DATABASE 数据库名<!--删除数据库-->
+    数据库命名首字母只能是英文，_，@，#；后面可用数字、字母、@、#；不可用保留字和SQL语言中的关键字
+    CREATE TABLE 表名(字段名1 数据类型(长度) 约束，字段名2 数据类型(长度) 约束...) <!--创建表-->
+    表名：以数据库的首字符开始，后加下划线，再加表名；如库名：baijie94，表名：b_student，列名：s_name
+    CREATE TABLE b_student(
+    s_id INT PRIMARY KEY,<!--定义主键约束：primary key-->
+    s_name CHAR(50) UNIQUE,<!--定义唯一约束：unique-->
+    s_age DECIMAL(5,2),<!--数据类型DECIMAL(m,n),m表示数字总位数，n表示其中小数占的位数-->
+    s_birthday DATA    <!--最后一个结尾不打逗号,-->
+    )
+    数据类型：
+    字符串型：char，固定长度；varchar，不固定长度，即使不输入数据，长度也是1，输入数据则依次+1
+    文本型：text，大文本
+    CREATE TABLE 表名2 SELECT * FROM 表名1<!--备份表数据，将表1数据备份到表2中-->
+
+    实体完整性：
+    主键约束：非空，且具有唯一性
+    唯一约束：不可重复，可以为空NULL，但NULL也只能出现一次
+
+    域完整性：
+    非空约束：NOT NULL
+    默认约束：DEFAULT
+    检查约束：CHECK   <!--MySQL中，它总是分析CHECK约束，但是会忽略CHECK约束-->
+
+    引用完整性：
+
+    删除表：DROP TABLE 表名
+
+    自动增长列：AUTO_INCREMENT(适用于INT型，但它不受删除行的影响，只会+1，不会因删除自动-1)
+    也可通过修改表的方式来设置ALTER TABLE 表名 AUTO_INCREMENT=起始数
+
+    复制表结构：CREATE TABLE 表名2 SELECT * FROM 表名1 WHERE 1=0
+    复制表结构和数据：CREATE TABLE 表名2 SELECT * FROM 表名1   <!--注意着两种都不会复制约束(索引)-->
+
+    添加字段列：ALTER TABLE 表名 ADD COLUMN 添加的字段及约束
+    删除字段列：ALTER TABLE 表名 DROP COLUMN 添加的字段及约束
+    修改字段列：ALTER TABLE 表名 CHANGE 被修改的字段 新的字段及约束
+
+    DML
+    数据的插入：insert into 表名(要插入的字段列表名)values(值1，值2，...)
+    自动增长列，默认值列，单条数据的插入，多条数据的插入
+
+    单条数据的全字段插入(此时最好取消自动增长列)：INSERT INTO 表名(要插入的字段列表名)values(值1，值2，...)<!--值为字符串时要用单引号引起来-->
+    如果表中的列允许为NULL值，则在插入数据时，可以不指定该数据列
+
+    多条数据的插入：INSERT INTO 表名(要插入的字段列表名)values(值1),(值2),(值3)...<!--只能在MySQL中这样使用，注意只能有一个values-->
+    通过查询来插入多条数据：INSERT INTO 表名2 SELECT * FROM 表名1  <!--不加values-->
+
+    UPDATE 修改、更新数据列：
+    基本语法：UPDATE 表名 SET 字段名1=值1,字段名2=值2,...WHERE 条件表达式  <!--若未加条件，则修改所有行的对应字段-->
+    UPDATE 表名 SET 字段名=NULL WHERE 条件表达式  <!--让满足条件的行中的某字段为空，即可表示删除该字段数据，但首先要允许此字段为NULL-->
+
+    DELETE FROM 删除表：
+    DELETE FROM 表名 <!--只删除行的数据，表的结构还在-->
+    DELETE FROM 表名 WHERE 条件表达式 <!--删除满足条件的行-->
+
+    <!--DELETE会记录日志，意味着数据删除后还可恢复，但效率低；TRUNCATE不会记录日志，意味着删除后不可恢复，但效率高-->
+    TRUNCATE TABLE 表名<!--删除-->
+
+
+    DQL语言：SELECT语句执行查询
+    基本语法：SELECT [DISTINCT] {*|字段名[别名],...} FROM 表名 [WHERE 过滤条件] [ORDER BY 字段1,字段2...]
+    <!--投影操作，投影到虚拟表-->
+    USE 库名<!--选择要使用的数据库-->
+    SELECT * FROM 表名 <!--先执行from，将标加载到内存，接着执行投影操作，确定要投影的字段列表-->
+    SELECT 字段名 FROM 表名 <!--查询单个字段-->
+    SELECT 字段名1,字段名2,... FROM 表名 <!--查询多个字段，各字段用逗号隔开-->
+
+    表的别名、列的别名：
+    方式1：SELECT 字段名 AS 别名(可为汉字)
+    方式2：字段名1 '别名1',字段2 '别名2',...<!--别名一般需要用单引号引起来，特别是名称中有空格分隔的情况-->
+
+    返回表中的唯一的数据值(即有重复的值只返回一个)：DISTINCT <!--如查询班级学生所有性别SELECT DISTINCT s_sex FROM stu，显示班上所有的年龄段SELECT DISTINCT s_age AS '年龄段' FROM stu-->
+
+    显示指定行数的数据：limit(放在语句的最后位置)
+    语法：limit 起始行位置，行数<!--此项要放在语句的最后位置，如显示前五个学生的信息SELECT * FROM stu LIMIT 0,5 (下标从0开始)-->
+    若只有一个参数，则此参数表示行数，起始行默认为0
+
+    SELECT s_age+10 AS 年龄 FROM stu <!--所有学生年龄+10，并以别名显示(否则会显示成s_age+10)-->
+    SELECT CONCAT(s_name,"/",s_age) AS "姓名/年龄" FROM stu<!--concat()字符串连接函数，用于字符串拼接-->
+
+    <!--选择操作 WHERE 过滤条件-->
+    SELECT * FROM 表名 WHERE 过滤条件
+    条件中可用 between and 表示闭区间范围，AND表并且，OR表或者
+    IN(或者连接同字段多条件，表满足这些条件之一，逗号隔开)，NOT IN(并且连接同字段多条件，表不满足这些所有条件，逗号隔开)
+    <!--SELECT * FROM stu WHERE s_age IN(21,23,25,28)；SELECT * FROM stu WHERE s_age NOT IN(21,23,25,28)-->
+
+    模糊查询：like 通配符
+    通配符："_"，表示匹配1个字符长度的字符
+            "%"，表示匹配0个或任意个字符长度的字符
+    <!--显示姓名中第二2个字是“红”的记录SELECT * FROM stu WHERE s_name LIKE "_红%"-->
+    <!--显示姓名中有个字是“强”的记录SELECT * FROM stu WHERE s_name LIKE "%强%"-->
+    <!--显示三个字姓名中间字是“德”的记录SELECT * FROM stu WHERE s_name LIKE "_德_"-->
+    NULL值的判断：is null，is not null<!--显示所有已报到的学生记录SELECT * FROM stu WHERE s_name IS NOT NULL-->
+
+    排序操作：order by 子句
+    SELECT s_name,s_age FROM stu
+    ORDER BY s_age ASC <!--按年龄从小到大显示所有学生的姓名和年龄，ASC表升序，DESC表降序，默认排序为升序-->
+    <!--将中文字按拼音排序convert(参与排序的字段名称 using 编码名称)，utf-8编码不能按拼音顺序排列-->
+    SELECT s_name FROM stu
+    ORDER BY CONVERT(s_name USING gbk/gb2312) <!--将姓名按拼音顺序排列-->
+
+
+    使用SELECT来执行聚合函数
+
+    COUNT：统计行数；结构：SELECT COUNT(计数规范) FROM 表名
+    SELECT COUNT(*) FROM stu <!--对所有行进行统计，包括为null值的行-->
+    SELECT COUNT(ALL s_name) FROM stu <!--ALL可省略，对所有有名字的(非null)行进行统计，这就包括为null值的行-->
+    SELECT COUNT(DISTINCT c_name) AS 班级数 FROM stu <!--统计班级数，重复的值只返回一个-->
+    SELECT COUNT(*) FROM stu WHERE s_sex='男' <!--统计男生数-->
+
+    SUM：求和；结构：SELECT SUM(计数规范) FROM 表名
+    SELECT SUM(ALL s_score) 总分 FROM score <!--ALL可省略-->
+    SELECT SUM(DISTINCT s_score) 总分 FROM score <!--重复的值只返回一个-->
+    ifNULL(字段名,0)<!--如果为空则此字段名返回0-->
+    SELECT SUM(ifNULL(s_score,0)) 总分 FROM score<!--s_score为null的项则认为其s_score值为0-->
+
+    AVG：求平均值；结构：SELECT AVG(计数规范) FROM 表名
+    SELECT AVG(ALL s_score) 平均分 FROM score <!--ALL可省略，不统计为null的数-->
+    SELECT AVG(DISTINCT s_score) 平均分 FROM score <!--重复的值只返回一个-->
+    SELECT CEIL(AVG(DISTINCT s_score)) 平均分 FROM score <!--CEIL向上取整-->
+
+    MAX/MIN：统计最大/最小值；结构：SELECT MAX/MIN(字段名) 别名 FROM 表名
+
+    使用多个聚合函数时用逗号隔开
+
+    聚合函数做条件时，不能写在WHERE中，只能写在HAVING子句中，having是对group by子句的结果进行条件过滤，只能放在group by子句后
+
+
+    子查询：查询中包含查询，相关子查询，非相关子查询
+    SELECT中嵌套子查询，返回的是单行、单列的数据，往往都是相关子查询，可能需要使用别名
+    FROM中嵌套子查询：SELECT * FROM (子查询) AS 别名；此子查询返回多行多列数据
+    WHERE中嵌套子查询：SELECT * FROM 表名 WHERE (子查询) [AND 条件表达式]；此子查询返回多行单列数据
+
+    ALL 要求子查询返回的结果是单列，可为单行或多行
+    ANY 要求子查询返回的结果是单列，单行或多行
+    EXISTS 子查询只要返回了行，其值就为真；子查询条件为真时，则返回行
+    NOT EXISTS 子查询只要没返回行，其值就为真；子查询条件为假时，不会返回行
+    EXISTS，NOT EXISTS不关心返回什么值，只关心是否有内容返回，它们后面总是跟一个子查询，且往往写成相关子查询
+    一般用IN，不用EXISTS；多用NOT EXISTS，少用或不用NOT IN
+
+
+    表联接(其为横向联接)：SELECT 列1,列2 FROM 表1 JOIN 表2 ON 表1.列 = 表2.列 <!--用JOIN联接，ON添加联接条件，有更多表则在后面依次再加join和on-->
+    表联接分类：内联接、外联接(又分左外联接、右外联接)、全联接(MySQL中不支持全联接)
+
+    内联接：select * from 表1 inner join 表2 on 表1.字段 = 表2.字段 <!--inner可以省略，内联接是指使用比较运算符根据每个表共有的列的值匹配两个表中的行；注意它只返回条件匹配的行-->
+    内联接另一种语法：select * from 表1 , 表2 where 表1.字段 = 表2.字段
+
+    外联接：<!--outer可省略，被定义为外联接的表的数据行都要返回(不管是否匹配)，而未被定义为外联接的表只返回匹配的数据行-->
+    左外联接：select * from 表1 left outer join 表2.字段 = 表2.字段
+    右外联接：select * from 表1 right outer join 表2.字段 = 表2.字段
+
+    全联接(MySQL中不支持全联接)：select * from 表1 full join 表2.字段 = 表2.字段、
+
+    联合(其为纵向联接)：UNION
+    union在联合时会排除重复的数据，第一张表投影出的字段的数量及数据类型，决定了后面所有要联接的表的字段数量和数据类型，所以要求后面所有要联合的表投影出来的字段的数据类型必须相同或相似
+    union all在联合时不会排除重复的数据
+
+    当投影中相同的字段名时，必须制定每个字段来源于哪个表，若不指定则会报错
+
+    数据库设计规范：
+    第一范式：列不可再分(值必须唯一)，行不可重复(定义主键)
+    第二范式：非主键列必须依赖于主键列(非主依主)
+    第三范式：除了主键外，其他列都不互相依赖(非主独立)
+
+
+
+
+
+
+</div>
+<script type="text/javascript" charset="UTF-8">
+</script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<div>
+    <p>我第一层P元素</p>
+    <div id="box">
+        <p>测试</p>
+    </div>
+    <div id="txt">
+        <p>12345698</p>
+        <input type="text"/>
+        <button onclick="getValue()">点击</button>
+    </div>
+    <div>
+        999999999999999
+    </div>
+    <div>1111111111111</div>
+</div>
+<div>888888888888</div>
+
+<script src="../jquery-1.11.3.js"></script>
+<script>
+    var box=document.getElementById("box");
+    $("#box");
+    /*JS与JQ互换*/
+    console.log($("#box").get(0));//Dom节点，jq==>js
+    console.log($(box));//jq对象，JS==>jq
+
+    $("boxx").css("color","red");//不报错，JQ内部写了判断
+//    $("span,div,.box,#box").css("color","green");
+    /*ul li a ^  input[type='text'] $("div ~ p") */
+
+
+    //jq为后代选择器提供了一个等价find（）方法，它表示如果在#box内找到指定子元素，可以对其进行操作
+    $("#box").find('p').css("color","orange");//和后代选择器等价
+    //box前/后紧邻同级元素
+//    $("#box").next().css("color","green");
+//    $("#box").prev().css("color","green");
+
+    //前后所有同级元素
+//    $("#box").nextAll().css("color","green");
+//    $("#box").prevAll().css("color","green");
+
+
+    //除自己以外的所有同级元素都改
+    $("#box").siblings().css("color","yellow");
+
+    //其他
+    $("#box").prevUntil("p").css("color","yellow");//同级上 遇到则停止
+    $("#box").nextUntil("p").css("color","yellow");//同级上 遇到则停止
+
+    //
+    function getValue(){
+       console.log($("input[type='text']").val()) ;//错误方法.value  JQ是不提供这个属性的
+    }
+    //设置输入框的值
+    $("input[type='text']").val("hello!王杰（大）");
+
+   $("#box").click(function(){
+       $("#box").html($("#box").html()+"<h1>王杰，无可替代~！</h1>");
+   })
+</script>
+</body>
+</html>

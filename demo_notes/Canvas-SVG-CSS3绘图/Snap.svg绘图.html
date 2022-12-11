@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1">
+  <title>Snap.svg</title>
+  <link rel="stylesheet" href="../plugins/highlight/styles/androidstudio.css">
+  <script src="../plugins/highlight/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <style type="text/css">
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    body {margin: 0;}
+    .e-flex-box {display: flex;}
+    .svg-code {flex: 1;margin: 0;background: #282b2e;height: 100vh;overflow: auto;}
+    .svg-view {width: 300px;margin: 0;padding-left: 20px;height: 100vh;overflow: auto;}
+    .svg-view svg {vertical-align: top;}
+  </style>
+</head>
+
+<body>
+  <div class="e-flex-box">
+    <ol class="svg-view">
+      <li>
+        <svg id="svg-1" height="100">
+          <g id="g"><circle cx="30" cy="30" r="30" fill="red" /></g>
+        </svg>
+        <svg id="svg-1-2" height="100"></svg>
+      </li>
+      <li id="svg-2"></li>
+    </ol>
+    <pre class="svg-code"><code class="css" id="show-script"></code></pre>
+  </div>
+  <script src="../plugins/snap.svg-min.js"></script>
+  <script type="text/javascript" charset="UTF-8" id="script">
+    /* 
+     * Snap() 创建或包装一个已存在的svg元素作为画布，返回snap包装对象，类似jQuery的`$()`方法
+     * Snap('css selector' || svgDOM || array) 将一个已存在的SVG元素包装成一个snap画布对象(参数array表示可以传入一组元素，包装后也会输出一组)
+     * Snap(width, height) 创建一个指定宽高的`svg`画布对象(需要将其元素节点插入到文档中才可见)
+     */
+    const svg = Snap('#svg-1'); /* 返回一个 Element 对象，返回的 Element 可链式调用 */
+
+    /*========== Element 类 ==========*/
+    const svg_g = svg.select('#g');
+    const svg_c = svg.select('circle'); /* select() 方法根据给定的css选择器在当前元素内部查找相应的元素，但其值返回匹配到的第一个元素 */
+    // svg.selectAll('circle'); /* selectAll() 方法同`select()`方法，但其返回匹配到的一组元素 */
+    svg_c.transform('translate(0, 10)'); /* transform() 获取或设置`transform`属性的值，不传参时则表示获取对应元素上的变换描述 */
+    console.log('transform：', svg_c.transform());
+    console.log('getBBox：', svg_c.getBBox()); /* getBBox() 返回元素的边界框描述，如中心点坐标、宽高大小、边界点等 */
+    console.log('parent：', svg_c.parent()); /* parent() 返回当前元素的父元素 */
+    console.log('asPX：', svg_c.asPX('cx')); /* asPX(attr [,value]) 方法返回当前元素的`attr`属性值以`px`单位转换后的值(不带单位)，若传入第二个参数value则返回该value */
+    const svg1_2 = Snap('#svg-1-2');
+    const c2 = svg1_2.paper.circle(30, 40, 15).attr({fill: 'blue'}); /* 通过`paper`类上的方法绘制图形，这里是`circle()`方法绘制圆，绘制的图形会自动插入到当前 Element 中 */
+    svg_c.click(function() { /* 绑定事件，类似jq */
+      console.log('click=svg-c，this=', this); /* this 指向当前事件绑定 Element */
+      svg_g.append(c2); /* append() 方法将一个 Element 或 Set(一组Element) 剪切到当前元素中（注意可以将其他画布中的图形剪切过来，因同一画布中可以直接绘制而不需要这样剪切） */
+      // svg_g.add(c2); /* add() 方法与 append() 方法作用一样，可看作是简写 */
+      c2.animate({fill: 'pink'}, 1500); /* el.animate(attrs, dur, [easing], [cb]) 方法设置当前元素的动画过渡，`attrs`为要动画的属性及其最终状态(可声明多个属性)，`dur`为过渡时间，`easing`为缓动函数，cb为动画完成回调 */
+      // c2.stop(); /* el.stop() 方法将使当前元素上的所有动画都停止(停止在当前过渡到的位置，而非结束状态，若要继续执行动画则需要重新触发原来的动画声明，暂未发现提供继续播放的方法) */
+    });
+    // c2.appendTo(svg_g); /* appendTo() 方法将当前元素剪切到给定的元素中 */
+    // svg_g.prepend(c2); /* prepend() 方法将给定的元素剪切到当前元素内部的最前面 */
+    // c2.prependTo(svg_g); /* prependTo() 方法将当前元素剪切到给定的元素内部的最前面 */
+    // el.before(el2); /* before() 方法将给定元素剪切到当前元素外部紧邻的前面 */
+    // el.after(el2); /* after() 方法将给定元素剪切到当前元素外部紧邻的后面 */
+    // el.insertBefore(el2); /* insertBefore() 方法将当前元素插入到给定元素外部紧邻的前面 */
+    // el.insertAfter(el2); /* insertAfter() 方法将当前元素插入到给定元素外部紧邻的后面 */
+    // el.remove(); /* remove() 方法从svg画布中移除当前元素 */
+    c2.use(); /* use() 方法创建一个`use`标签并引用当前元素，返回生成的`use`元素 */
+    const c3 = c2.clone().transform('translate(50, 0)').attr({fill:'orange'}); /* clone() 方法将当前元素克隆一个(克隆元素自动插入在当前元素位置后面)，并返回克隆元素 */
+    c2.toDefs(); /* toDefs() 方法将当前元素移动到预定义区域`defs`标签内，需要注意的是该移动操作需要放在像`use`或`clone`这样的操作之后，否则生成的引用或克隆元素也会在`defs`标签中 */
+    // el.toPattern(x, y, width, height); /* toPattern() 方法将当前元素转换为一个`pattern`填充图元(参数分别是该填充图元的位置和宽高，可参看`pattern`元素的属性)，可被用于`fill`填充，返回转换后的`pattern`元素 */
+    // el.marker(x, y, width, height, refX, refY); /* marker() 方法将当前元素转换为一个`marker`标记图元(参数可参看`marker`元素的属性)，返回转换后的`marker`元素，可被用于线条等的首尾标记 */
+    // el.data(key [,value]); /* data() 方法在当前元素对象上获取或设置对应key的数据(这些数据是绑定在当前元素的snap包装对象上的额外数据，并不是HTML上的`data-*`属性，与jq中的data方法有相同点也有不同点)，仍返回当前元素(获取则返回对应值) */
+    // el.removeData([key]); /* removeData() 方法删除当前元素上对应key的数据，若不指定`key`则删除其上所有data数据，仍返回当前元素 */
+    console.log('innerSVG：', svg_g.innerSVG()); /* innerSVG() 方法返回当前元素的内部标签内容(不包含自身)字符串，类似DOM中的`innerHTML`属性 */
+    console.log('outerSVG：', svg_g.outerSVG()); /* outerSVG() 方法返回当前元素的标签内容(包含自身)字符串，类似DOM中的`outerHTML`属性 */
+    console.log('toString：', svg_g.toString()); /* toString() 方法作用同`outerSVG()`方法，只是两者的输出标签结构可能会有所差异，但从DOM上来说没区别 */
+    console.log('node：', svg_g.node); /* node 属性保存的是该元素的原生DOM对象，可通过该属性引用其原生对象 */
+    console.log('inAnim', svg_g.inAnim()); /* inAnim() 方法返回当前元素可能能手动操作的(已开始但还未结束的)一组动画对象(每个对象包含一些动画的描述和操作方法)，不存在可操作动画则会返回一个空数组 */
+
+    /*========== Paper 图形元素绘制 ==========*/
+    const paper = svg.paper;
+    console.log('svg===svg.paper', svg === svg.paper); /* 实测发现SVG元素的snap对象与其paper属性对象等价 */
+    // paper.svg(x, y, width, height, vbx, vby, vbw, vbh); /* 绘制svg元素，并返回该svg元素，参数同`svg`标签(`vbx`指`viewBox`属性中`x`对应的值) */
+    // paper.rect(x, y, width, height, [rx], [ry]); /* 绘制矩形，并返回该矩形元素，参数同`rect`标签 */
+    // paper.circle(x, y, r); /* 绘制圆，参数同`circle`标签 */
+    // paper.image(src, x, y, width, height); /* 绘制图片，参数同`image`标签(src属性对应标签中`xlink:href`属性) */
+    // paper.ellipse(cx, cy, rx, ry); /* 绘制椭圆，参数同`ellipse`标签 */
+    // paper.path(d); /* 绘制路径，参数同`path`标签的`d`属性 */
+    // paper.g([el...]).add(el...); /* 绘制组，并返回该组，可传入一个或多个元素成组，也可不传入参数，而后使用组对象上的`add()`方法往该组中添加元素 */
+    // paper.group(); /* 同`paper.g`方法 */
+    // paper.mask(); /* 用法同`paper.g`，只是该方法用于创建`mask`遮罩标签 */
+    // paper.ptrn(x, y, width, height, vbx, vby, vbw, vbh); /* 用法同`paper.g`，只是该方法用于创建`pattern`填充图元标签 */
+    // paper.use(id || el); /* 创建`use`标签，参数`id`(#号可有可无)指向要引用元素的的id，也可以传入要引入的元素Element对象 */
+    // paper.symbol(vbx, vby, vbw, vbh); /* 创建`symbol`标签(作用与`defs`标签完全相同，只是可以单独设置viewBox)，参数为`viewBox`属性对应的各个值 */
+    // paper.text(x, y, str||strArray); /* 创建`text`文本标签，第三个参数`str`为文本字符串内容(也可以是字符串数组，此时将嵌套`tspan`标签生成多段文本) */
+    /* 须注意：snap中`text`的文本路径不是显式生成`textPath`标签后再手动插入到`text`标签中的，而是通过设置`textpath`属性的方式(text标签并无此属性，只是snap提供的快捷方式，其内部去创建和插入相关标签) */
+    paper.text(30, 70, 'text').attr({textpath: paper.path("M0,30L0,100")});
+    // paper.line(x1, y1, x2, y2); /* 绘制线段，参数同`line`标签 */
+    // paper.polyline(points...); /* 绘制折线，参数为`polyline`标签上`points`属性的值，可以是散列形式`x1, y1, x2, y2...`，也可以是数组形式`[x1, y1, x2, y2...]` */
+    // paper.polygon(points...); /* 绘制多边形，参数同上面`polyline()`方法 */
+    /* paper.gradient(gradientDesc) 创建渐变色(包括线性和径向)，参数为渐变描述字符串(snap提供的描述格式)，返回渐变元素
+     * 渐变描述字符串格式为：类型(范围)颜色1-颜色2[:比例]-颜色3...，如：`l(0, 0, 1, 1)#000-#f00:25-#fff`、`r(0.5, 0.5, 0.5)#000-#fff`、
+     * 类型有：线性渐变(l、L)、径向渐变(r、R)，小写表示相对应用该渐变的元素的位置(取值0~1，表示比例位置)，大写表示参照整个svg画布坐标系的绝对位置，l(x1,y1,x2,y2)、r(cx,cy,r[,fx,fy])，可选的`fx,fy`参数表示焦点相对圆心的偏移量，这些参数可参照svg渐变标签上的属性
+     * 颜色与比例：可用的css颜色格式均可，每个颜色间使用短横线'-'连接，每个颜色后面可使用冒号':'加数字(0~100)表示该颜色的渐变位置比例，默认第一个颜色比例位置为0，最后一个为100 */
+    const grdt = paper.gradient("l(0, 0, 1, 1)#000-#f00:25-#fff"); /* 返回的渐变可被用于`fill`填充 */
+    console.log('gradient:stops：', grdt.stops()); /* stops() 方法返回该渐变元素中的渐变分段`stop`元素数组(该方法只能用于渐变元素)，注意与普通元素的停止动画`el.stop()`方法的区别 */
+    grdt.addStop('#0f0', 50); /* addStop(color, offset) 方法用于向当前渐变元素中添加渐变颜色(`stop`标签定义)，参数同`stop`标签：color对应标签上`stop-color`属性，offset即上面提到的颜色位置比例(0~100) */
+    grdt.setStops('#f00-#0f0:25-#00f:75-#fff'); /* setStops(colorsDesc) 方法用于重置当前渐变元素中的渐变颜色(重新生成所有`stop`标签)，参数为渐变颜色及偏移描述字符串(即上面渐变描述字符串中后面颜色部分) */
+
+    /*========== Snap 类 ==========*/
+    const svg2 = Snap(300, 100);
+    const s2_c = svg2.paper.circle(25, 25, 20).attr({fill: 'red'});
+    document.querySelector("#svg-2").appendChild(svg2.node); /* Snap创建的svg画布对象需要将其原生DOM节点插入到文档中才可见 */
+    s2_c.click(function() {
+      /* Snap.animate(from, to, setter, dur, [easing], [cb]) 方法将在起始from和终止to间进行插值，每个插值可通过setter函数去获取设置在要动画的元素上(因此setter中可以同时给多个元素进行动画赋值)，
+       * dur为过渡时间，easing为缓动函数(可通过mina对象使用内置的，也可以自定义，默认应该是mina.linear，cb为动画结束后的回调(实际也就是插值完成过渡到to时的回调)) */
+      Snap.animate(25, 270, (val) => {
+        s2_c.attr({cx: val}); /* 这里的动画效果实际等价于：s2_c.animate({cx: val}, 1000) */
+      }, 1000);
+    });
+
+  </script>
+  <script>
+    document.getElementById('show-script').innerHTML = document.getElementById('script').innerHTML;
+  </script>
+</body>
+
+</html>

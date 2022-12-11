@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1">
+    <title>columns多列布局</title>
+    <link rel="stylesheet" href="../../plugins/highlight/styles/androidstudio.css">
+    <script src="../../plugins/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <style>
+        /*::-webkit-scrollbar { display: none; }    !*不显示滚动条*!*/
+        *{-webkit-box-sizing: border-box;-moz-box-sizing: border-box;-ms-box-sizing:border-box;-o-box-sizing:border-box;box-sizing: border-box;}
+        body,p,ul,pre {margin: 0;padding: 0;}
+        ul{list-style:none;}
+        img {max-width: 100%;vertical-align: top;background: #ffffff;}
+        .tj {text-align: justify;}
+        .box-wrap {display: flex;height: calc(100vh - 89px);border: 1px solid #dadada;*zoom:1;}
+        .left-box,
+        .right-box {overflow: auto;}
+        .right-box {-webkit-flex: 1;-ms-flex: 1;flex: 1;}
+        .left-box {position: relative;width: 40%;}
+        .right-box code {min-height: 100%;}
+        .col-resize {width: 4px;cursor: col-resize;}
+        .color-red {color: #ff0000;}
+    </style>
+</head>
+<body>
+
+<h3>
+    <span class="color-red">该columns多列布局不同于网格布局，此处的多列布局属于像报刊书籍等图文内容的排版，而不是页面区域划分的多列布局(grid布局)</span>
+    <br/>IE10+支持多列布局，Chrome、Safari添加‘-webkit-’前缀，Firefox添加‘-moz-’前缀，以下只在一个属性中添加前缀作为示例，实际使用中自行添加
+</h3>
+<ul>
+<li>
+<div class="box-wrap">
+<style class="js_styleCode">
+    /* columns: column-width || column-count，该属性是列宽和列数两个属性的合并简写方式，就像background属性 */
+    .columns {
+        -webkit-columns: 10em 4;
+        -moz-columns: 10em 4;
+        columns: 10em 4;
+    }
+
+    .multi-column {
+        /*每列的宽度，注意该属性在表现上是 min-width，而非固定宽度，当按这里设置的列宽排版再加上列间距后容器能放下下面设置的列数且还有多余的空间时，就会将多余的空间分配给列宽
+         *若未设置列宽，则将根据列数自动分配列宽*/
+        column-width: 10em;
+        /*列数，默认1列，注意该属性设置的是最大列数，并非固定列数，当按上面设置的列宽排版再加上列间距后容器放不下这里设置的列数时就会自动减少列数以便能放下，这时若容器有富余空间就会分配给列宽
+         *若未设置列数，则将根据列宽自动显示为能放下的最大列数，固定宽容器能放下的最大列数：count = Math.floor((containerWith + colGap)/(colWidth + colGap))
+         *疑问？Chrome中当容器设置了固定高度时，列数将不生效，内容过多时，将按以上列宽切分成多列而溢出容器*/
+        column-count: 4;
+        column-gap: 2em;  /*列间距，默认为normal(相当于1em)*/
+        /*列间边框，默认颜色同文字颜色，且其像outline一样不占据空间，作用也同border和outline类似，是简写属性，同样包含width、style、color三个子属性
+         *列间边框在视图层级上(即Z轴上)处于背景 background 与内容 content 之间*/
+        column-rule: 1px dashed #f00;
+        column-fill: balance;       /*每列内容高度填充模式，默认auto，根据内容变化自动变化，balance表示根据内容最多的一列的高度进行统一（实际效果没测试出显著特点）*/
+    }
+
+    /*子元素跨列，作用于多列容器的子元素，功能类似于表格中的colspan，即可使某个子内容不跟随分列*/
+    .colspan {
+        -webkit-column-span: all;
+        -moz-column-span: all;
+        column-span: all;       /*值为none或all，默认none表示不跨列，all表示跨所有列*/
+    }
+</style>
+<div class="left-box">
+    <div class="multi-column tj">
+        <h2 class="colspan">标题跨列，columns多列布局用法解析</h2>
+        CSS3中新出现的多列布局(multi-column)是传统HTML网页中块状布局模式的有力扩充。这种新语法能够让WEB开发人员轻松的让文本呈现多列显示。我们知道，当一行文字太长时，读者读起来就比较费劲，有可能读错行或读串行；人们的视点从文本的一端移到另一端、然后换到下一行的行首，如果眼球移动浮动过大，他们的注意力就会减退，容易读不下去。所以，为了最大效率的使用大屏幕显示器，页面设计中需要限制文本的宽度，让文本按多列呈现，就像报纸上的新闻排版一样。
+
+        <h3>但是在CSS3的多列布局(columns)语法功能出现之前</h3>，人们如果想让文本呈多列显示，要么使用绝对定位，手动给文本分段落，或者使用JS脚本等，而新语法的出现，彻底改变了这样的局面。
+
+        列布局的浏览器完美兼容
+        对于一些不支持多列布局特征的浏览器，比如IE9/IE8，会把这些属性全部忽略，这样布局就呈现出传统的单块布局。
+
+        为了保证浏览器最大的兼容性，我们在使用多列布局属性时，最好添加浏览器引擎前缀，最基本的要加上三种：谷歌浏览器的-webkit-，火狐浏览器的-moz-，IE浏览器的-ms-，最后，别忘了不带前缀的写法。
+    </div>
+</div>
+<i class="col-resize"></i>
+<pre class="right-box"><code class="css js_showCode" contenteditable="true"></code></pre>
+</div>
+</li>
+</ul>
+
+</body>
+<script src="../../js/jquery-1.11.3.min.js"></script>
+<script>
+$(function () {
+
+    /*左右两侧容器宽度调整*/
+    $('.col-resize').mousedown(function (e) {
+        let leftBox = $(this).prev('.left-box'),
+            w = leftBox.width(),
+            x = e.clientX;
+
+        $(document).on('mousemove.resize',function (e) {
+            let dx = e.clientX - x;
+            leftBox.width(w + dx);
+        });
+
+    }).mouseup(function () {
+        $(document).off('mousemove.resize')
+    });
+
+    $('.js_styleCode').each(function (index, el) {
+        let _this = $(el);
+        _this.closest('li').find('.js_showCode').html(_this.html());
+    });
+
+    /*实时响应*/
+    $('.js_showCode').on('keyup',function () {
+        let _this = $(this);
+        _this.closest('li').find('.js_styleCode').html(_this.text());
+    });
+
+});
+</script>
+</html>

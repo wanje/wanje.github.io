@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1">
+    <title>elementUI组件</title>
+    <link rel="stylesheet" href="../css/iview.css">
+    <!--<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">-->
+    <script src="../lib/vue-2.5.17.js"></script>
+    <script src="../lib/iview.min.js"></script>
+    <!--<script src="../lib/jquery-1.11.3.min.js"></script>-->
+    <!--<script src="https://unpkg.com/element-ui/lib/index.js"></script>-->
+    <style>
+        /*=========================================== 平台组件可视化赋值类样式 ===========================================*/
+        section:empty,
+        div:empty { min-height: 30px; }
+        section:empty:before,
+        div:empty:before { content: ''; display: block; width: 100%; height: 100%; min-height: 30px; border: 1px dashed #ddd; }
+
+
+
+        /*========================================= elementUI组件库缺少的辅助类 =========================================*/
+        /* 背景色 */
+        .bg-blue { background-color: #409eff; }     /* 蓝色 */
+        .bg-success { background-color: #67c23a; }  /* 绿色/success */
+        .bg-warning { background-color: #e6a23c; }  /* 橙色/warning */
+        .bg-danger { background-color: #f56c6c; }   /* 深品红/danger */
+        .bg-info { background-color: #909399; }     /* 灰色/info */
+
+        /* 字体颜色 */
+        .color-white { color: #ffffff; }      /* 黑色/primary */
+        .color-primary { color: #303133; }      /* 黑色/primary */
+        .color-regular { color: #606266; }      /* 浅黑/regular */
+        .color-secondary { color: #909399; }      /* 灰色/secondary */
+        .color-placeholder { color: #c0c4cc; }      /* 浅灰/placeholder */
+
+        /* font-size */
+        .fz-12 { font-size: 12px;}
+        .fz-13 { font-size: 13px;}
+        .fz-14 { font-size: 14px;}
+        .fz-16 { font-size: 16px;}
+        .fz-18 { font-size: 18px;}
+        .fz-20 { font-size: 20px;}
+
+        /* 边框颜色 */
+        .border-base { border-color: #dcdfe6; }     /* 一级边框 */
+        .border-light { border-color: #e4e7ed; }     /* 二级边框 */
+        .border-lighter { border-color: #ebeef5; }     /* 三级边框 */
+        .border-extra-light { border-color: #f2f6fc; }     /* 四级边框 */
+
+
+
+        /*================================================ 组件额外样式 ================================================*/
+        /*================== 栅格化布局 ==================*/
+        /* 5等份布局及对应响应式 */
+        .el-col-501 { width: 20%;}
+        .el-col-502 { width: 40%;}
+        .el-col-503 { width: 60%;}
+        .el-col-504 { width: 80%;}
+        .el-col-offset-501 { margin-left: 20%;}
+        .el-col-offset-502 { margin-left: 40%;}
+        .el-col-offset-503 { margin-left: 60%;}
+        .el-col-offset-504 { margin-left: 80%;}
+        .el-col-pull-501, .el-col-pull-502, .el-col-pull-503, .el-col-pull-504, .el-col-push-501, .el-col-push-502, .el-col-push-503, .el-col-push-504 { position: relative;}
+        .el-col-pull-501 { right: 20%;}
+        .el-col-pull-502 { right: 40%;}
+        .el-col-pull-503 { right: 60%;}
+        .el-col-pull-504 { right: 80%;}
+        .el-col-push-501 { left: 20%;}
+        .el-col-push-502 { left: 40%;}
+        .el-col-push-503 { left: 60%;}
+        .el-col-push-504 { left: 80%;}
+        /* 响应式 */
+        @media only screen and (max-width: 768px) {
+            .el-col-xs-501 {
+                width: 20%
+            }
+            .el-col-xs-offset-501 {
+                margin-left: 20%
+            }
+            .el-col-xs-pull-501 {
+                position: relative;
+                right: 20%
+            }
+            .el-col-xs-push-501 {
+                position: relative;
+                left: 20%
+            }
+            .el-col-xs-502 {
+                width: 40%
+            }
+            .el-col-xs-offset-502 {
+                margin-left: 40%
+            }
+            .el-col-xs-pull-502 {
+                position: relative;
+                right: 40%
+            }
+            .el-col-xs-push-502 {
+                position: relative;
+                left: 40%
+            }
+            .el-col-xs-503 {
+                width: 60%
+            }
+            .el-col-xs-offset-503 {
+                margin-left: 60%
+            }
+            .el-col-xs-pull-503 {
+                position: relative;
+                right: 60%
+            }
+            .el-col-xs-push-503 {
+                position: relative;
+                left: 60%
+            }
+            .el-col-xs-504 {
+                width: 80%
+            }
+            .el-col-xs-offset-504 {
+                margin-left: 80%
+            }
+            .el-col-xs-pull-504 {
+                position: relative;
+                right: 80%
+            }
+            .el-col-xs-push-504 {
+                position: relative;
+                left: 80%
+            }
+        }
+        @media only screen and (min-width: 768px) {
+            .el-col-sm-501 {
+                width: 20%
+            }
+            .el-col-sm-offset-501 {
+                margin-left: 20%
+            }
+            .el-col-sm-pull-501 {
+                position: relative;
+                right: 20%
+            }
+            .el-col-sm-push-501 {
+                position: relative;
+                left: 20%
+            }
+            .el-col-sm-502 {
+                width: 40%
+            }
+            .el-col-sm-offset-502 {
+                margin-left: 40%
+            }
+            .el-col-sm-pull-502 {
+                position: relative;
+                right: 40%
+            }
+            .el-col-sm-push-502 {
+                position: relative;
+                left: 40%
+            }
+            .el-col-sm-503 {
+                width: 60%
+            }
+            .el-col-sm-offset-503 {
+                margin-left: 60%
+            }
+            .el-col-sm-pull-503 {
+                position: relative;
+                right: 60%
+            }
+            .el-col-sm-push-503 {
+                position: relative;
+                left: 60%
+            }
+            .el-col-sm-504 {
+                width: 80%
+            }
+            .el-col-sm-offset-504 {
+                margin-left: 80%
+            }
+            .el-col-sm-pull-504 {
+                position: relative;
+                right: 80%
+            }
+            .el-col-sm-push-504 {
+                position: relative;
+                left: 80%
+            }
+        }
+        @media only screen and (min-width: 992px) {
+            .el-col-md-501 {
+                width: 20%
+            }
+            .el-col-md-offset-501 {
+                margin-left: 20%
+            }
+            .el-col-md-pull-501 {
+                position: relative;
+                right: 20%
+            }
+            .el-col-md-push-501 {
+                position: relative;
+                left: 20%
+            }
+            .el-col-md-502 {
+                width: 40%
+            }
+            .el-col-md-offset-502 {
+                margin-left: 40%
+            }
+            .el-col-md-pull-502 {
+                position: relative;
+                right: 40%
+            }
+            .el-col-md-push-502 {
+                position: relative;
+                left: 40%
+            }
+            .el-col-md-503 {
+                width: 60%
+            }
+            .el-col-md-offset-503 {
+                margin-left: 60%
+            }
+            .el-col-md-pull-503 {
+                position: relative;
+                right: 60%
+            }
+            .el-col-md-push-503 {
+                position: relative;
+                left: 60%
+            }
+            .el-col-md-504 {
+                width: 80%
+            }
+            .el-col-md-offset-504 {
+                margin-left: 80%
+            }
+            .el-col-md-pull-504 {
+                position: relative;
+                right: 80%
+            }
+            .el-col-md-push-504 {
+                position: relative;
+                left: 80%
+            }
+        }
+        @media only screen and (min-width: 1200px) {
+            .el-col-lg-501 {
+                width: 20%
+            }
+            .el-col-lg-offset-501 {
+                margin-left: 20%
+            }
+            .el-col-lg-pull-501 {
+                position: relative;
+                right: 20%
+            }
+            .el-col-lg-push-501 {
+                position: relative;
+                left: 20%
+            }
+            .el-col-lg-502 {
+                width: 40%
+            }
+            .el-col-lg-offset-502 {
+                margin-left: 40%
+            }
+            .el-col-lg-pull-502 {
+                position: relative;
+                right: 40%
+            }
+            .el-col-lg-push-502 {
+                position: relative;
+                left: 40%
+            }
+            .el-col-lg-503 {
+                width: 60%
+            }
+            .el-col-lg-offset-503 {
+                margin-left: 60%
+            }
+            .el-col-lg-pull-503 {
+                position: relative;
+                right: 60%
+            }
+            .el-col-lg-push-503 {
+                position: relative;
+                left: 60%
+            }
+            .el-col-lg-504 {
+                width: 80%
+            }
+            .el-col-lg-offset-504 {
+                margin-left: 80%
+            }
+            .el-col-lg-pull-504 {
+                position: relative;
+                right: 80%
+            }
+            .el-col-lg-push-504 {
+                position: relative;
+                left: 80%
+            }
+        }
+        @media only screen and (min-width: 1920px) {
+            .el-col-xl-501 {
+                width: 20%
+            }
+            .el-col-xl-offset-501 {
+                margin-left: 20%
+            }
+            .el-col-xl-pull-501 {
+                position: relative;
+                right: 20%
+            }
+            .el-col-xl-push-501 {
+                position: relative;
+                left: 20%
+            }
+            .el-col-xl-502 {
+                width: 40%
+            }
+            .el-col-xl-offset-502 {
+                margin-left: 40%
+            }
+            .el-col-xl-pull-502 {
+                position: relative;
+                right: 40%
+            }
+            .el-col-xl-push-502 {
+                position: relative;
+                left: 40%
+            }
+            .el-col-xl-503 {
+                width: 60%
+            }
+            .el-col-xl-offset-503 {
+                margin-left: 60%
+            }
+            .el-col-xl-pull-503 {
+                position: relative;
+                right: 60%
+            }
+            .el-col-xl-push-503 {
+                position: relative;
+                left: 60%
+            }
+            .el-col-xl-504 {
+                width: 80%
+            }
+            .el-col-xl-offset-504 {
+                margin-left: 80%
+            }
+            .el-col-xl-pull-504 {
+                position: relative;
+                right: 80%
+            }
+            .el-col-xl-push-504 {
+                position: relative;
+                left: 80%
+            }
+        }
+
+
+
+
+        /* 页面显示应用样式，与组件无关 */
+        body {font-size: 12px;}
+        #app { width: 100%; height: 100%;padding-bottom: 10vh; }
+        .el-row {
+            margin-bottom: 10px;
+        }
+        .el-row:last-child {
+             margin-bottom: 0;
+         }
+
+
+
+    </style>
+</head>
+<body>
+
+<div onclick="this.setAttribute('node-id',new Date().getTime())">点击在该标签上设置node-id，同理可转移到拖拽事件上</div>
+
+<div id="app">
+    <!--=================================================== 栅格化 ===================================================-->
+    <p>栅格化分为24等份，也包含5等份</p>
+    <el-row>
+        <el-col :span="8"></el-col>
+        <el-col :span="8"></el-col>
+        <el-col :span="8"></el-col>
+    </el-row>
+    <el-row>
+        <el-col :span="501"></el-col>
+        <el-col :span="501"></el-col>
+        <el-col :span="501"></el-col>
+        <el-col :span="501"></el-col>
+        <el-col :span="501"></el-col>
+    </el-row>
+
+    <p>在el-row上绑定gutter属性设置每一栏之间的间隔(像素数)</p>
+    <el-row :gutter="20">
+        <el-col :span="6"></el-col>
+        <el-col :span="6"></el-col>
+        <el-col :span="6"></el-col>
+        <el-col :span="6"></el-col>
+    </el-row>
+
+    <p>在el-col上绑定offset属性指定左侧间隔距离(格数，通过margin-left实现，会将后面的元素依次向后推动)</p>
+    <p>绑定pull属性将使对应元素向左偏移某栅格数，绑定push属性则是向右偏移，这种偏移只是对设定元素，不会推动旁边的元素，因为其是用position:relative;实现的</p>
+    <el-row>
+        <el-col :span="501"></el-col>
+        <el-col :span="501" :offset="2"></el-col>
+        <el-col :span="501"></el-col>
+        <el-col :span="501" :push="1"></el-col>
+    </el-row>
+
+    <p>在el-row上将type属性设置为flex可改为flexbox布局</p>
+    <el-row type="flex">
+        <el-col :span="6"></el-col>
+        <el-col :span="6"></el-col>
+        <el-col :span="6"></el-col>
+        <el-col :span="6"></el-col>
+    </el-row>
+
+    <p>在开启flexbox布局后，可在el-row上将 justify属性指定为 start(左对齐), center(居中), end(右对齐), space-between(等距间隔), space-around(等距包围) 其中的值来定义子元素的水平排版方式</p>
+    <p>align属性指定为 top/middle/bottom 中的某值来定义子元素的垂直方向排列方式</p>
+    <el-row type="flex" justify="space-between">
+        <el-col :span="6"></el-col>
+        <el-col :span="6"></el-col>
+        <el-col :span="6"></el-col>
+    </el-row>
+    <el-row type="flex" align="middle" style="height: 60px;background: #f0f0f0;">
+        <el-col :span="6"></el-col>
+        <el-col :span="6"></el-col>
+        <el-col :span="6"></el-col>
+    </el-row>
+
+    <p>响应式布局，类似bootstrap中一样，预设了五个响应尺寸：xs(<768)、sm(>=768)、md(>=992)、lg(>=1200) 和 xl(>=1920)，绑定这些属性在el-col元素上指定number类型值时表示在多大屏幕下显示多少格，与span属性的作用一样，只是会根据媒体查询结果显示</p>
+    <p>若偏移距离也要根据media设定，则设定的值要是一个对象，用来指定宽度格数和偏移格数，例如：{span: 4, offset: 2}</p>
+    <el-row>
+        <el-col :xs="12" :sm="8" :md="6" :lg="501" :xl="4"></el-col>
+        <el-col :xs="12" :sm="8" :md="6" :lg="501" :xl="6"></el-col>
+        <el-col :xs="12" :sm="8" :md="{span: 4, offset: 2}" :lg="501" :xl="4"></el-col>     <!-- 这里md下设定offset没有其他同类型class覆盖，因为其他条件下没设置，所以样式只要屏幕>=992都有效，<992则无效 -->
+        <el-col :xs="12" :sm="8" :md="6" :lg="501" :xl="4"></el-col>
+        <el-col :xs="12" :sm="8" :md="6" :lg="501" :xl="6"></el-col>
+    </el-row>
+
+
+    <!--================================================== 布局容器 ==================================================-->
+    <!-- 注意布局容器中 header、aside、main、footer的父容器必须要是container，否者不会按照预想的方式分布 -->
+    <el-container class="bg-info color-white" >    <!-- direction属性指定子元素排列方向取值 horizontal/vertical -->
+        <el-header class="bg-blue" height="40px">Header</el-header>    <!-- height属性设置高度，默认60px -->
+        <el-container>
+            <el-aside class="bg-success" width="200px">Aside</el-aside>        <!-- width指定宽度，默认300px -->
+            <el-main>Main</el-main>
+        </el-container>
+        <el-footer class="bg-warning" height="40px">Footer</el-footer>     <!-- height属性设置高度，默认60px -->
+    </el-container>
+
+
+    <!--================================================== icon图标 ==================================================-->
+    <!-- 直接通过class指定要使用的图标名，el-icon-名字 -->
+    <i class="el-icon-delete">图标</i>
+
+
+    <!--================================================= button按钮 =================================================-->
+    <el-button type="text">文字按钮不带线框</el-button>  <!-- type属性指定按钮种类(实际变化颜色，text类型是文本按钮不带线框) -->
+    <el-button type="primary" plain>按钮</el-button>    <!-- plain属性表明启用淡背景 -->
+    <el-button round>按钮</el-button>     <!-- round属性表明启用大圆角(即两边是个半圆) -->
+    <el-button disabled>按钮</el-button>  <!-- disabled属性表明启用禁用(整个按钮色调会更淡) -->
+    <el-button icon="el-icon-edit">按钮</el-button>      <!-- icon属性指明图标按钮使用的图标 -->
+    <el-button circle icon="el-icon-edit"></el-button>  <!-- circle属性表明启用全圆角（即正圆或椭圆 -->
+    <el-button type="primary">上传<i class="el-icon-upload el-icon--right"></i></el-button> <!-- 若要将图标放在文字右边则不能直接在button上指定icon属性，要自己在button中将i标签图标放在右边，el-icon--right类的作用仅是与左侧增加5px间距 -->
+    <el-button type="danger" :loading="true">加载中</el-button>   <!-- 绑定loading属性，指明为true(或返回一个为true的值)可以显示为加载图标 -->
+    <el-button type="primary" autofocus>自动聚焦</el-button>   <!-- autofocus表明自动获取到焦点 -->
+    <el-button type="info" native-type="reset">reset按钮</el-button>   <!-- native-type指明原生type类型值，即 button/submit/reset 默认为button -->
+    <!-- 使用 el-button-group 嵌套按钮形成按钮组 -->
+    <el-button-group>
+        <el-button type="success" icon="el-icon-arrow-left">上页</el-button>
+        <el-button type="success">下页<i class="el-icon-arrow-right el-icon--right"></i></el-button>
+    </el-button-group>
+    <!-- size 属性指明按钮尺寸 -->
+    <el-button>默认大小</el-button>
+    <el-button type="warning" size="medium">中等按钮</el-button>
+    <el-button type="danger" size="small">小按钮</el-button>
+    <el-button type="info" size="mini">超小按钮</el-button>
+
+
+    <hr>
+    <!--================================================= Radio单选框 =================================================-->
+    <el-radio v-model="radio_name" label="1" name="radioName">备选项1</el-radio>       <!-- v-model绑定变量，另一个作用也相当于radio的name以区分组别，也可以使用原生name属性 -->
+    <el-radio v-model="radio_name" label="2">备选项2</el-radio>       <!-- label属性指明该选项的value值，就与radio的value一样，也可以用:label的形式绑定，当选项中没有文本时，label的值也会自动充当后面的文本，:label绑定的不会 -->
+    <el-radio v-model="radio_name" label="3" disabled>备选项3</el-radio>       <!-- disabled属性表明禁用该选项 -->
+    <!-- el-radio-group元素中加入单选框形成单选框组 -->
+    <el-radio-group v-model="radio_name2" @change="consoleLog(radio_name2)">      <!-- 单选组元素上v-model绑定变量，不再用每个单选元素上再绑定，也可添加size属性，但也只对内部有border属性的radio有效，在组上注册change事件传入v-model的变量(即每次点击时对应的value值)，也可单独注册在单个radio上 -->
+        <el-radio :label="1">备选项1</el-radio>    <!-- 绑定label指明该选项的value值，也可以直接使用label属性指明，区别在于指定的数字值在:label中被当做数字解析，而在label中当做字符串解析，即绑定的值是当做变量，属性指定的值当做文本 -->
+        <el-radio :label="2" border size="mini">备选项2</el-radio>    <!-- border属性表明启用带按钮边框的单选框样式，该属性只能加在单个单选框上，不能统一加在分组元素上；size属性指明带边框形式单选框尺寸，所以设置该属性的前提是也要启用border属性 -->
+        <el-radio :label="3">备选项3</el-radio>
+    </el-radio-group>
+    <!-- 单选按钮组 -->
+    <el-radio-group v-model="radio_name3" size="mini" text-color="#ff0" fill="#f0f">  <!-- 按钮组元素上也可以指明size和disabled属性，其将用于整个按钮组，text-color属性指明按钮形式radio被激活时里面文字的颜色，默认为#ffffff，fill属性指明按钮radio被激活时的填充色和边框色，默认#409EFF，但若有默认选中项一开始显示的时候还是使用的默认色 -->
+        <el-radio-button label="1">备选项1</el-radio-button>   <!-- 将 el-radio 元素换成 el-radio-button 元素就可以得到单选按钮组形式 -->
+        <el-radio-button label="2">备选项2</el-radio-button>   <!-- 这里单选按钮组中的label用属性形式，和绑定形式都可以，其数字值作为字符串和数字也都可以 -->
+        <el-radio-button label="3">备选项3</el-radio-button>   <!-- 同样，在单个 el-radio-button 上也可指明disabled和name属性 -->
+    </el-radio-group>
+
+
+    <hr>
+    <!--=============================================== checkbox复选框 ===============================================-->
+    <el-checkbox v-model="box_checked" @change="consoleLog(box_checked)">备选项</el-checkbox>  <!-- 单独使用checkbox时绑定的变量值应为Boolean布尔值，表示选中与否，因为此时不需要确认选项值 -->
+
+
+
+</div>
+
+<script type="text/javascript">
+
+    /*========== add by wangjie_ac start ==========*/
+
+    /*========== add by wangjie_ac end ==========*/
+
+    var vueOption = {    // annotated by wangjie_ac
+        el: '#app',      //edited by wangjie_ac
+        data: {
+            radio_name: '1',
+            radio_name2: 3,
+            radio_name3: 2,
+            box_checked: true
+        },
+        methods: {
+            toggleValue: function(a){ this[a]=!this[a]; },
+            consoleLog: function(a){ console.log(a); },
+            returnSth: function(a){ return a; }
+        }
+
+    };
+    var app = new Vue(vueOption);
+
+</script>
+</body>
+</html>

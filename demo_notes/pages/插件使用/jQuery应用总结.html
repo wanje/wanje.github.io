@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script type="text/javascript" src="../../js/jquery-1.11.3.js"></script>
+    <style type="text/css">
+        .code {display: block;white-space: pre;font-family: monospace;}
+    </style>
+</head>
+<pre>
+    为避免jQuery的快捷符$与其他库有冲突，可使用jQuery.noConflict()函数将变量 $ 的控制权移交给其他的JS库，或用这个函数重新自定义一个快捷符(即一个等价于jQuery的变量)，
+    如：jQuery.noConflict(); //如果有引入其他有$冲突的库(如Prototype.js)，将变量$的控制权移交给Prototype.js，则jQ中的$符将不能再用，可用jQuery字符来代替
+        var varName=jQuery.noConflict(); //自定义了一个varName来替换原来的 $ 符号
+
+    jQuery对象无法使用DOM对象的任何方法，DOM对象也无法使用jQuery里的任何方法，只有在转换为对方时才能用对方的方法，但此时就不能再用原来的方法，除非分开保存原对象和转换后的对象。
+    一般命名规范在jQuery对象的变量前多加一个$符号，如  var $name=$("#id");//jQuery对象     var name=document.getElementById(idname);//DOM对象
+
+    jQuery对象与DOM对象的互相转换：
+    jQuery对象转换为DOM对象：1、jQuery对象是一个类似数组的对象，可在其后加上下标index来转换为DOM对象，如 var name=$name[0]；
+                             2、通过jQuery自身提供的get(index)方法来转换为DOM对象，如 var name=$name.get(0)；
+    DOM对象转换为jQuery对象：只需要用$()将DOM对象栝起来就转换成jQuery对象了，如 var $name=$(name); // $(DOM对象)
+
+    <!--==============================================jQuery中的选择器简记====================================================================================================================-->
+    jQuery选择器可接受2个参数：$(exp[,context])，可选参数context省略时则默认在html的document中查找相应节点(平时用得最多)，当传入context(上下文)参数时，表示在context中查找，context可以是DOM元素集、jQuery对象、文档(如xml文档)。
+
+
+    <!--==============================================jQuery中的DOM操作====================================================================================================================-->
+
+    <!--==================================================节点操作===================================================-->
+    创建节点：
+    $()方法不仅是jQuery选择器方法，也是$(document).ready()的简写，还可用于创建元素节点，但括号中的参数与原生方法写法不同，如 $("<p></p>")或$("<p/>")，原生中写成document.createElement("p")，它们都表示创建一个p标签节点($("p")是jq选择器)；
+    $()区别于createElement的是还可以用来直接创建HTML代码，但同createElement一样都是创建了但并不存在HTML文档中，需要插入到HTML文档中才能看见，如 $("<p title='简介'>这就是我的<span>功能</span>></p>")，注意它还未插入到文档中
+
+    插入/移动节点：
+    以下方法都有一特性，即它们自带$()选择器的功能，括号中可以直接写选择器表达式或要创建的HTML代码，不用加$()或用变量的形式保存节点
+    A.append(B)方法用于向元素节点A内尾部插入节点B，原生中用A.appendChild(B)方法，除此之外jQuery还提供了更多的插入节点的方法，如下：(被插入的节点可直接以HTML代码形式写出，不一定非要用变量的形式，如$("p").append("<b>你好</b>"))
+    B.appendTo(A)；将B插入到A中尾部，appendTo还有一个功能就是移动元素：若B是当前html文档中的元素，首先会将B从文档中移除，然后再添加到A中，即此时合并了remove与appendTo两步操作
+    A.prepend(B)；在A内部的前面插入B，例 A.prepend("#B")，在A内部前面插入id为B的节点
+    B.prependTo(A)；将B插入到A内部的前面
+    A.after(B)；在A外部后面插入B
+    B.insertAfter(A)；将B插入到A外部后面
+    A.before(B)；在A外部前面插入B
+    B.insertBefore(A)；将B插入到A外部前面
+
+    移除节点：
+    A.remove()；移除节点A，包括A节点中的所有后代节点，此方法返回值为一个指向被移除节点的引用，因此也可将其保存下来再次使用
+    A.remove(B)；移除节点A中满足条件B的节点，如：$("ul li").remove("li[title='条件']")，表示移除ul下li中title值为“条件”的li元素节点
+    detach([expr])；此方法作用与remove一样，但与remove不同的是detach移除的元素DOM结构并不会从它所在的jQuery对象中删除，所移除元素原来绑定的事件和附加数据都会保留下来，
+              当重新将移除的元素添加回去时，原事件和数据仍然有效，但remove后再放回去的元素原来的事件或附加数据将无效；
+    A.empty()；将A节点内容清空(自身还在)，包括其后代所有节点，严格来说它并不是移除节点，就像A.innerHTML=""；
+
+    复制节点：
+    A.clone()；复制节点A，但此时并不具有A的相关行为(事件)，
+               传入第一个参数true：A.clone(true)，此时会连带A的事件也进行复制；
+               传入第二个参数true：A.clone(true,true)，表示节点内部阶段相关绑定也复制保留；
+               A.clone().appendTo(B) 表示复制一个A节点并插入到B中
+
+    替换节点：
+    A.replaceWith(B)；将A节点用B节点替换，包括其内容也会替换，B既可以是存在的节点，也可以是创建的节点(变量保存或直接HTML代码形式皆可)
+    B.replaceAll(A)；用B节点替换A节点，只是颠倒了replaceWith的操作而已，两者作用一样
+
+    包裹节点：
+    A.wrap(B)；将A节点用B节点包裹起来，此方法会将所有匹配到的节点单独包裹(即若匹配到A节点有多处，则每处都会用B包裹)
+    A.wrapAll(B)；也是将A节点用B节点包裹起来，但与wrap方法不同的是此方法是将匹配到的所有A节点只用一个B节点包裹起来，不会将每个A单独包裹，这样就有可能将其他节点也包裹进B中
+    A.wrapInner(B)；此方法是将A节点的内容用B包裹起来，此时只有A标签本身未被包裹
+
+    删除包裹节点：
+    unwrap()；删除当前元素的包裹节点(即父元素)，不会移除内部元素
+
+    <!--==================================================属性操作===================================================-->[ ]表示可选参数
+    获取与设置属性：
+        attr(a [,b])；此方法用于获取和设置元素的属性值，可有一个或两个参数；只有一个参数时为属性名，attr(a)表示获取属性a的属性值；两个参数时为属性名和属性值，attr(a,b)表示设置属性a的值为b
+                      若要为同一元素设置多个属性，可采用对象名值对形式的写法：$("p").attr({"title":"sth"，"name":"test"})，多个属性值可用空格隔开；
+                      其中的b可以是一个返回属性值的函数function(index, attr)，第一个参数为当前元素的索引值，第二个参数为原先的属性值
+                    注意：该方法一般用于获取或设置写在html标签上的元素属性，返回或设置返回 attributes 的值，将attributes理解为属性；
+                            虽然自定义html属性也能通过该方法获取，但是自定义属性一般使用 data() 方法更合理；
+        prop(a [,b])；用法与attr()一样，也是获取或设置元素的属性值(包括自定义的DOM属性)；
+                    注意区别：该方法一般用于获取或设置元素的DOM属性，返回 property 的值，如tagName、checked等，将property理解为特性；
+
+    删除属性：
+        removeAttr(a)；删除元素的attr属性a，同时删除多个属性则用空格隔开
+        removeProp(a)；删除元素的prop属性a，注意该方法一般是用于删除自定义的DOM属性，不用于删除原生DOM属性(删除原生DOM属性浏览器可能会报错)
+
+    attr 与 prop 区别举例：
+        某元素ele：<input type="checkbox" checked="checked" />
+        $(ele).attr('checked') 对应原生 ele.getAttribute('checked')，返回值‘checked’，其不会跟着复选框的选中状态改变而改变，只返回html上设定的值；
+        $(ele).prop('checked') 对应原生 ele.checked，返回值 true，其会跟着复选框的选中状态改变而改变；
+
+        $(ele).attr('tagName') 元素上没有该属性，所以返回undefined；
+        $(ele).prop('tagName') 对应原生 ele.tagName，返回标签名 input；
+        自定义DOM属性：$(ele).prop('defMyselfProp', value) 对应原生 ele.defMyselfProp = value;
+
+
+    <!--=======================================设置与获取HTML、文本、value值=========================================-->
+    html([a])；此方法类似于原生中的innerHTML属性，可用于获取或设置元素内的HTML内容，不带参数则为获取，带参数则为设置，参数可为function(index, html)[index为索引值，html为该元素原html内容]
+    text([a])；此方法类似于原生中的innerText属性，可用于获取或设置元素内的文本内容，参数可为function(index, text)[index为索引值，text为该元素原text内容]
+    val([a])；此方法类似于原生中的value属性，可用于设置或获取元素的值，当元素为多选时它返回一个包含所有被选中值的一个数组，val()方法还可通过设置值使select、checkbox、radio相应的选项被选中，在表单操作中常用到，详例见书P84，
+              参数可为function(index, value)[index为索引值，value为该元素原value值]
+
+    <!--================================================class类操作==================================================--> | 表示或者
+    class实际也是元素的一个属性，所以也可以用上面的 attr() 和 removeAttr() 方法进行操作，但jQuery中还有专用于操作class的方法：
+    addClass(a...|fn)；此方法用于追加class样式a(即再添加一个class，不会删除已存在的class，这与attr略有不同)，多个值用空格隔开，fn表示参数可以由函数function(index, class)返回，index为索引，class为原属性值
+    removeClass([a...|fn])；用于移除class样式，不带参数时表示移除全部class，带参数时则移除指定的class，多个值用空格隔开
+    toggleClass(a...|fn[，switch])；在添加与删除class之间切换，当a存在时则删除a(相当于调用removeClass)，当a不存在时则追加a(相当于调用addClass)，每次触发事件就在添加与删除之间切换，
+                                   可选参数switch为布尔值，表示是否添加该class(因此可根据条件何时增删)，函数fn为function(index,class,switch)，switch即传递的前面说的switch参数值
+    hasClass(a...)；判断元素中是否含有指定的class，有则返回true，无则返回false，此方法在jQuery内部实际是调用了is()方法，$("p").hasClass("class1")实际与$("p").is(".class1")等价，注意is中参数的写法
+
+    <!--============================================== CSS-DOM 操作==================================================-->
+    获取与设置样式：类似于atr()的用法
+    css(a[，b])；此方法用于获取和设置元素的CSS样式，可有一个或两个参数；只有一个参数时为属性名，css(a)表示获取属性a的属性值；两个参数时为属性名和属性值，css(a,b)表示设置属性a的值为b，b亦可以为function(index, value)，value为原属性值，
+                 若要为同一元素设置多个样式属性，可采用对象名值对形式的写法：$("p").css({"fontSize":"24px"，"color":"red"})；若表示宽高或距离的属性的值是未带单位的数字，则将会默认单位是像素px；
+                 此方法中若属性有短横线"-"连接，则也可以将其改写为驼峰式写法，如font-size => fontSize，background-color => backgroundColor，
+                 在1.9+版本中传递一个CSS的样式属性的数组将返回 属性 - 值 配对的对象：obj.css(["color","margin-left","padding-top"]);
+    height([a|fn])；获取匹配元素当前计算的高度值(不带单位，默认px)，其获取的高度值是元素的内容区(不管box-sizing属性值)在页面中的实际高度，与样式的设置无关，区别于用css("height")获取的高度
+                    其也可设置元素的高度，若传参是一个数字，则默认单位是px，若要用其他单位则带上单位以字符串传入，如$("p").height(100)，$("p").height("10em")，若为函数则function(index, height)，height为原高度
+    width([a|fn])；获取或设置元素的宽度，同height()方法
+    innerHeight()；获取元素内部区域高度px（包括内边距，但不包括边框）
+    innerWidth()；获取元素内部区域宽度px（包括内边距，但不包括边框）
+    outerHeight([true])；获取元素外部部区域高度px（包括内边距、边框，若添加true，则还包括外边距）
+    outerWidth([true])；获取元素外部部区域宽度px（包括内边距、边框，若添加true，则还包括外边距）
+    offset([a])；获取或设置元素相对于当前文档document的偏移，也就是相对于当前文档的坐标，对可见元素有效，返回的对象包含两个整型属性：top 和 left，以像素计
+    position()；获取元素相对于最近的定位祖先元素的偏移(即坐标)，此法不接受任何参数，对可见元素有效，返回的对象包含两个整型属性：top 和 left，以像素计
+    scrollTop([a])；获取或设置元素的当前垂直滚动条的位置，对所有元素有效，参数不带单位，以像素计
+    scrollLeft([a])；获取或设置元素的当前水平滚动条的位置，对所有元素有效，参数不带单位，以像素计
+
+    <!--================================================遍历各节点===================================================--> expr表示css选择器表达式，DOMel表示DOM元素(节点)
+    children([expr])；用于取得匹配元素的子元素集合，注意是子元素，不是后代元素，所以只有一级后代，不传参则为所有子元素，传参则筛选指定的子元素
+    next([expr])；用于取得匹配元素后面紧邻的同辈元素(一个)，传参则表示既要紧邻又要匹配该条件
+    nextAll([expr])；查找当前元素之后所有的同辈元素，可传入css选择器参数进行过滤
+    nextUntil([expr|DOMel][，filter])；查找当前元素之后所有的同辈元素，直到遇到匹配的那个元素结束(不包含该匹配元素)，若没有遇到指定的元素或没有传参，则其作用等同于nextAll()，
+                                       若传入两个参数，则第二个参数filter表示要匹配的兄弟元素，只有匹配到的兄弟元素才会保留(意义类似于nextAll的参数)
+    prev([expr])；用于取得匹配元素前面紧邻的同辈元素(一个)，传参则表示既要紧邻又要匹配该条件
+    prevAll([expr])；查找当前元素之前所有的同辈元素，可传入css选择器参数进行过滤
+    prevUntil([expr|DOMel][，filter])；参数的作用类似于nextUntil，只是该方法用于查找当前元素之前的兄弟元素
+    siblings([expr])；用于取得当前元素前后所有的同辈元素，若传入参数则匹配指定的同辈元素
+    closest(expr|jqObj)；用于取得离当前元素最近的指定的元素(祖先或自身)，其从自身开始查找，若自身符合条件则返回元素本身
+    parent([expr])；用于取得匹配元素的直接父元素，注意是父元素，不是祖先元素，所以只有一级父级，传参则表示既要是直接父元素又要匹配该条件
+    parents([expr])；用于取得当前元素的祖先元素，包含每一级匹配到的指定元素，若不传参则获取所有祖先元素(不包含根元素)
+    parentsUntil([expr|DOMel][,filter])；参数作用类似于nextUntil方法，只是该方法用于查找祖先元素
+    find(a)；在当前对象的所有后代中找到指定的a元素，a可以是css选择器表达式、jQuery对象
+    offsetParent()；不接受参数，返回距离当前元素最近的有定位(非static值)的祖先元素
+    filter(a...|fn)；对当前集合进行过滤筛选，返回与条件匹配的元素，多个条件用逗号隔开(都放在同一对引号中)，a可以是css选择器表达式、jQuery对象、过滤函数，
+                  当为过滤函数时function(index)，此函数用作测试集合中的每个元素，返回true则保留，false则排除，函数中的this指遍历到的当前DOM元素
+    eq(index)；返回集合中索引为index（0开始）的元素，可为负值，此时则为倒数
+    first()；返回集合中第一个元素
+    last()；返回集合中最后一个元素
+    is(a|fn)；检测当前元素集合中是否至少有一个满足传入的参数(可以是css选择器、jQuery对象)或函数function(index)的返回条件，该方法返回true或false
+    has(expr)；保留包含指定后代的元素，排除不包含该指定后代的元素
+    not(expr|jqObj|fn)；排除与指定表达式或jQuery对象或DOM对象或函数function(index)返回值匹配的元素
+    slice(start[，end])；返回当前集合中指定范围内的元素，start为起始下标(0开始，若为负数则表示倒数)，end为结束下标(但不包括)，若省略end参数则默认到最后一个
+    add(expr|DOMel|jqObj|html[，context])；在当前集合中添加新的匹配元素集合(即将两者合并)，参数可以是css选择器、DOM节点、jQuery对象、html内容，若传入第二个参数context，则表示待查找的上下文(否则默认document中)
+    addBack([expr])；1.8+版本支持，将先前的集合(使用链式调用时前一步返回的集合)添加到当前集合中，从而合并成一个集合，传入参数则表示过滤前一个集合后再添加(匹配的才添加)，
+                     例：$("div").find("p").addBack().addClass("bg");当前集合是p，前一步集合是div，调用addBack方法后将div集合添加到当前p集合中，从而返回一个新的集合(各元素按文档中的顺序排列)
+    andSelf()；已过时，不接受参数，在1.8+版本中使用addBack()方法替代
+    contents()；查找匹配元素内部所有的子节点（包括文本节点和注释节点，注意是子节点），不接受参数，如果元素是一个iframe，则查找其文档内容(document对象，框架元素会自动生成基本文档结构)
+    end()；返回链式调用中当前集合的前一个集合，不接受参数，例：$("div").find("p").addClass("bg").end()；当前链式中的操作对象集合为p，在调用end()方法后则将之后的操作对象集合重新调整为先前的div
+
+    <!--==============================================event事件对象==================================================-->
+    event.currentTarget；在事件冒泡中的当前DOM元素(即被绑定事件的元素)，该属性等于事件处理函数中的 this 对象，例：$('ul').on('click','li',function(event){});这里实际被绑定事件的元素为ul中的li，event.currentTarget和this都指向对应的li
+    event.target；直接触发事件的DOM元素(事件源)，例：$('ul').on('click',function(event){});这里将事件直接绑定在ul上，并未指向其中的li，所以这里的event.target可能指向ul，也可能指向其中的li或其他后代元素，总之是指向直接触发事件的元素，而event.currentTarget和this都指向ul
+    event.delegateTarget；指向绑定了当前正在调用jQuery 事件处理器的元素(即当前链式语句中启用注册事件方法的元素)，例：$('ul').on('click','li',function(event){});这里调用事件处理器的元素是ul，所以event.delegateTarget指向ul
+    event.relatedTarget；指向在事件中涉及的其它任何DOM元素，对于 mouseout 事件，它指向被进入的元素；对于 mouseover 事件，它指向被离开的元素
+    event.data；指向注册事件时可选的数据对象参数，例：$('li').on('click',{val: i},function(event){});这里注册事件时的数据对象参数是可选的(这里i可能是外层作用域中的一个变量)，若有传入该参数，可通过event.data.val这样的方式访问其中的数据
+    event.stopPropagation()；阻止事件冒泡，从而不会继续触发祖先元素的相应事件，该方法不会阻止同一个元素上的其他事件处理函数的运行
+    event.isPropagationStopped()；检测 event.stopPropagation() 方法是否被调用过，返回一个布尔值
+    event.stopImmediatePropagation()；阻止其余的事件处理函数执行，同事阻止事件冒泡
+    event.isImmediatePropagationStopped()；检测 event.stopImmediatePropagation() 是否被调用过，返回一个布尔值
+    event.preventDefault()；阻止事件触发默认行为，例如 a 标签的默认跳转
+    event.isDefaultPrevented()；检测 event.preventDefault() 方法是否被调用过，返回一个布尔值
+    event.type；描述事件类型(即该事件是什么事件)
+    event.pageX；鼠标相对于文档的左边缘的位置(X坐标)
+    event.pageY；鼠标相对于文档的顶部边缘的位置(Y坐标)
+    event.which；返回键盘和鼠标事件的键码，其将event.keyCode 和 event.charCode 标准化了，鼠标事件中(1代表鼠标左键、2代表鼠标中键、3代表鼠标右键)(注意对于键盘事件中非打印按键没有keypress事件，但有keydown和keyup事件)
+    event.timeStamp；时间戳，返回事件触发时距离1970年1月1日的毫秒数（在IE下是如此，在其他浏览器下测试不是，一般用于计算两个时间点的差值），其此功能同样可通过原生获得：(new Date).getTime()
+    event.originalEvent；jQuery中的event对象是处理过的，该属性返回原生事件对象
+    键盘事件中的其他属性可通过将event对象打印出来自己查看（包括组合键中判断Ctrl、Shift、Alt键是否按下等）
+
+    <!--================================================ Ajax API ===================================================-->
+    <script class="code">
+
+        //使用get方式请求或发送数据
+        $.get(url,data,success,dataType);
+                //url，为请求地址
+                //data，可选，为发送至服务器的 key/value 数据
+                //success，可选，为请求成功时的回调函数
+                //dataType，可选，返回内容格式：xml, html, script, json, text, _default
+
+        //使用post方式请求或发送数据
+        $.post(url,data,success,dataType);
+                //url，为请求地址
+                //data，可选，为发送至服务器的 key/value 数据
+                //success，可选，为请求成功时的回调函数
+                //dataType，可选，返回内容格式：xml, html, script, json, text, _default
+
+        //载入远程HTML文件代码并插入至DOM中，默认使用GET方式，传递附加参数时自动转换为POST方式
+        $('#id').load(url,data,callback);
+                //url，为待插入的html页面地址，可以是整个html页面，也可以是页面中筛选出的html代码段，语法形如：url #some > li（url位置html文件中，id为some元素中的子li元素，这样筛选一段代码时url中的html文件不用加html后缀，若是整个文件就要加）
+                //data，可选，为发送至服务器的 key/value 数据
+                //callback，可选，为载入成功时的回调函数
+
+        //使用get方式请求JSON数据
+        $.getJSON(url,data,success);
+                //url，为请求地址
+                //data，可选，为发送至服务器的 key/value 数据
+                //success，可选，为请求成功时的回调函数
+
+        //一般不直接使用$.ajax()方法，而使用经过封装的几个简便方法：$.get()、$.post() 和 node.load() 方法等
+        $.ajax({  //该方法为jQuery中ajax的底层实现，所有配置项都是可选的，详细配置可查看文档，这里只列出一部分
+
+            url: 'server.php',      //请求的处理地址，默认为当前页面地址
+
+            type: 'post',           //设置请求类型，默认为get方式
+
+            dataType: 'json',       //指定数据类型，以应用相应的数据处理方式，可以指定为XML、html、json、jsonp、script或text等
+
+            data: '数据obj',         //发送到服务器的数据，键值对形式数据，会自动转换为请求字符串格式
+
+            processData: true,      //默认true，此情况下，通过data选项传递进来的数据，如果是一个对象(技术上讲只要不是字符串)，都会处理转化成一个查询字符串，以配合默认内容类型 "application/x-www-form-urlencoded"。如果要发送 DOM 树信息或其它不希望转换的信息，请设置为 false
+
+            username: '用户名',      //如果服务器需要HTTP认证，需要提供用户名和密码
+
+            password: '密码',        //服务器HTTP认证密码
+
+            accepts: '默认取决于数据类型',       //内容类型发送请求头（Content-Type），用于通知服务器该请求需要接收何种类型的返回结果。如果accepts设置需要修改，推荐在$.ajaxSetup() 方法中设置一次
+
+            async: true,          //默认为true，表示异步请求，若需要同步请求则设为false，但一般都不这样做
+
+            cache: true,          //是否启用缓存，默认: true, dataType为"script"和"jsonp"时默认为false
+
+            context: '回调函数的上下文对象',       //即ajax相关回调函数中this的指向
+
+            global: true,         //该请求是否总是触发全局AJAX事件处理程序，默认为true
+
+            jsonp: 'callback',      //在一个jsonp请求中重写回调函数的名字，默认为callback。这个值用来替代在"callback=?"这种GET或POST请求中URL参数里的"callback"部分，比如{jsonp:'onJsonPLoad'}会导致将"onJsonPLoad=?"传给服务器
+
+            jsonpCallback: 'callbackName',       //为jsonp请求指定一个回调函数名或函数，这个值将用来取代jQuery自动生成的随机函数名
+
+            timeout: 3000,            //设置请求超时时间（毫秒），此设置将覆盖$.ajaxSetup() 里的全局设置。 超时周期开始于$.ajax 访问成功的那个时间点
+
+            example: '示例',       //指定数据类型
+
+            statusCode: {          //指定请求中的http状态码对应的回调
+                404: function () { }    //若请求中响应状态是404，则调用该函数
+            },
+
+            beforeSend: function () {
+                //发送请求之前的回调，传入一个XMLHttpRequest对象作为参数
+            },
+            error: function (xhr,textStatus,errorThrown) {
+                //请求出错时的回调，传入XMLHttpRequest对象，描述错误类型的字符串以及一个异常对象（如果有的话）
+            },
+            dataFilter: function (data,dataType) {
+                //请求成功后对原始数据进行过滤的回调，传入返回的数据以及"dataType"参数的值。并且必须返回新的数据（可能是处理过的）传递给success回调函数
+            },
+            success: function (data,textStatus,xhr) {
+                //请求成功后的回调，传入返回后的数据，以及包含成功代码的字符串，和xhr对象
+            },
+            complete: function (xhr,textStatus) {
+                //请求完成后的回调，无论成功或失败，传入XMLHttpRequest对象，以及一个包含成功或错误代码的字符串
+            }
+        });
+        // .ajaxComplete(callback)方法绑定ajax请求完成后的回调，请求完成都会触发ajaxComplete事件
+        $(document).ajaxComplete(function(event, xhr, ajaxOptions) {
+            //该回调会传入三个参数：1、时间对象(这里是ajaxComplete事件)，2、XMLHttpRequest对象，3、ajax的配置项
+        });
+
+
+    </script>
+
+    <!--===============================================jQuery核心API==================================================-->
+    each(function(index,ele){})；遍历一个集合，为其中每个元素执行一次传入的回调函数，index为元素的索引，ele指向当前元素，其中的this也指向当前遍历到的元素；若在函数中返回false则停止遍历(就像for循环中的break)，若返回true则跳入下一个遍历(就像for循环中的continue)
+    A.index([expr|DOMel|jqObj])；返回一个索引值(0开始)，若不传参则表示当前元素在其同辈元素中的位置，
+                                 若传入参数为一个DOM元素或jQuery对象，且A是一个集合，则返回传入元素在集合A中的位置，
+                                 若传入参数为css选择器表达式，且A是一个元素的jQuery对象，则返回A元素相对于选择器匹配元素集中的位置，若找不到匹配的元素则返回 -1
+    $.extend([true，]targetObj[，obj1...])；将两个或更多对象的内容合并到第一个对象(目标对象targetObj，同时targetObj会被修改，若不想被修改则可传入一个空对象作为目标对象)，相同的属性或方法将被后面的覆盖，若只传入一个对象targetObj则将扩展jQuery的命名空间，
+                                            最前面的布尔值true表示是否进行深度合并(即若对象的属性值中也存在对象，则这些深层的对象也将进行逐一合并，而不是直接在第一层被覆盖)，不传入true则默认不进行深度合并，注意不接受false参数
+    $.fn.extend(obj)；将一个对象的内容合并到jQuery的原型($.fn)上，以扩展新的jQuery实例方法，也可直接在$.fn上进行扩展：$.fn.newMethod=function(...){}
+
+    .data()方法存取 dataset，注意用此法存取时也是不加data-前缀的，而且此法对data数据做出的更改，不会反映到HTML元素data属性上，而只是保存在jQuery对象中。
+        获取：obj.data("name");
+        设置：obj.data("name","value");  //此时该jQuery对象中的该name属性值已改变，但是该元素对应的html文档中的data-name属性值并未变，若采用上面其他方法访问得到的将仍是原来的属性值，而obj.data方法可以获取到现在的值
+        另外jQuery中data方法可以解析元素上dataset的JSON信息：其可以很聪明的从data里提取出json信息转换为对象，例如：
+            HTML：<span id="song-info" data-meta='{"name":"Latch", "album":"Disclosure", "date":"2013"}'>Latch (feat. Sam Smith)</span>
+            JS：var songInfo = $("#song-info").data("meta"); //将data-meta属性的JSON格式值转化为对象形式返回
+                songInfo.date;  //此时可通过对象的形式进行访问
+
+<div>
+    <!--==============================================================================================================-->
+    <!--===================================== 以下为jQuery使用过程中收集到的其余知识点 ====================================-->
+    <!--==============================================================================================================-->
+    一个元素内有节点插入时，可监听“DOMNodeInserted”事件，用法：$node.on('DOMNodeInserted',function(){ });
+    一个元素内有节点移除时，可监听“DOMNodeRemoved”事件，用法：$node.on('DOMNodeRemoved',function(){ });
+
+    关于jQuery中的事件对象：
+    jquery中，最终传入事件处理程序的 event 其实已经被 jQuery 做过标准化处理，其原有的事件对象则被保存于 event 对象的 originalEvent 属性之中，
+    所以若要在jQuery中使用原生event对象就要这样写：$(selector).on(type,function(event){ var e = event.originalEvent || window.event.originalEvent; });
+
+
+    <!--==============================================================================================================-->
+    <!--============================================ 基于jQuery的扩展方法收集 ===========================================-->
+    <!--==============================================================================================================-->
+    <script class="code">
+        // 将提交的表单数据序列化成为json对象格式
+        $.fn.serializeJSON = function() {
+            var serializeObj = {};
+            var array = this.serializeArray();      //jQuery的.serializeArray()方法是将表单数据序列化为JSON对象的数组形式，而非JSON字符串，其每个单元格内保存一个{name:'字段',value:'值'}形式对象，如：[{name:'username',value:'wanje'},{name:'pwd',value:'123456'}]
+            $(array).each(function() {
+                if (serializeObj[this.name]) {
+                    if ($.isArray(serializeObj[this.name])) {
+                        serializeObj[this.name].push(this.value);
+                    } else {
+                        serializeObj[this.name] = [serializeObj[this.name], this.value];
+                    }
+                } else {
+                    serializeObj[this.name] = this.value;
+                }
+            });
+            return serializeObj;
+        };
+    </script>
+
+
+
+</div>
+</pre>
+<body>
+<script type="text/javascript" charset="UTF-8">
+
+</script>
+</body>
+</html>

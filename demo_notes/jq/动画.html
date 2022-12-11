@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        #box{
+            width: 200px;
+            height: 200px;
+            background: #00CBBD;
+        }
+        .test{
+            width: 50px;
+            height: 50px;
+            line-height: 50px;
+            text-align: center;
+            color: orangered;
+            /*background: yellowgreen;*/
+            margin-left: 5px;
+            float: left;
+            font-size: 30px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div id="box"></div>
+<button id="btn1">隐藏box</button>
+<button id="btn2">显示box</button>
+<button id="btn3">滑动隐藏box</button>
+<button id="btn4">滑动显示box</button>
+<button id="btn5">隐藏/显示box</button>
+<button id="btn6">淡入淡出</button><br/>
+
+<button id="btn7">点击出现</button><br/>
+
+<div class="test">周</div>
+<div class="test">鑫</div>
+<div class="test">贱</div>
+<div class="test">吃</div>
+<div class="test">翔</div>
+<div class="test">！</div>
+
+
+<script src="../jquery-1.11.3.js"></script>
+<script>
+$("#btn1").click(function(){//隐藏
+    $("#box").hide(800);//括号内毫秒数|fast|normal|slow
+});
+$("#btn2").click(function(){//显示
+    $("#box").show(800);//括号内毫秒数|fast|normal|slow
+});
+$("#btn3").click(function(){//滑动隐藏
+    $("#box").slideUp(800);//括号内毫秒数|fast|normal|slow
+});
+$("#btn4").click(function(){//滑动显示
+    $("#box").slideDown(800);//括号内毫秒数|fast|normal|slow
+});
+$("#btn5").click(function(){
+//    $("#box").toggle(500);//切换
+    $("#box").slideToggle(500);//切换
+});
+    $("#btn6").click(function(){
+//        $("#box").fadeOut("slow");
+//        $("#box").fadeIn("slow");
+        $("#box").fadeToggle("slow");
+    });
+
+
+    //队列显示
+    $("#btn7").click(function(){
+//        $(".test").show(200);
+//        $(".test").show(800,function(){
+//            alert("1111");
+//        });
+//        $(".test").eq(0).show(800,function(){
+//            $(".test").eq(1).show(800,function(){
+//                $(".test").eq(2).show(800,function(){
+//                    $(".test").eq(3).show(800,function(){
+//                        $(".test").eq(4).show(800,function(){
+//                            $(".test").eq(5).show(800)
+//                        })
+//                    })
+//                })
+//            });
+//        });
+
+        $(".test").first().show(200,function myShow(){
+            $(this).next().show(200,myShow);//自己调用自己，递归调用
+        })
+
+
+
+    });
+</script>
+</body>
+</html>

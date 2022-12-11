@@ -1,0 +1,425 @@
+<!DOCTYPE>
+<html lang="zh-CN">
+<head>
+	<title>IBOSS</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /*隐藏滚轮*/
+        ::-webkit-scrollbar {width: 10px;}
+        ::-webkit-scrollbar-track {display: none;}
+        /*定义滑块 内阴影+圆角*/
+        ::-webkit-scrollbar-thumb {border-radius: 10px;-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);background-color: gainsboro;}
+        * {margin: 0;padding: 0;box-sizing: border-box;font-style: normal;font-weight: normal;}
+        body {background: #f1f2f8;font-size: 14px;-webkit-font-smoothing: antialiased;}
+        a {text-decoration: none;}
+        .fl {float: left;}
+        .hide {display: none;}
+        .main-head { height: 80px; padding: 20px 20px 0 40px; line-height: 56px; background: #40b9fe; color: #ffffff; font-size: 14px; }
+        .logo-link img { margin-top: 1px; vertical-align: top; }
+        .main-nav { float: left; height: 100%; margin-left: 56px; }
+        .main-nav li { float: left; margin-left: 100px; list-style: none; }
+        .main-nav a { display: block; color: inherit; border-bottom: 4px solid transparent; }
+        .main-nav a.active,
+        .main-nav a:hover { display: block; color: inherit; border-bottom-color: #ffffff; font-weight: 600; }
+        .head-info a { color: inherit; margin-left: 0.6em; }
+        .head-info a:hover { text-decoration: underline; }
+        .head-info a:after { content: '|'; margin-left: 0.6em; }
+
+        .side-nav { position: fixed; left: 0; top: 80px; bottom: 0; width: 200px; padding: 20px 20px 0; background: #ffffff; overflow: auto; line-height: 16px; }
+        .side-nav>div { display: none; }
+        .side-nav>div.active { display: block; }
+        .side-nav dt,
+        .side-nav dd { padding-left: 28px; }
+        .side-nav dt { cursor: pointer; margin-bottom: 38px; color: #222222; height: 16px; background: url(./images/icon-nav.png) 0 0 no-repeat; }
+        .side-nav .ico-2 { background-position: 0 -51px; }
+        .side-nav .ico-3 { background-position: 0 -100px; }
+        .side-nav .ico-4 { background-position: 0 -151px; }
+        .side-nav .ico-5 { background-position: 0 -200px; }
+        .nav-level2 a { display: block; color: #555555; margin-bottom: 38px; }
+        dt.active,
+        a.active,
+        .side-nav dt:hover,
+        .side-nav a:hover { color: #40b9fe; }
+        .icon-arrow { display: inline-block; width: 10px; height: 100%; background: url(./images/arrow-down.png) center center no-repeat; }
+        .icon-arrow.up { background-image: url(./images/arrow-up.png); }
+        .side-nav dt .icon-arrow { float: right; }
+
+        .tab-bar { height: 60px; padding: 12px 10px; margin-left: 200px; white-space: nowrap; background: #f9fafb; overflow: hidden; position: relative; }
+        .tab-bar ul { font-size: 0; padding-left: 80px; }
+        .tab-bar ul:before { content: ''; position: fixed; left: 200px; top: 80px; width: 88px; height: 60px; background: #f9fafb; }
+        .tab-bar li { display: inline-block; height: 36px; line-height: 34px; border: 1px solid #e6e6e6; padding: 0 20px; font-size: 14px; margin-right: 10px; -webkit-border-radius: 2px; -moz-border-radius: 2px; border-radius: 2px; cursor: pointer; }
+        .tab-bar li + li { padding-right: 10px; }
+        .tab-bar li:last-child { margin-right: 50px; }
+        .tab-bar li.active { background: #40b9fe; border-color: #40b9fe; color: #ffffff; }
+        .index-page { position: fixed; top: 92px; left: 210px; }
+        .icon-close { display: inline-block; width: 18px; height: 18px; background: url(./images/icon-close3.png) center center no-repeat; cursor: pointer; margin-left: 20px; vertical-align: text-bottom; }
+        .icon-close:hover { background-image: url(./images/icon-close.png); }
+        .tab-bar li.active .icon-close { background-image: url(./images/icon-close4.png); }
+        .tab-bar li.active .icon-close:hover { background-image: url(./images/icon-close2.png); }
+        .tab-next { width: 40px; height: 60px; background: #f8f9fb url(./images/icon-next.png) center center no-repeat; border-left: 1px solid #e6e9ec; -webkit-box-shadow: -5px 0 5px #e6e9ec; -moz-box-shadow: -5px 0 5px #e6e9ec; box-shadow: -5px 0 5px #e6e9ec; filter:progid:DXImageTransform.Microsoft.Shadow(color='#e6e9ec', Direction='180', Strength='10'); cursor: pointer; position: fixed; top: 80px; right: 0; z-index: 9; }
+
+        .frame-wrap { position: fixed; left: 210px; right: 10px; top: 150px; bottom: 10px; background: #ffffff; overflow: auto; }
+        .frame-wrap iframe { position: absolute; left: 0; top: 0; width: 100%; height: 100%; opacity: 0; visibility: hidden; filter:progid:DXImageTransform.Microsoft.Alpha(opacity=0); }
+        .frame-wrap iframe.active { opacity: 1; visibility: visible; z-index: 9; filter:progid:DXImageTransform.Microsoft.Alpha(opacity=100); }
+    </style>
+</head>
+<body>
+    <!--头部主导航-->
+    <div class="main-head">
+        <a href="javascript:;" class="logo-link fl"><img src="./images/justify-content.jpg" alt="logo" width="114" height="38"/></a>
+        <ul class="main-nav clearfix" id="main-nav">
+            <li><a data-menu="system" class="active" href="#none">系统管理</a></li>
+            <li><a data-menu="financial" href="#none">财务管理</a></li>
+            <li><a data-menu="material" href="#none">资料查询</a></li>
+            <li><a data-menu="order" href="#none">订单管理</a></li>
+            <li><a data-menu="business" href="#none">业务办理</a></li>
+        </ul>
+        <p class="head-info fr"><a href="#">lifeng130</a><a href="#">退出</a></p>
+    </div>
+
+    <!--左侧菜单-->
+    <div class="side-nav" id="side-nav">
+        <div data-menu="system" class="active">
+            <dl>
+                <dt class="ico-1">系统管理二级1 <i class="icon-arrow"></i></dt>
+                <dd class="nav-level2 ">
+                    <a href="号码选择.html">号码选择</a>
+                    <a href="编辑框-基本.html">编辑框</a>
+                    <a href="产品管理_产品信息列表.html">产品信息列表</a>
+                </dd>
+            </dl>
+            <dl>
+                <dt class="ico-2">系统管理二级2 <i class="icon-arrow"></i></dt>
+                <dd class="nav-level2 hide">
+                    <a href="url">三级菜单</a>
+                    <a href="url">三级菜单</a>
+                </dd>
+            </dl>
+            <dl>
+                <dt class="ico-3">系统管理二级3 <i class="icon-arrow"></i></dt>
+                <dd class="nav-level2 hide">
+                    <a href="url">三级菜单</a>
+                    <a href="url">三级菜单</a>
+                </dd>
+            </dl>
+            <dl>
+                <dt class="ico-4">系统管理二级4 <i class="icon-arrow"></i></dt>
+                <dd class="nav-level2 hide">
+                    <a href="url">三级菜单</a>
+                    <a href="url">三级菜单</a>
+                </dd>
+            </dl>
+            <dl>
+                <dt class="ico-5">系统管理二级5 <i class="icon-arrow"></i></dt>
+                <dd class="nav-level2 hide">
+                    <a href="url">三级菜单</a>
+                    <a href="url">三级菜单</a>
+                </dd>
+            </dl>
+        </div>
+        <div data-menu="financial">
+            <dl>
+                <dt class="ico-1">财务管理二级1 <i class="icon-arrow"></i></dt>
+                <dd class="nav-level2 hide">
+                    <a href="号码选择.html">号码选择</a>
+                    <a href="编辑框-基本.html">编辑框</a>
+                    <a href="产品管理_产品信息列表.html">产品信息列表</a>
+                </dd>
+            </dl>
+            <dl>
+                <dt class="ico-2">财务管理二级2 <i class="icon-arrow"></i></dt>
+                <dd class="nav-level2 hide">
+                    <a href="url">三级菜单</a>
+                    <a href="url">三级菜单</a>
+                </dd>
+            </dl>
+            <dl>
+                <dt class="ico-3">财务管理二级3 <i class="icon-arrow"></i></dt>
+                <dd class="nav-level2 hide">
+                    <a href="url">三级菜单</a>
+                    <a href="url">三级菜单</a>
+                </dd>
+            </dl>
+            <dl>
+                <dt class="ico-4">财务管理二级4 <i class="icon-arrow"></i></dt>
+                <dd class="nav-level2 hide">
+                    <a href="url">三级菜单</a>
+                    <a href="url">三级菜单</a>
+                </dd>
+            </dl>
+            <dl>
+                <dt class="ico-5">财务管理二级5 <i class="icon-arrow"></i></dt>
+                <dd class="nav-level2 hide">
+                    <a href="url">三级菜单</a>
+                    <a href="url">三级菜单</a>
+                </dd>
+            </dl>
+        </div>
+        <div data-menu="material">
+            <dl>
+                <dt class="ico-1">资料查询二级1 <i class="icon-arrow"></i></dt>
+                <dd class="nav-level2 hide">
+                    <a href="号码选择.html">号码选择</a>
+                    <a href="编辑框-基本.html">编辑框</a>
+                    <a href="产品管理_产品信息列表.html">产品信息列表</a>
+                </dd>
+            </dl>
+            <dl>
+                <dt class="ico-2">资料查询二级2 <i class="icon-arrow"></i></dt>
+                <dd class="nav-level2 hide">
+                    <a href="url">三级菜单</a>
+                    <a href="url">三级菜单</a>
+                </dd>
+            </dl>
+            <dl>
+                <dt class="ico-3">资料查询二级3 <i class="icon-arrow"></i></dt>
+                <dd class="nav-level2 hide">
+                    <a href="url">三级菜单</a>
+                    <a href="url">三级菜单</a>
+                </dd>
+            </dl>
+            <dl>
+                <dt class="ico-4">资料查询二级4 <i class="icon-arrow"></i></dt>
+                <dd class="nav-level2 hide">
+                    <a href="url">三级菜单</a>
+                    <a href="url">三级菜单</a>
+                </dd>
+            </dl>
+            <dl>
+                <dt class="ico-5">资料查询二级5 <i class="icon-arrow"></i></dt>
+                <dd class="nav-level2 hide">
+                    <a href="url">三级菜单</a>
+                    <a href="url">三级菜单</a>
+                </dd>
+            </dl>
+        </div>
+        <div data-menu="order">
+            <dl>
+                <dt class="ico-1">订单管理二级1 <i class="icon-arrow"></i></dt>
+                <dd class="nav-level2 hide">
+                    <a href="号码选择.html">号码选择</a>
+                    <a href="编辑框-基本.html">编辑框</a>
+                    <a href="产品管理_产品信息列表.html">产品信息列表</a>
+                </dd>
+            </dl>
+            <dl>
+                <dt class="ico-2">订单管理二级2 <i class="icon-arrow"></i></dt>
+                <dd class="nav-level2 hide">
+                    <a href="url">三级菜单</a>
+                    <a href="url">三级菜单</a>
+                </dd>
+            </dl>
+            <dl>
+                <dt class="ico-3">订单管理二级3 <i class="icon-arrow"></i></dt>
+                <dd class="nav-level2 hide">
+                    <a href="url">三级菜单</a>
+                    <a href="url">三级菜单</a>
+                </dd>
+            </dl>
+            <dl>
+                <dt class="ico-4">订单管理二级4 <i class="icon-arrow"></i></dt>
+                <dd class="nav-level2 hide">
+                    <a href="url">三级菜单</a>
+                    <a href="url">三级菜单</a>
+                </dd>
+            </dl>
+            <dl>
+                <dt class="ico-5">订单管理二级5 <i class="icon-arrow"></i></dt>
+                <dd class="nav-level2 hide">
+                    <a href="url">三级菜单</a>
+                    <a href="url">三级菜单</a>
+                </dd>
+            </dl>
+        </div>
+        <div data-menu="business">
+            <dl>
+                <dt class="ico-1">业务办理二级1 <i class="icon-arrow"></i></dt>
+                <dd class="nav-level2 hide">
+                    <a href="号码选择.html">号码选择</a>
+                    <a href="编辑框-基本.html">编辑框</a>
+                    <a href="产品管理_产品信息列表.html">产品信息列表</a>
+                </dd>
+            </dl>
+            <dl>
+                <dt class="ico-2">业务办理二级2 <i class="icon-arrow"></i></dt>
+                <dd class="nav-level2 hide">
+                    <a href="url">三级菜单</a>
+                    <a href="url">三级菜单</
+                </dd>
+            </dl>
+            <dl>
+                <dt class="ico-3">业务办理二级3 <i class="icon-arrow"></i></dt>
+                <dd class="nav-level2 hide">
+                    <a href="url">三级菜单</a>
+                    <a href="url">三级菜单</a>
+                </dd>
+            </dl>
+            <dl>
+                <dt class="ico-4">业务办理二级4 <i class="icon-arrow"></i></dt>
+                <dd class="nav-level2 hide">
+                    <a href="url">三级菜单</a>
+                    <a href="url">三级菜单</a>
+                </dd>
+            </dl>
+            <dl>
+                <dt class="ico-5">业务办理二级5 <i class="icon-arrow"></i></dt>
+                <dd class="nav-level2 hide">
+                    <a href="url">三级菜单</a>
+                    <a href="url">三级菜单</a>
+                </dd>
+            </dl>
+        </div>
+    </div>
+
+    <!--标签栏-->
+    <div class="tab-bar" id="tab-bar">
+        <ul id="tab-list">
+            <li class="index-page active" id="index-page" data-flag="index">首页</li>
+        </ul>
+        <i class="tab-next" id="tab-next"></i>
+    </div>
+
+    <!--嵌套页面放置容器-->
+    <div class="frame-wrap" id="frame-wrap">
+        <iframe id="iframeEl" data-flag="index" class="active" src="http://127.0.0.1:5500/过渡板.html" frameborder="0"></iframe>
+        <!-- <div id="editLayer" style="position: absolute;left: 0;top: 0;z-index: 10;height: 100%;width: 100%;user-select: none;"></div> -->
+    </div>
+
+<script type="text/javascript" src="./js/jquery-1.11.3.min.js"></script>
+<script>
+window.name = '主框架';
+$(function () {
+
+    var ele = {
+        mainNav: $('#main-nav'),
+        sideNav: $('#side-nav'),
+        tabBar: $('#tab-bar'),
+        tabList: $('#tab-list'),
+        frameWrap: $('#frame-wrap')
+    };
+
+    //解决tab键对页面焦点的影响
+    $(document).on('keydown', function (e) {
+        if (e.keyCode === 9) e.preventDefault();
+    });
+
+    //主导航菜单
+    ele.mainNav.on('click','a',function (e) {
+        e.preventDefault();
+
+        var $this = $(this);
+        var menu = $this.attr('data-menu');
+
+        ele.mainNav.find('a').removeClass('active');
+        $this.addClass('active');
+        ele.sideNav.children('[data-menu="' + menu + '"]').addClass('active').siblings().removeClass('active');
+
+    });
+
+    /*标签栏交互*/
+    ele.tabBar.on('click','li',function () {
+        var $this = $(this);
+        var timeStamp = $this.attr('data-flag');
+        var menu = $this.attr('data-menu');
+
+        $this.addClass('active').siblings().removeClass('active');
+        ele.sideNav.find('a,dt').removeClass('active');
+        ele.sideNav.find('[data-flag="' + timeStamp + '"]').addClass('active').parent().slideDown(200).prev().addClass('active').find('.icon-arrow').addClass('up');
+        ele.frameWrap.find('[data-flag="' + timeStamp + '"]').addClass('active').siblings().removeClass('active');
+        ele.mainNav.find('[data-menu="' + menu + '"]').trigger('click');
+
+    }).on('click','#tab-next',function () {
+        var left = ele.tabBar.scrollLeft();
+        ele.tabBar.scrollLeft(left+100);
+
+    }).on('click','#index-page',function () {
+        ele.tabBar.scrollLeft(0);
+
+    }).on('click','.icon-close',function () {
+        var $this = $(this);
+        var parent = $this.parent();
+        var prev = parent.prev();
+        var timeStamp = parent.attr('data-flag');
+
+        if (parent.hasClass('active')) {
+            setTimeout(function () {
+                prev.trigger('click');
+            }, 10);
+        }
+
+        parent.remove();
+        ele.sideNav.find('[data-flag="' + timeStamp + '"]').attr('data-flag','');
+        ele.frameWrap.find('[data-flag="' + timeStamp + '"]').remove();
+
+    });
+
+    //点击侧边栏导航链接生成tab标签和iframe嵌套页面，以及菜单的收缩与展开
+    ele.sideNav.on('click','dt',function () {
+        var $this = $(this);
+        $this.find('.icon-arrow').toggleClass('up');
+        $this.next().slideToggle(200);
+
+    }).on('click','a',function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        var $this = $(this);
+        var timeStamp = $this.attr('data-flag');
+        var menu = $this.closest('div').attr('data-menu');
+        var url = $this.attr('href');
+
+        ele.sideNav.find('a,dt').removeClass('active');
+        $this.addClass('active').parent().prev().addClass('active');
+
+        if (!timeStamp) {
+            timeStamp = new Date().getTime();
+            $this.attr('data-flag',timeStamp);
+            ele.tabList.find('li').removeClass('active');
+            ele.tabList.append('<li class="active" data-flag="'+ timeStamp +'" data-menu="'+ menu +'">' + $this.text() + '<i class="icon-close"></i></li>');
+            ele.frameWrap.find('iframe').removeClass('active');
+            ele.frameWrap.append('<iframe class="active" data-flag="'+ timeStamp +'" src="' + url + '" frameborder="0"></iframe>');
+
+        } else {
+            ele.tabList.find('[data-flag="' + timeStamp + '"]').trigger('click');
+        }
+
+    });
+
+    //postMessage跨域通信
+    $(window).on('message',function (event) {
+        event = event.originalEvent;
+
+        console.log(event.data,event.origin);
+
+        var msg = '回消息' + Math.random()*10000;
+        console.log(msg,event.origin);
+        event.source.postMessage(msg,event.origin);
+    });
+
+    // 模拟APP工厂在遮罩层上双击自动在底部元素中插入光标测试
+  /* var iframeWin = iframeEl.contentWindow;
+  iframeEl.onload = function() {
+    console.log(iframeWin.editDiv);
+    // iframeWin.editDiv.contentEditable = true;
+    iframeWin.document.body.contentEditable = true;
+    editLayer.addEventListener('dblclick', function(){
+      console.log('dblclick', this);
+      var range = iframeWin.document.createRange();
+      range.selectNode(iframeWin.editCont);
+      var sel = iframeWin.document.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+      iframeWin.focus();
+      sel.collapseToEnd();
+      this.style.display = 'none';
+    })
+  }; */
+
+});
+
+
+</script>
+</body>
+</html>

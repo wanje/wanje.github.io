@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>antv-G2</title>
+    <link rel="stylesheet" href="../../plugins/highlight/styles/androidstudio.css">
+    <script src="../../plugins/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <style type="text/css">
+        ::-webkit-scrollbar { display: none; }    /*不显示滚动条*/
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+        .view {
+            float: left;
+            width: 35%;
+            height: 100vh;
+            border-right: 1px solid #dadada;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            overflow: auto;
+        }
+        .view > div {
+            padding: 5px;
+            height: 270px;
+        }
+        .code {
+            float: right;
+            display: block;
+            width: 65%;
+            height: 100vh;
+            margin: 0;
+            white-space: pre;
+            font-family: monospace;
+            background: #ececec;
+            overflow: auto;
+        }
+    </style>
+</head>
+<body>
+<section class="view">
+    <div id="chart1"></div>
+    <div id="chart2"></div>
+    http://www.bootstrapmb.com/tag/kejigan
+
+    https://www.jsdaima.com/d-555.html
+    http://v.bootstrapmb.com/2019/4/tjpsr3954/
+    http://v.bootstrapmb.com/2018/12/0f8og3134/
+    http://v.bootstrapmb.com/2018/10/8ak8d2590/
+
+    https://www.jsdaima.com/js/demo/1569.html
+    http://v.bootstrapmb.com/2019/4/abiwa4320/
+    http://html5.huceo.com/shengbo/
+    http://www.htmlsucai.com/demo/2017/06/html5 canvas酷炫的3D球形文字云动画特效
+</section>
+<pre class="code"><code class="css" id="show-script"></code></pre>
+<script type="text/javascript" charset="UTF-8" src="../../js/jquery-1.11.3.js"></script>
+<script type="text/javascript" charset="UTF-8" src="../../plugins/antv/g2-4.0.12.min.js"></script>
+<script type="text/javascript">
+  const data = [
+    { feature: 'Battery', value: 0.22, phone: 'iPhone' },
+    { feature: 'Brand', value: 0.28, phone: 'iPhone' },
+    { feature: 'Contract', value: 0.29, phone: 'iPhone' },
+    { feature: 'Design', value: 0.17, phone: 'iPhone' },
+    { feature: 'Internet', value: 0.22, phone: 'iPhone' },
+    { feature: 'Large', value: 0.02, phone: 'iPhone' },
+    { feature: 'Price', value: 0.21, phone: 'iPhone' },
+    { feature: 'Smart', value: 0.5, phone: 'iPhone' },
+    { feature: 'Battery', value: 0.27, phone: 'Samsung' },
+    { feature: 'Brand', value: 0.16, phone: 'Samsung' },
+    { feature: 'Contract', value: 0.35, phone: 'Samsung' },
+    { feature: 'Design', value: 0.13, phone: 'Samsung' },
+    { feature: 'Internet', value: 0.2, phone: 'Samsung' },
+    { feature: 'Large', value: 0.13, phone: 'Samsung' },
+    { feature: 'Price', value: 0.35, phone: 'Samsung' },
+    { feature: 'Smart', value: 0.38, phone: 'Samsung' },
+    { feature: 'Battery', value: 0.26, phone: 'Nokia' },
+    { feature: 'Brand', value: 0.1, phone: 'Nokia' },
+    { feature: 'Contract', value: 0.3, phone: 'Nokia' },
+    { feature: 'Design', value: 0.14, phone: 'Nokia' },
+    { feature: 'Internet', value: 0.22, phone: 'Nokia' },
+    { feature: 'Large', value: 0.04, phone: 'Nokia' },
+    { feature: 'Price', value: 0.41, phone: 'Nokia' },
+    { feature: 'Smart', value: 0.3, phone: 'Nokia' }
+  ];
+</script>
+<script type="text/javascript" charset="UTF-8" id="script">
+  // 数据格式示例
+  // const data = [ // 数据中的数值为一个数组时，在图表上将表现出是一个区间
+  //   { feature: 'Battery', value: 0.22, phone: 'iPhone' },
+  //   { feature: 'Brand', value: 0.16, phone: 'Samsung' },
+  //   { feature: 'Smart', value: 0.3, phone: 'Nokia' }
+  // ];
+  $(function () {
+    // 1、创建 Chart 图表对象：const chart = new G2.Chart(pramObj)，指定图表所在的容器ID、图表的宽高、边距等信息；
+    // 2、载入图表数据源：chart.data()
+    // 3、使用图形语法进行图表的绘制：chart.position(x*y)...
+    // 4、渲染图表：chart.render()
+    /**===== Step 1: 创建 Chart 对象 =====*/
+    const chart1 = new G2.Chart({
+      container: 'chart1', // 指定图表容器 ID
+      autoFit: true, // 是否自适应，指的是图表是否自适应容器的大小，默认false
+//      width: 300, // 指定图表宽度，若开启了‘autoFit’则默认使用图表容器的宽，当容器的宽计算值为‘0px’时会采用这里设置的值作为第二选择，若没有开启‘autoFit’则直接使用这里设置的值，高度同理
+//      height: 300, // 指定图表高度
+//      padding: [10, 10, 50, 30], // 绘图区域边距(注意是图形区域，不包含坐标轴及其标记)
+    });
+
+//    chart1.coordinate('polar'); // 坐标系设置，不设置则默认为直角坐标系(`rect`或`cartesian`)，`polar`为y轴值映射为半径的极坐标系，`helix`为螺旋坐标系，`theta`为y轴值映射为角度的极坐标系，在第4步render前设置就有效
+//    chart1.coordinate('polar').transpose(); // 设置为极坐标系，且将映射关系用transpose()转换，否则默认会将直角坐标系中的y值映射为半径而不是角度，等同于`chart1.coordinate('theta')`，transpose()在不同坐标系下的转换作用不一样
+//    chart1.coordinate('polar').rotate(-Math.PI * 0.5); // 坐标系变换，包括rotate旋转、scale缩放、transpose置换、reflect镜像等等
+    /** 图表样式配置 */
+    /* 坐标轴样式配置 */
+//    chart1.axis();
+    /* 图例样式配置 */
+    chart1.legend({
+      position: 'bottom-right' // 图例位置，可选值为`top、right、bottom、left`四个关键字之一或其两两组合，注意'bottom-right'与'right-bottom'不同，前者为底部右侧，后者为右侧底部，只有一个关键值时另一方为居中，默认‘bottom’，表示底部居中
+    });
+    /* 提示信息样式配置 */
+//    chart1.tooltip();
+    /* 度量配置 */
+//    chart1.scale();
+
+    /**===== Step 2: 载入数据源 =====*/
+    chart1.data(data);
+
+    /**===== Step 3：创建图形语法 =====*/
+    // 图形语法部分可链式调用，注意顺序，涉及数据处理的应放在前面，数据关联的放在后面
+    chart1
+        .line() // 图形选择，`point`为点图、`interval`为柱状图、`line`为折线图、`area`为面积图
+//        .adjust('stack') // 数据展示方式调整，参数`stack`表示堆叠，即各系列的同一数据项的数值是累加的
+        .position('feature*value') // 坐标轴映射，position(X轴关联数据字段*Y轴关联数据字段)，不同图形坐标轴映射参数可能不同
+        .color('phone') // 颜色映射，color(颜色)、color(字段)、color(字段，颜色list)，可统一颜色、根据字段映射默认颜色列表、根据字段映射自定义颜色列表，可用颜色区分不同系列，将自动生成图例
+//        .shape('phone', ['circle', 'square', 'triangle']) // 形状映射，shape(形状)、shape(字段)、shape(字段，形状list)，可用形状区分不同系列，将自动生成图例
+//        .size(6) // 尺寸映射，size(尺寸)、size(字段)、size(字段，尺寸list)
+    ;
+    // 图表叠加，将多种图形标记叠加到一起
+    chart1.area().position('feature*value').color('phone');
+    chart1.point().position('feature*value').shape('circle');
+
+    /**===== Step 4: 渲染图表 =====*/
+    chart1.render();
+
+    /** 数据更新 */
+    /* 方式1，更新数据同时更新图表呈现 */
+    chart1.changeData(data); // changeData()方法直接根据新的数据重绘图表（要求新数据的数据结构与就数据的数据结构一样，因为图表的各项数据映射是相同的，只是数据改变了，否则映射关系可能出错）
+    /* 方式2，更新数据与更新图表绘制分开 */
+    chart1.data(data); // 载入新的数据
+//    chart1.clear(); // clear()方法可清除画布，此时图表及前面的所有图形语法定义和数据映射关系都将清除，后面需要重新创建图形及数据映射(当做一个新图表)，该方法放在data()方法前后都可以，不调用则不会清除原图形相关定义
+    // do sth others
+    chart1.render(); // 需要的时候调用绘制才改变图表呈现
+
+
+
+    /**==================================================================*/
+    /**============================== 示例 ==============================*/
+    /**==================================================================*/
+    const chart2 = new G2.Chart({
+      container: 'chart2',
+      autoFit: true,
+      padding: [10, 50, 50, 30],
+    });
+    chart2.data(data);
+
+    /** Step 2 */
+    // 图表分面，将各系列分开绘制在同一画布上但不同位置和坐标系中（即对绘图画布进行分割，分割后的每个面绘制一个系列）
+    chart2.facet('rect', { // 第一个参数表示分面形状('rect'表示按照矩形分割)，第二个参数为图形相关绘制设置
+      fields: [null, 'phone'],
+      rowTitle: {
+        style: {
+          textAlign: 'start',
+          fontSize: 12,
+        },
+      },
+      eachView: function(view) { // 图表绘制函数，每个系列都会调用
+        view.area().position('feature*value');
+        view.line().position('feature*value');
+        view.point().position('feature*value').shape('circle');
+      },
+    });
+
+    chart2.render();
+  });
+</script>
+<script>
+  document.getElementById('show-script').innerHTML = document.getElementById('script').innerHTML;
+</script>
+</body>
+</html>

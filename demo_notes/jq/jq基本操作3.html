@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        #box{
+            color:red;
+        }
+        .border{
+            border: 3px dashed white;
+        }
+        .box{
+            font-size: 30px;
+        }
+        .black{
+            outline: 5px solid black;
+        }
+        .pink{
+            outline: 5px solid pink;
+        }
+    </style>
+</head>
+<body>
+<div id="box" style="color:gold">
+    测试
+</div>
+<button>字色切换</button>
+<script src="../jquery-1.11.3.js"></script>
+<script>
+$(function(){
+//    console.log($("#box").css("color"));//获取样式rgb色
+//    console.log($("#box").css(["color","height","width"]));//同时获取多个值
+//    $("#box").css("background-color","blue");
+//    $("#box").css({"height":"100px","width":"520px","border-radius":"20px"});
+////    $("#box").attr("class","border");
+//    $("#box").addClass("border box");//添加类
+//
+//    $("#box").removeClass("box");
+
+    $("button").click(function(){
+        $("#box").toggleClass(function(){
+            return $("#box").hasClass("black")?"pink":"black";//
+
+            //等同于
+            if($("#box").hasClass("black")){
+                return "pink";
+            }else{
+                return "black";
+            }
+
+        });
+    });
+});
+
+</script>
+</body>
+</html>

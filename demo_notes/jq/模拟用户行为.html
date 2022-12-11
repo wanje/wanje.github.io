@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<button id="btn1">按钮1</button>
+<button id="btn2">按钮2</button>
+<button id="btn3">自定义事件</button>
+<button id="btn4">触发自定义事件</button>
+<p>这是一个P标签</p>
+<script src="../jquery-1.11.3.js"></script>
+<script>
+//    $("#btn1").on("click",function(){
+//        alert("按钮1被按了");
+//    });
+//    $("#btn2").on("click",function(){
+//    alert("按钮2被按了");
+//    });
+
+//    $("#btn1").on("click",function(){
+//        $("#btn2").click();
+
+        //方法二
+//        $("#btn2").trigger("click");
+//    });
+//    $("#btn3").on({
+//        "mytest":function(){
+//            alert("自定义事件")
+//        },
+//        "click":function(){
+//            $("#btn3").trigger("mytest");
+//        }
+//    });
+//    $("#btn4").on("click",function(){
+//        $("#btn3").trigger("myTest");
+//    })
+
+    $("#btn3").on("click myTest",function(){
+        alert("自定义事件");
+    });
+    $("#btn4").on("click",function(){
+        $("#btn3").click().trigger("myTest");
+    });
+
+    //trigger方法可以进行参数的传递
+    $("p").bind("myEvent",function(event,mes1,mes2){//event获取事件源，
+        alert(mes1+" "+mes2);
+    });
+    $("p").trigger("myEvent",["Hello","World!"]);
+
+
+    /*
+    * 事件源===============================================================指派事件处理程序
+    * 网页上的元素                 保存跟这次事件相关的信息
+    * 按钮-鼠标事件      type(事件类型)|keyCode（用户按键）|clientX(鼠标点击的坐标)
+    * 文本框-键盘事件
+    * 滚动条-html事件
+    * */
+</script>
+</body>
+</html>

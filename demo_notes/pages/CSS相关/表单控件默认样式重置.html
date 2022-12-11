@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>伪元素表单控件默认样式重置</title>
+    <style type="text/css">
+        body>div {padding-bottom: 10px;border-bottom: 1px dashed gray;line-height: 1.8;}
+        body div span {background: lightblue;padding: 2px 5px;border-radius: 5px;color: #666;font-size: 14px;}
+        h4 { margin: 1em 0;}
+        h4 span { font-weight: normal;font-size: 14px;}
+        /*================================= button =================================*/
+        .btn button::-moz-focus-inner,  /*Firefox下增加内边框，这些边边框都是伪元素的，不是元素的边框*/
+        .btn input::-moz-focus-inner {border: 5px solid red;}
+        .btn button::-moz-focus-outer,  /*Firefox下增加外边框*/
+        .btn input::-moz-focus-outer {border: 5px solid blue;}
+
+        /*================================= input =================================*/
+
+        /*===========placeholder属性===========*/
+        .inp :-ms-input-placeholder {color: #ff0000;text-indent: 1em;}  /*IE10+*/
+        .inp ::-webkit-input-placeholder {color: #ff0000;text-indent: 1em;}   /*chrome*/
+        .inp ::-moz-placeholder {color: #ff0000;text-indent: 1em;}   /*Firefox下，此处文字缩进无效果*/
+
+        /*IE10+中的单复选框*/
+        .inp ::-ms-check {color: red;border: 1px solid red;background: white;padding: .1em;}
+        /*chrome中的color类型*/
+        .inp [type="color"]::-webkit-color-swatch-wrapper {border: 1px solid #777;background-image: -webkit-gradient(linear, 0 0, 100% 0,from(red),color-stop(15%, orange),color-stop(30%, yellow),color-stop(50%, green),color-stop(65%, darkcyan),color-stop(80%, blue),to(purple));}   /*外部的包含块*/
+        .inp [type="color"]::-webkit-color-swatch { height: 20px;position: relative;left: 0;top: 20px; }   /*中间的小黑块*/
+        /*chrome中的date类型，下拉的日期选择组件的UI貌似还不能修改*/
+        .inp [type="date"]::-webkit-datetime-edit { padding: 1px;border: 1px dashed black; }     /*控制编辑区，即框中日期显示区域*/
+        .inp [type="date"]::-webkit-datetime-edit-fields-wrapper { background-color: #eee; }    /*控制年月日这个区域*/
+        .inp [type="date"]::-webkit-datetime-edit-text { color: #4D90FE; padding: 0 .3em; }      /*控制年月日之间的斜线或短横线*/
+        .inp [type="date"]::-webkit-datetime-edit-year-field { color: red; }                      /*控制年*/
+        .inp [type="date"]::-webkit-datetime-edit-month-field { color: green; }                   /*控制月*/
+        .inp [type="date"]::-webkit-datetime-edit-day-field { color: blue; }                      /*控制日*/
+        .inp [type="date"]::-webkit-inner-spin-button { -webkit-appearance: none; }              /*控制上下小箭头*/
+        .inp [type="date"]::-webkit-clear-button { -webkit-appearance: none; }                    /*控制清除内容的叉叉*/
+        .inp [type="date"]::-webkit-calendar-picker-indicator { color: #666;border-radius: 2px;background: #cccccc; }    /*控制下拉小箭头*/
+        /*file类型，IE10+和chrome支持各自的修改，但效果与修改前没什么实质性变化，所以基本可以忽略*/
+        .inp [type="file"]::-ms-browse { }   /*IE*/
+        .inp [type="file"]::-webkit-file-upload-button { }   /*chrome*/
+        /*number类型，目前只有chrome下可修改*/
+        .inp [type="number"]::-webkit-textfield-decoration-container { background-color: #f0f3f9;}  /*输入框内部区域*/
+        .inp [type="number"]::-webkit-inner-spin-button { -webkit-appearance: none;}  /*上下小箭头*/
+        /*password类型，修改IE中的小眼睛区域(IE10+)*/
+        .inp [type="password"]::-ms-reveal { display: none; }
+        /*======range类型======*/
+        /*IE10+下*/
+        .inp [type="range"]::-ms-fill-lower { background: orange; }    /*已经拖拽的区域*/
+        .inp [type="range"]::-ms-fill-upper { background: green; }     /*还没有拖拽的区域*/
+        .inp [type="range"]::-ms-thumb { background: red; }     /*滑块*/
+        .inp [type="range"]::-ms-track { padding: 5px; }     /*滑槽*/
+        .inp [type="range"]::-ms-tooltip { display: none;}  /*拖动时候显示的数字，该元素只能用display或visibility这样的隐藏属性*/
+        .inp [type="range"]::-ms-ticks-before { display: block; color: black; }     /*前面/上面的刻度线*/
+        .inp [type="range"]::-ms-ticks-after { display: block; color: blue; }       /*后面、下面的刻度线*/
+        /*chrome下*/
+        .inp [type="range"] { -webkit-appearance: none;outline: none;}
+        .inp [type="range"]::-webkit-slider-runnable-track { height: 4px;border-radius: 2px;border: 1px solid #a0b3d6;background: #f0f3f9;}     /*滑槽*/
+        .inp [type="range"]::-webkit-slider-thumb { -webkit-appearance: none;width: 10px;height: 10px;border-radius: 100%;background: #ff0000;position: relative;top: -3px;outline: none;}   /*滑块，要改变滑块的样式需设置input为默认表现是none，并设置滑块的默认表现也为none*/
+        /*Firefox下*/
+        .inp [type="range"]::-moz-range-track {border: 1px solid #a0b3d6;height: 4px;background: #f0f3f9;} /*滑槽*/
+        .inp [type="range"]::-moz-range-thumb {width: 10px;height: 10px;border-radius: 100%;background: #34538b;}   /*滑块*/
+        /*search类型，chrome下*/
+        .inp input[type="search"]::-webkit-search-cancel-button { -webkit-appearance: none; }    /* 隐藏清空的叉叉按钮 */
+
+        /*======textarea======*/
+        textarea {
+            resize: none;   /*css3属性，使不可直接拖动改变文本框大小*/
+            overflow: auto;     /*针对IE去掉右侧滚动条一直显示，默认是 overflow: scroll;*/
+        }
+
+        /*IE下拉列表去掉右侧默认样式*/
+        select::-ms-expand {
+            display: none;
+        }
+
+        /*IE10+下去掉文本输入框右侧叉叉按钮*/
+        ::-ms-clear {
+            display: none;  /*对于IE10以下的浏览器不能直接去掉叉叉，但该叉叉只在输入框大于一定长度时才会出现，若输入框宽度比较小就不会出现该叉叉*/
+        }
+
+    </style>
+</head>
+<body>
+    <h1>option+command+U 查看源文件</h1>
+    <!--================================= button =================================-->
+    <h4>button [<span>只有Firefox下可增加内外边框，大多情况下无用</span>]</h4>
+    <div>默认：
+        <button>button</button>
+        <input type="button" value="input-button"/>
+        <input type="submit" value="submit"/>
+        <input type="reset" value="reset"/>
+        <div class="btn">重置：
+            <button>button</button>
+            <input type="button" value="input-button"/>
+            <input type="submit" value="submit"/>
+            <input type="reset" value="reset"/>
+        </div>
+    </div>
+    <!--================================= input =================================-->
+    <h4>input</h4>
+    <div>默认：
+        <input type="text" placeholder="占位提示文字"/>placeholder属性
+        <input type="checkbox"/>checkbox
+        <input type="radio" name="sex"/><input type="radio" name="sex"/>radio
+        <span>IE和Safari不支持color类型，自动转为text</span>
+        <input type="color"/>color
+        <span>IE、Safari和Firefox都不支持date类型，自动转为text</span>
+        <input type="date"/>date
+        <span>IE10+和chrome对file类型支持各自的修改，但效果与修改前没什么实质性变化，所以基本可以忽略</span>
+        <input type="file"/>file
+        <input type="number"/>number
+        <input type="password"/>password
+        <input type="range"/>range
+        <input type="search"/>search
+        <div class="inp">重置：
+            <span>修改placeholder属性</span>
+            <input type="text" placeholder="占位提示文字"/>placeholder属性
+            <span>只有IE10+下单复选框可重置</span>
+            <input type="checkbox"/>checkbox
+            <input type="radio" name="sex"/><input type="radio" name="sex"/>radio
+            <span>只有chrome下color和date类型可作部分修改</span>
+            <input type="color"/>color
+            <input type="date"/>date
+            <span>只有chrome中number类型可修改</span>
+            <input type="number"/>number
+            <span>修改IE10+中password类型中的小眼睛区域</span>
+            <input type="password"/>password
+            <span>range类型在IE10+、webkit内核、Firefox中都有各自的修改</span>
+            <input type="range"/>range
+            <span>去掉chrome下的search类型清空叉叉符号</span>
+            <input type="search"/>search
+        </div>
+    </div>
+<script type="text/javascript" charset="UTF-8">
+
+</script>
+</body>
+</html>

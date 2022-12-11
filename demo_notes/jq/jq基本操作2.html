@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        .myclass{
+            width: 100px;
+            height: 100px;
+        }
+    </style>
+</head>
+<body>
+<div id="myCBs">
+    <input type="checkbox" value="1" id="myinput1"/>
+    <input type="checkbox" value="2"/>
+    <input type="checkbox" value="3"/>
+    <input type="checkbox" value="4"/>
+    <input type="checkbox" value="5"/>
+    <input type="checkbox" value="6"/>
+    <button onclick="getChecked()">获取勾选的checkbox</button>
+    <button onclick="getAttr()">获取元素的属性值</button>
+    <button onclick="setAttr()">设置元素的属性值</button>
+    <button onclick="removeAttr()">移除元素的属性值</button>
+</div>
+
+<script src="../jquery-1.11.3.js"></script>
+<script>
+    function getChecked(){
+//        console.log($("input[type='checkbox']:checked"));
+//        console.log($("input[type='checkbox']:checked").val());
+        var CbVal=$("input[type='checkbox']:checked");
+
+        for(var i=0;i<CbVal.length;i++){
+            console.log($(CbVal[i]).val());
+        }
+    }
+
+    function getAttr(){
+        /*attr("属性名")*/
+        console.log($("#myinput1").attr("type"));
+    }
+
+    function setAttr(){
+//        $("#myinput1").attr("class","myclass");
+        $("#myinput1").attr({"class":"myclass","id":"myid1"});
+    }
+
+    function removeAttr(){
+        $("#myid1").removeAttr("class");
+    }
+</script>
+</body>
+</html>

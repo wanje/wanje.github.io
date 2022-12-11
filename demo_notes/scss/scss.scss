@@ -1,0 +1,326 @@
+
+// --no-cache --update --style compact $FileName$:$FileParentDir$/css/$FileNameWithoutExtension$.css    webstorm中配置编译后的css文件输出位子和格式
+// 输出格式有四种：nested（包含层级缩进）、expanded（无层级缩进，但每个属性占一行）、compact（同作用域的属性放在一行）、compressed（完全压缩）
+// $FileNameWithoutExtension$.css:$FileNameWithoutExtension$.css.map      webstorm中配置编译后的css文件与scss文件的映射关系(即生成map文件)
+
+//一般定义的变量都为属性值，可直接使用，但当变量作为属性或字符串拼接等特殊情况下使用时，需要以 #{$variable} 插值的形式使用，如CSS中的`calc()`计算方法中就要使用该插值方式，更多见后面举例
+
+@charset "utf-8";
+html,body{
+  font-size: 12px;
+  font-family: "microsoft yahei", "Arial", "Helvetica", "sans-serif", "Droid Sans", "Droid Sans Fallback", "Lucida Grande", "Hiragino Sans GB", "Hiragino Sans GB W3";
+}
+//css common
+$sizeList:(0 0)  (5 5px)  (10 10px) (15 15px) (25 25px) (50 50px) !default;
+$classList:(pd padding) (pdt padding-top) (pdr padding-right) (pdb padding-bottom) (pdl padding-left) (mg margin) (mgt margin-top) (mgr margin-right) (mgl margin-left) (mgb margin-bottom) !default;
+@each $className in $classList{
+  $name:nth($className,1);
+  $attr:nth($className,2);
+  @each $val in $sizeList{
+    $cname:nth($val,1);
+    $cval:nth($val,2);
+    .#{$name}-#{$cname}{
+      #{$attr}:#{$cval} !important;
+    }
+  }
+}
+
+//清除浮动
+.clearfix{
+  &:before{         //&符号表示当前位置的父容器，@at-root表示跳出当前嵌套层级到外面（默认只是选择器层级关系的外面）
+    content: '';
+    display: table;
+    height: 0;
+  }
+  &:after{
+    content: '';
+    display: block;
+    height: 0;
+    clear: both;
+  }
+}
+
+//px to rem（此处以iPhone6）
+@function px2rem($int){
+  @return ($int / 75) * 1rem;
+}
+.p1 {
+  width: px2rem(75);
+}
+
+
+//sass具有运算的特性，可以对数值型的Value(如：数字、颜色、变量等)进行加减乘除四则运算。请注意运算符前后请留一个空格，不然会出错
+
+
+//==================================================== variable变量 ====================================================
+
+$black: black !default;     //变量名以 $ 符号开头，加上 !default 表示默认变量，在其前面或后面声明一个同名变量都可以覆盖该默认变量，而不加时只有在后面重新声明会覆盖前面的
+$white: #fff;
+$gray: #ccc !default;
+$lh: 2;
+$fz: 14px;
+.color-white{color: $white}    //一般定义的变量都为属性值，可直接使用，但当变量作为属性或某些特殊情况下使用时，需要以 #{$variable} 的形式使用
+.color-#{$black} {color: $black}  //变量用于拼接字符串
+.fz-14 { font: #{$fz}/#{$lh} a;}    //变量用于一些特殊情况，此处若不加#{}，分隔符/就会被当做除号，编译出错误的结果
+
+//多值变量，其分为list类型和map类型，简单来说list类型有点像js中的数组，而map类型有点像js中的对象；
+//list数据可通过空格，逗号、小括号分隔多个值，可用nth($var,$index)取值，下标从1开始，且该下标只表示第一层(多维时需要一层一层访问下去),关于list数据操作还有很多其他函数；
+$list1: 5px 10px 20px 30px;    //一维数据
+$list2-1: 5px 10px, 20px 30px;    //二维数据，相当于js中的二维数组
+$list2-2: (5px 10px) (20px 30px);   //二维数据，与上面$list2-1表示的一样
+$list2-3: (12 12px) (14 14px);   //二维数据，与上面$list2-1表示的一样
+a{
+  font-size:nth($list1,2);    //下标从1开始
+
+  &:hover{
+    font-size:nth(nth($list2-1,2),1);   //访问多维数据，由内向外一层层嵌套
+  }
+}
+@each $item,$size in $list2-3 {     //@each/in 可用于遍历list数据、map数据
+  .fz-#{$item} {
+    font-size: $size;
+  }
+}
+//map数据以键值对形式出现，其中value值又可以是list，格式为：$map:(key1:value1, key2:value2, key3:value3);，可通过map-get($map,$key)取值，关于map数据还有很多其他函数；
+$head: (h1: 2em, h2: 1.5em, h3: 1.2em);
+@each $header, $size in $head {
+  #{$header} {
+    font-size: $size;
+  }
+}
+$fontSize: 12px;   //最外面声明的变量默认就是全局变量
+$color: #333;
+.b{
+  $fontSize: 14px;  //在选择器内部声明的为局部变量，作用域为所在{}
+  color:$color;
+  $color: #fff !global;   //加上 !global 后则表示全局变量，将覆盖最外层的同名变量，但在未声明前访问的还是原变量
+  font-size:$fontSize;
+}
+.c{
+  font-size:$fontSize;
+  color:$color;
+}
+
+
+//====================================================== @mixin ========================================================
+//@mixin（混入）定义
+
+//清除浮动
+@mixin clearfix {
+  *zoom:1;
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+    font-size:0;
+    height:0;
+    line-height:0;
+    visibility:hidden;
+  }
+}
+
+//设置webkit浏览器中额滚动条样式
+@mixin scrollBar {
+  &::-webkit-scrollbar-track-piece {
+    background: #d3dce6;
+  }
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #99a9bf;
+    border-radius: 20px;
+  }
+}
+
+//set prefix（设置前缀）
+@mixin prefix($property, $value) {
+  @each $prefix in -webkit-, -moz-, -ms-, -o-, '' {
+    #{$prefix}#{$property}: $value;
+  }
+}
+//set font-size（结合rem使用时html上有设置data-dpr属性，这里是以iPhone6设计稿为基础尺寸，所以data-dpr="2"时的字体大小为一倍基准）
+@mixin fz($fz){
+  font-size: $fz*0.5px;
+  [data-dpr="2"] & { font-size: $fz*1px; }
+  [data-dpr="3"] & { font-size: $fz * 1.5px; }
+}
+//set border-radius（设置带前缀的圆角属性）
+@mixin radius($size:4px) {  // 给参数指定一个默认值，不传入时就使用该默认值
+  -webkit-border-radius: $size;
+  -moz-border-radius: $size;
+  -ms-border-radius: $size;
+  border-radius: $size;
+}
+// set box-shadow（设置带前缀的元素阴影）
+@mixin boxShadow($x, $y, $color) {
+  -moz-box-shadow: $x $y 4px $color; // FF3.5+
+  -webkit-box-shadow: $x $y 4px $color; // Saf3.0+, Chrome
+  box-shadow: $x $y 4px $color; // Opera 10.5, IE 9.0
+  -ms-filter: "progid:DXImageTransform.Microsoft.dropshadow(OffX=#{$x}, OffY=#{$y}, Color='#{$color}')";  // IE8
+  filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=#{$x}, OffY=#{$y}, Color='#{$color}');    // IE6,IE7
+}
+@mixin boxShadow2($shadow...) {     //当参数有多组值时，可在变量后加三个点...，这样当传入多组用逗号分隔的值时不会被当做是不同部分参数
+  -moz-box-shadow: $shadow;
+  -webkit-box-shadow: $shadow;
+  box-shadow: $shadow;
+}
+
+//渐变色
+@mixin gradient2right($startColor, $endColor) {
+  background-image: -webkit-gradient(linear, left bottom, right top, color-stop(0%, $startColor), color-stop(100%, $endColor));
+  background-image: -webkit-linear-gradient(left, $startColor, $endColor);
+  background-image: -o-linear-gradient(left, $startColor, $endColor);
+  background-image: -moz-linear-gradient(left, $startColor, $endColor);
+  background-image: -ms-linear-gradient(left, $startColor, $endColor);
+  background-image: linear-gradient(to right, $startColor, $endColor);
+}
+
+//绘制三角形
+@mixin triangle($width, $height, $color, $direction) {
+  $width: $width/2;
+  $color-border-style: $height solid $color;
+  $transparent-border-style: $width solid transparent;
+  height: 0;
+  width: 0;
+
+  @if $direction==up {
+    border-bottom: $color-border-style;
+    border-left: $transparent-border-style;
+    border-right: $transparent-border-style;
+  }
+
+  @else if $direction==right {
+    border-left: $color-border-style;
+    border-top: $transparent-border-style;
+    border-bottom: $transparent-border-style;
+  }
+
+  @else if $direction==down {
+    border-top: $color-border-style;
+    border-left: $transparent-border-style;
+    border-right: $transparent-border-style;
+  }
+
+  @else if $direction==left {
+    border-right: $color-border-style;
+    border-top: $transparent-border-style;
+    border-bottom: $transparent-border-style;
+  }
+}
+//set keyframes（动画生成）
+@mixin keyframes($name) {
+  @-webkit-keyframes #{$name} {
+    @content;      //@content 接收一整块样式，在引用定义的mixin时，@content将接收{}代码块的内容
+  }
+  @-moz-keyframes #{$name} {
+    @content;
+  }
+  @-o-keyframes #{$name} {
+    @content;
+  }
+  @keyframes #{$name} {
+    @content;
+  }
+}
+
+//调用定义的mixin使用：@include mixinName
+@include keyframes(move) {
+  0% {
+      transform: translateX(0);
+  }
+  100% {
+      transform: translateX(200px);
+  }
+}
+.p2 {
+  width: 50%;
+  @include fz(32);
+  @include prefix(transition, 0.5s);
+  @include boxShadow(4,4,gray);
+
+  span {
+    display: inline-block;
+    @include radius(4px);
+    @include boxShadow2(0 2px 2px #666,0 3px 3px #777,0 4px 4px #999);  //传入多组值
+  }
+}
+
+
+//======================================================= 继承 =========================================================
+
+//可以让选择器继承另一个选择器的所有样式，使用选择器的继承，要使用关键词 @extend，后面紧跟需要继承的选择器
+h1{
+  border: 4px solid #ff9aa9;
+}
+.speaker{
+  @extend h1;   //继承h1的样式
+  border-width: 2px;
+}
+//占位选择器 %，这种选择器的优势在于：如果不调用则不会有任何多余的css文件，避免了以前在一些基础的文件中预定义了很多基础的样式，然后实际应用中不管是否使用了@extend去继承相应的样式，都会解析出来所有的样式；
+// 占位选择器以%标识定义，通过@extend调用
+%ir{
+  color: transparent;
+  text-shadow: none;
+  background-color: transparent;
+  border: 0;
+}
+.ir{
+  @extend %ir;    //若此处不用@extend调用，则上面定义的就不会编译在css文件中
+}
+
+
+//=================================================== 条件判断及循环 =====================================================
+
+// @if 判断，@if可一个条件单独使用，也可以和@else结合多条件使用
+$type: monster;
+.p {
+  @if $type == ocean {
+    font-size: 12px;
+  } @else if $type == matador {
+    font-size: 14px;
+  } @else if $type == monster {
+    font-size: 16px;
+  } @else {
+    font-size: 18px;
+  }
+}
+//三目判断，语法为：if($condition, $if_true, $if_false)，三个参数分别表示：条件，条件为真的值，条件为假的值
+.p {
+  border-width: if(true, 1px, 2px); //1px
+  border-radius: if(false, 1px, 2px); //2px
+}
+// @for循环，for循环有两种形式，分别为：@for $i from <start> through <end> 和 @for $i from <start> to <end>。
+// $i表示数字变量[类似数组中的下标]，start表示起始值，end表示结束值，这两个的区别是关键字through表示包括end这个数，而to则不包括end这个数
+@for $i from 1 through 3 {
+  .item-#{$i} { width: 2em * $i; }
+}
+// @each循环，语法为：@each $var in <list or map>。其中$var表示变量，而list和map表示list类型数据和map类型数据
+@each $size in $list1 {   //更多例子可以查看上面variable变量下的list、map数据类型
+  .fz-#{$size} {
+    font-size: $size;
+  }
+}
+
+
+//======================================================= 函数 =========================================================
+//sass自带许多函数，也可使用关键字@function自定义
+
+/*===== 常用颜色处理函数 =====*/
+//`lighten($color, $amount)`减淡和`darken($color, $amount)`加深，第一个参数是颜色值，第二个参数都是百分比(表示加深或减淡的相对程度)
+//`rgba($color, $alpha)`，该方法可返回一个带指定透明度的rgba格式色值，第一个参数可以是任意有效色值，第二个参数为透明度；该方法也可以像原始rgba颜色值的方式一样使用传入四个参数(原始rgba就没什么区别了)
+//`mix($color1, $color2, [$weight])`，该方法可返回一个按比例混合两个颜色后的色值，前两个参数为颜色值(任意有效色值，包括rgba格式)，第三个可选参数为混合比例(第一个色值的比例，第二个色值比例就为1减该比例)，默认`50%`表示各占一半
+.darkgray{
+  color: darken($gray,10%);
+}
+.lightgray{
+  color: lighten($gray,10%);
+}
+.rgba{
+  color: rgba(#c82858,0.65); //rgba(200, 40, 88, 0.65)，根据`#c82858`的`65%`透明度计算出一个rgba颜色值
+}
+.mix{
+  color: mix(#c82858,rgba(200,40,80,.65),0.3); //rgba(200, 40, 80, 0.65105)，把`#c82858`和`rgba(200,40,88,.65)`两颜色按`0.3`和`0.7`的比例混合得到一个新颜色
+}

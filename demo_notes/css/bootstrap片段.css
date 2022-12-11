@@ -1,0 +1,320 @@
+/*!
+ * Bootstrap v3.3.5 (http://getbootstrap.com)
+ * Copyright 2011-2015 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ */
+/*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
+html {
+  font-family: sans-serif;
+  -webkit-text-size-adjust: 100%;/*使字体在设置得很小时能通过转换达到可识别的大小*/
+      -ms-text-size-adjust: 100%;
+}
+audio,
+canvas,
+progress,     /*<progress> 标签定义运行中的进度（进程），可以使用 <progress> 标签来显示 JavaScript 中耗费时间的函数的进度*/
+video {
+  display: inline-block;
+  vertical-align: baseline;
+}
+template {    /*H5中声明表示模板的元素*/
+  display: none;
+}
+dfn {       /* dfn 标签可标记那些对特殊术语或短语的定义，现在流行的浏览器通常用斜体来显示<dfn></dfn>中的文本*/
+  font-style: italic;
+}
+mark {      /*<mark> 标签定义带有记号的文本，文本高亮显示，IE9+支持*/
+  color: #000;
+  background: #ff0;
+}
+sub,        /*上标、下标*/
+sup {
+  position: relative;
+  font-size: 75%;
+  line-height: 0;
+  vertical-align: baseline;
+}
+svg:not(:root) {    /* :root 表示匹配根元素 */
+  overflow: hidden;
+}
+figure {    /*<figure> 标签规定独立的流内容（图像、图表、照片、代码等等），常用于图片陪说明文字，使用 <figcaption> 元素为 figure 添加标题（caption）*/
+  margin: 1em 40px;
+}
+code,   /*<code> 标签用于表示计算机源代码或者其他机器可以阅读的文本内容*/
+kbd,    /*<kbd> 标签定义键盘文本，经常用在与计算机相关的文档和手册中，用来表示文本是从键盘上键入的*/
+pre,    /*pre 元素中的文本通常会保留空格和换行符，而文本也会呈现为等宽字体，<pre> 标签的一个常见应用就是用来表示计算机的源代码，可使段落断开的标签(如标题、<p>和<address>标签)绝不能包含在<pre>所定义的块里*/
+samp {  /*<samp> 标签并不常使用，只有在要从正常的上下文中将某些短字符序列提取出来，对它们加以强调的极少情况下，才使用这个标签*/
+  font-family: monospace, monospace;
+  font-size: 1em;
+}
+optgroup,   /*<optgroup> 标签定义选项组，包裹select中的option进行分组，其必需属性label为该选项组规定描述*/
+select {
+  margin: 0;
+  font: inherit;
+  color: inherit;
+}
+select {
+  text-transform: none;/*字体变换(大写/小写/首字母大写)设为无*/
+}
+button,
+html input[type="button"],
+input[type="reset"],
+input[type="submit"] {
+  -webkit-appearance: button;   /*指定元素呈现的默认样式(webkit内核)，此处设置为按钮*/
+  cursor: pointer;
+}
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+  padding: 0;
+  border: 0;
+}
+input[type="checkbox"],
+input[type="radio"] {
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;     /*盒模型模式，content-box | border-box | padding-box */
+  padding: 0;
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  height: auto;
+}
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+fieldset {    /*用于将表单信息分组，默认有边框包裹内容*/
+  padding: .35em .625em .75em;
+  margin: 0 2px;
+  border: 1px solid #c0c0c0;
+}
+legend {    /*fieldset分组的标题*/
+  padding: 0;
+  border: 0;
+}
+table {
+  border-spacing: 0;
+  border-collapse: collapse;    /*表格边框合并与否(此处设置为合并)，默认不合并*/
+}
+/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src/css/main.css */
+@media print {
+  a[href]:after {
+    content: " (" attr(href) ")";   /*插入内容为属性href的属性值*/
+  }
+  abbr[title]:after {         /*<abbr> 标签表示它所包含的文本是一个更长的单词或短语的缩写形式*/
+    content: " (" attr(title) ")";
+  }
+  blockquote {      /*<blockquote> 标签定义块引用，其可选属性cite表示应用的地址，可为绝对/相对地址或锚点*/
+    border: 1px solid #999;
+    page-break-inside: avoid;   /*page-break-inside 属性设置元素内部的 page-breaking 行为，即分页行为，此处设置为避免在元素内部插入分页符*/
+  }
+  p,
+  h2,
+  h3 {
+    orphans: 3;   /*设置当元素内部发生分页时必须在页面底部保留的最少行数*/
+    widows: 3;    /*设置当元素内部发生分页时必须在页面顶部保留的最少行数*/
+  }
+  h2,
+  h3 {
+    page-break-after: avoid;    /*page-break-after 属性设置元素后的 page-breaking 行为*/
+  }
+}
+@font-face {
+  font-family: 'Glyphicons Halflings';
+  src: url('../fonts/glyphicons-halflings-regular.eot');
+  src: url('../fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('../fonts/glyphicons-halflings-regular.woff2') format('woff2'), url('../fonts/glyphicons-halflings-regular.woff') format('woff'), url('../fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('../fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
+}
+.glyphicon {
+  -webkit-font-smoothing: antialiased;  /*webkit内核浏览器字体抗锯齿,使用后字体看起来会更清晰舒服*/
+  -moz-osx-font-smoothing: grayscale;   /*火狐浏览器下字体抗锯齿*/
+}
+html {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);  /*这个属性只用于iOS，当点击一个链接或者通过Javascript定义的可点击元素的时候，它就会默认出现一个半透明的灰色背景，可通过此属性修改*/
+}
+a:focus {
+  outline: thin dotted;
+  outline: 5px auto -webkit-focus-ring-color;   /*-webkit-focus-ring-color指webkit内核下自有的轮廓外发光颜色*/
+  outline-offset: -2px;   /*轮廓偏移，即轮廓与边框间的距离*/
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);   /*裁剪绝对定位元素，rect中四个值分别为要裁剪区按上右下左顺序距离元素上/左边缘的距离(从内部算)，被裁剪掉的部分相当于没有了*/
+  border: 0;
+}
+@media (min-width: 768px) {
+  .dl-horizontal dt {
+    float: left;
+    width: 160px;
+    overflow: hidden;
+    clear: left;
+    text-align: right;
+    text-overflow: ellipsis;  /*文字溢出时显示省略号*/
+    white-space: nowrap;       /*不换行*/
+  }
+}
+pre {
+  display: block;
+  padding: 9.5px;
+  margin: 0 0 10px;
+  font-size: 13px;
+  line-height: 1.42857143;
+  color: #333;
+  word-break: break-all;  /*文字换行规则*/
+  word-wrap: break-word;  /*长单词换行规则*/
+  background-color: #f5f5f5;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+pre code {
+  padding: 0;
+  font-size: inherit;
+  color: inherit;
+  white-space: pre-wrap;  /*如何处理元素内的空白，此处是保留空白符序列但正常换行；在设置文本溢出省略时设为nowrap表示不在空白处换行*/
+  background-color: transparent;
+  border-radius: 0;
+}
+@media screen and (max-width: 767px) {
+  .table-responsive {
+    overflow-y: hidden;
+    -ms-overflow-style: -ms-autohiding-scrollbar; /*IE10下修正溢出隐藏滚动条后页面无法滚动*/
+  }
+}
+output {    /*<output> 标签定义不同类型的输出，比如脚本的输出*/
+  display: block;
+}
+.form-control {
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+  -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+       -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+          transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+}
+.form-control::-moz-placeholder,   /*火狐下设置文本输入框占位符字体颜色*/
+.form-control:-ms-input-placeholder,   /*IE下设置文本输入框占位符字体颜色*/
+.form-control::-webkit-input-placeholder {    /*webkit内核下设置文本输入框占位符字体颜色*/
+  color: #999;
+}
+fieldset[disabled] .form-control {
+  cursor: not-allowed;    /*表示禁止的光标样式，部分高级浏览器支持*/
+}
+@media screen and (-webkit-min-device-pixel-ratio: 0) {     /*-webkit-min-device-pixel-ratio表示设备像素密度*/
+}
+.btn {
+  -ms-touch-action: manipulation;   /*IE10下的触控效果的设置*/
+      touch-action: manipulation;   /*触控效果的设置，此处manipulation表示允许触摸驱动的平移和拖拽缩放*/
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;    /*是否允许用户选择文本，此处none表示不允许，此处主要是应用于移动端长按按钮时不触发选择文本*/
+}
+fieldset[disabled] .btn {
+  cursor: not-allowed;
+  filter: alpha(opacity=65);    /*IE下滤镜，设置元素透明度*/
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  opacity: .65;
+}
+a.btn.disabled,
+fieldset[disabled] a.btn {
+  pointer-events: none;   /*设置在何时成为属性事件的target(事件源)，此处none表示该元素不会直接触发鼠标事件；但是若其后代元素pointer-events属性明确指定了其他值，则在触发该后代元素的鼠标事件时仍可通过冒泡或捕获监听到该父元素的该鼠标事件从而间接触发*/
+}
+.collapsing {
+  -webkit-transition-timing-function: ease;
+       -o-transition-timing-function: ease;
+          transition-timing-function: ease;     /*过渡速度函数*/
+  -webkit-transition-duration: .35s;
+       -o-transition-duration: .35s;
+          transition-duration: .35s;             /*过渡时间*/
+  -webkit-transition-property: height, visibility;
+       -o-transition-property: height, visibility;
+          transition-property: height, visibility;      /*过渡属性*/
+}
+.dropdown-menu {
+  -webkit-background-clip: padding-box;
+          background-clip: padding-box;     /*background-clip 属性规定背景的绘制区域，IE9+支持*/
+  -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+          box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+}
+.dropdown-menu > .disabled > a:hover,
+.dropdown-menu > .disabled > a:focus {
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);    /*IE下的滤镜，此处为渐变色，但设置中enabled=false表示不激活滤镜(即禁用)*/
+}
+.btn-group-justified {
+  display: table;
+  width: 100%;
+  table-layout: fixed;    /*表格固定宽度(各单元格尽量等宽)*/
+  border-collapse: separate;    /*表格单元格边框合并与否，此处为分离*/
+}
+.navbar-collapse {
+  -webkit-overflow-scrolling: touch;    /*该属性控制元素在移动设备上是否使用滚动回弹效果，此处touch值表示使用滚动回弹效果，auto值表示停止触摸则停止滚动，目前主要是iOS中用到*/
+}
+.label:empty {      /* :empty 选择器匹配没有子元素（包括文本节点）的元素，IE9+支持*/
+  display: none;
+}
+.progress-striped .progress-bar,
+.progress-bar-striped {             /*设置线性渐变*/
+  background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
+  background-image:      -o-linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
+  background-image:         linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
+}
+.media-body {
+  overflow: hidden;
+  zoom: 1;     /*IE中缩放因子，同时该属性可触发元素的layout属性*/
+}
+.tooltip {
+  text-align: left;
+  text-align: start;    /* CSS3中新增属性值，除了left | right | center，还有start | end | justify | match-parent | justify-all */
+  text-decoration: none;
+  text-shadow: none;
+  text-transform: none;
+  letter-spacing: normal;
+  word-break: normal;
+  word-spacing: normal;
+  word-wrap: normal;
+  white-space: normal;
+  filter: alpha(opacity=0);
+  line-break: auto;     /*指定文本的断行规则*/
+}
+@media all and (transform-3d), (-webkit-transform-3d) {     /*通过媒体查询判断浏览器是否可用3d变换，若通过则可应用下面的变换，如通过-webkit-transform-3d验证说明该浏览器是webkit内核的，则可用webkit相关属性*/
+  .carousel-inner > .item {
+    -webkit-transition: -webkit-transform .6s ease-in-out;
+         -o-transition:      -o-transform .6s ease-in-out;
+            transition:         transform .6s ease-in-out;
+
+    -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;    /*该属性设置元素旋转到背面后是否可见*/
+    -webkit-perspective: 1000px;
+            perspective: 1000px;    /*该属性定义 3D 元素距视图的距离，以像素计，可不带单位，当为元素定义 perspective 属性时，其子元素会获得透视效果，而不是该元素本身*/
+  }
+}
+.carousel-control.left {
+  background-image: -webkit-linear-gradient(left, rgba(0, 0, 0, .5) 0%, rgba(0, 0, 0, .0001) 100%);
+  background-image:      -o-linear-gradient(left, rgba(0, 0, 0, .5) 0%, rgba(0, 0, 0, .0001) 100%);
+  background-image: -webkit-gradient(linear, left top, right top, from(rgba(0, 0, 0, .5)), to(rgba(0, 0, 0, .0001)));
+  background-image:         linear-gradient(to right, rgba(0, 0, 0, .5) 0%, rgba(0, 0, 0, .0001) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#80000000', endColorstr='#00000000', GradientType=1);   /*IE下渐变*/
+}
+.text-hide {    /*文本隐藏  可参考 http://www.zhangxinxu.com/wordpress/2013/07/letter-spacing-first-letter-按钮文字隐藏 */
+  font: 0/0 a;    /*属性值中的 a 只是用来占位(本该是表示字体的值)的一个随意字母，并无实际含义*/
+  color: transparent;     /*有说法需在chrome中添加，但实测并无影响，可能在某些低版本中需要*/
+  text-shadow: none;
+  background-color: transparent;
+  border: 0;
+}
+@-ms-viewport {     /*将之前通常在meta标签中设置的viewport属性放在CSS中(w3c正制定的新规范)，此处是IE(IE10+)下的设置*/
+  width: device-width;
+}
+@media (max-width: 767px) {
+}
+@media (min-width: 768px) and (max-width: 991px) {
+}
+@media (min-width: 992px) and (max-width: 1199px) {
+}
+@media (min-width: 1200px) {
+}
+@media print {
+}

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        .divs{
+            width: 50px;
+            height: 50px;
+            background: gold;
+            margin-top: 3px;
+        }
+    </style>
+</head>
+<body>
+<div id="mydiv">
+    <button>按钮1</button>
+    <button>按钮2</button>
+    <button>按钮3</button>
+    <button>按钮4</button>
+    <button>按钮5</button>
+
+    <div class="divs"></div>
+    <div class="divs"></div>
+    <div class="divs"></div>
+    <div class="divs"></div>
+    <div class="divs"></div>
+</div>
+
+
+<script src="../jquery-1.11.3.js"></script>
+<script>
+//  $("button").bind("click",function(){
+//      alert($(this).text());
+//  });
+//    $("button").on("click",function(){
+//        alert($(this).text());
+//    });
+//    $("#mydiv").on("click",".divs",function(){
+//        alert("测试~~~~~~");
+//    });
+//    $("#mydiv").on("click","button",function(){
+//        alert("mydiv绑定~~~~~~");
+//    });
+
+    //on事件绑定的取消
+//    $("#mydiv").off();
+//    $("#mydiv").off("click","button");
+//});
+
+    //On可以同时绑定多个事件
+    $("button").on({
+        "click":function(){
+            alert("点击事件");
+        },
+        "mouseover":function(){
+            alert("移入事件");
+        }
+
+    })
+
+</script>
+</body>
+</html>

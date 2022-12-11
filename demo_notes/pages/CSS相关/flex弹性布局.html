@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>flex弹性布局</title>
+    <link rel="stylesheet" href="../../css/defaultPc.css"/>
+    <style type="text/css">
+        body {padding: 10px;}
+        h4 {font-weight: bold;line-height: 3;}
+        ul {width: 600px;border: 1px solid #000;margin-bottom: 5px;}
+        ul>li {color: #ffffff;text-align: center;background: #ff0000;width: 140px;height: 2.5em;line-height: 2.5em;}
+        ul.wh-auto>li {;width: auto;height: auto;}
+        ul>li:nth-of-type(2) {background: #00ff00;}
+        ul>li:nth-of-type(3) {background: #0000ff;}
+        ul>li:nth-of-type(4) {background: #4f4f4f;}
+        ul>li:nth-of-type(5) {background: #ff00ff;}
+        .h150 {height: 150px;}
+        .h100 {height: 100px;}
+        .w350 {width: 350px;}
+        p img {vertical-align: top;width: 3em;cursor: pointer;}
+        p img.open {width: auto;}
+        /*=============================作用于父容器===================================================================*/
+        .flex-box {
+            display: -webkit-box;
+            display: -moz-box;
+            display: -ms-flexbox;
+            display: -webkit-flex;
+            display: flex;  /*父元素设置成弹性盒子时，里面包含的条目会水平显示，且不会发生父元素塌陷*/
+        }
+
+        /* flex-direction主轴方向*/
+        .direction-row { flex-direction: row; }  /*默认值，row表示主轴为横向，条目从左往右排列*/
+        .direction-row-rev { flex-direction: row-reverse; }  /* row-reverse表示主轴为横向，但条目从右往左排列*/
+        .direction-column { flex-direction: column; }  /* column表示主轴为纵向，条目从上往下排列*/
+        .direction-column-rev { flex-direction: column-reverse; }  /* column-reverse表示主轴为纵向，但条目从下往上排列*/
+
+        /* flex-wrap条目换行与否*/
+        /*若容器在交叉轴上有多余的尺寸，则默认情况下这些多余空间会平均分给各行的空白距离(相当于增加到各行交叉轴的margin上)*/
+        .nowrap { flex-wrap: nowrap; }  /*默认值，所有条目只在容器主轴的一行上，可能出现条目互相重叠或超出容器范围的现象*/
+        .wrap { flex-wrap: wrap; }  /*当容器中的条目超出主轴方向上的一行时，会把条目排列到下一行，下一行的位置与交叉轴的方向一致*/
+        .wrap-reverse { flex-wrap: wrap-reverse; }  /*与 wrap 的含义类似，不同的是下一行的位置与交叉轴的方向相反*/
+
+        /* flex-flow主轴方向和换行与否的组合写法*/
+        .flow { flex-flow: column wrap; }  /* flex-flow:flex-direction flex-wrap;主轴方向和换行与否的组合写法*/
+
+        /*=============================作用于子元素===================================================================*/
+        /*条目在未明确设置尺寸时，默认情况下交叉轴上的宽或高度会被拉伸占满容器的宽或高度*/
+        /*=========条目弹性尺寸组合写法=========*/
+        .flex {     /*组合写法，包含三个属性依次为flex-grow、flex-shrink、flex-basis */
+            -moz-box-flex: 1;
+            -webkit-flex: 1;
+            -ms-flex: 1;
+            flex: 1;    /*该属性的3个初始默认值分别是"0 1 auto"。当属性"flex"的值为 none 时，相当于"0 0 auto"。当组成部分"flex-basis"被省略时，其值为 0%。*/
+        }
+        /* flex-grow多余空间分配比例(扩放)*/
+        .grow { flex-grow: 1; } /*默认值,为 0，表示不放大，值为没有单位的非负数，表示的是当容器有多余的空间时，这些空间在不同条目之间的分配比例(按该项的flex-grow值占所有条目flex-grow值之和的比例计算)*/
+
+        /* flex-shrink多余空间分配比例(收缩)*/
+        .shrink { flex-shrink: 1; } /*默认值为 1，使用上类似于flex-grow，表示的是当容器空间不足时，各个条目的尺寸缩小的比例(按该项的flex-shrink值占所有条目flex-shrink值之和的比例计算)；
+                                        *在进行尺寸缩小时，条目的缩小比例与容器不足部分的尺寸相乘之后，就得到了该条目应该缩小的尺寸的实际值*/
+        /* flex-basis*/
+        .basis { flex-basis: 50px; } /*默认值为 auto，"flex-basis"属性声明接受的值与"width"属性是一样的，用来确定弹性条目的初始主轴尺寸，这是条目的尺寸被容器调整之前的初始值，
+                                         *如果"flex-basis"的值为 auto，则实际使用的值是主轴尺寸属性的值，即 width 或 height 属性的值，如果主轴尺寸属性的值也是 auto，则使用的值由条目内容的尺寸来确定*/
+
+        /*条目顺序*/
+        .order {
+            -ms-flex-order: 1;
+            -webkit-order: 1;
+            order:1;    /*各项默认值都是0，按html出现顺序再文档中先后显示，order只可改变其出现顺序，值越大则显示排列顺序越在后面，可以为负值*/
+        }
+
+        /*==================================对齐方式(作用于父容器)==================================*/
+        /*使用自动空白边方式(即值为auto的margin)，在使用自动空白边时，容器中额外的空白空间会被声明为 auto 的空白边占据*/
+        /*=======主轴方向上的对齐，justify-content属性=======*/
+        .jc-flexStart { justify-content: flex-start; }   /*默认值，条目集中于该行的起始位置。第一个条目与其所在行在主轴起始方向上的边界保持对齐，其余的条目按照顺序依次排列*/
+        .jc-flexEnd { justify-content: flex-end; }   /*条目集中于该行的结束方向。最后一个条目与其所在行在主轴结束方向上的边界保持对齐，其余的条目按照顺序依次排列*/
+        .jc-center { justify-content: center; }   /*所有条目挨着排列在主轴的中央，在主轴首尾留有同样大小的空白空间。若空白空间不足，则条目会在两个方向上超出同样的空间。*/
+        .jc-spaceBetween { justify-content: space-between; }   /*条目在所在行上与主轴首尾对齐(首尾不留空白空间)，空白空间在条目之间平均分配，使得相邻条目之间的空白尺寸相同。*/
+        .jc-spaceAround { justify-content: space-around; }   /*类似于space-between，不同的是主轴首尾条目与该行的边界之间同样存在空白空间，该空白空间的尺寸是条目之间的空白空间的尺寸的一半。*/
+
+        /*=======交叉轴方向上的对齐(只有一行时)，align-items属性=======*/
+        .ai-stretch { align-items: stretch; }   /*默认值，如果条目的交叉轴尺寸的计算值是"auto"，则其实际使用的值会使得条目在交叉轴方向上尽可能地占满。*/
+        .ai-flexStart { align-items: flex-start; }   /*类似于主轴，条目与其所在行在交叉轴起始方向上的边界保持对齐。*/
+        .ai-flexEnd { align-items: flex-end; }   /*类似于主轴，条目与其所在行在交叉轴结束方向上的边界保持对齐。*/
+        .ai-center { align-items: center; }   /*类似于主轴，所有条目排列在交叉轴的中央，若空白空间不足，则条目会在两个方向上超出同样的空间。*/
+        .ai-baseline { align-items: baseline; }   /*条目在基准线上保持对齐。在所有条目中，基准线与交叉轴起始方向上的边界距离最大的条目，它与所在行在交叉轴方向上的边界保持对齐。*/
+        /*另外还有作用于条目本身的 align-self 属性可复写父容器的align-items属性，其可选值除了上面align-items的所有值之外，还可以设置为"auto"。当"align-self"的值为 auto 时，其计算值是父节点的属性"align-items"的值。如果该节点没有父节点，则计算值为"stretch"。*/
+        .as-auto { align-self: auto; }  /*默认值*/
+        .as-stretch { align-self: stretch; }
+        .as-flexStart { align-self: flex-start; }
+        .as-flexEnd { align-self: flex-end; }
+        .as-center { align-self: center; }
+        .as-baseline { align-self: baseline; }
+
+        /*=======交叉轴方向上的对齐(有多行时)，align-content属性=======*/
+        .ac-stretch { align-content: stretch; }   /*默认值，如果各行的交叉轴尺寸的计算值是"auto"，则将伸展行来占满剩余的空间。多余的空间在各行之间平均分配，使得每一行的交叉轴尺寸变大。*/
+        .ac-flexStart { align-content: flex-start; }   /*行集中于容器的交叉轴起始位置。第一行与容器在交叉轴起始方向上的边界保持对齐，其余行按照顺序依次排列。*/
+        .ac-flexEnd { align-content: flex-end; }   /*行集中于容器的交叉轴结束位置。第一行与容器在交叉轴结束方向上的边界保持对齐，其余行按照顺序依次排列。*/
+        .ac-center { align-content: center; }   /*所有行挨着排列在交叉轴的中央，在交叉轴首尾留有同样大小的空白空间。若空白空间不足，则行会在两个方向上超出同样的空间。*/
+        .ac-spaceBetween { align-content: space-between; }   /*各行在所在列上与交叉轴首尾对齐(首尾不留空白空间)，空白空间在条目之间平均分配，使得相邻行之间的空白尺寸相同。*/
+        .ac-spaceAround { align-content: space-around; }   /*类似于space-between，不同的是交叉轴轴首尾行与该列的边界之间同样存在空白空间，该空白空间的尺寸是各行之间的空白空间的尺寸的一半。*/
+
+
+
+    </style>
+</head>
+<body>
+    <p class="hide">
+        弹性盒模型：（设置父元素）
+        display:flex;/*父元素设置此项后，里面包含的项目会水平显示，且不会发生父元素塌陷*/
+        display:inline-lex;/*父元素设置此项后，容器会变成一个行内容器，所以其宽高就是其内容的宽高*/
+        flex-direction:row;/*项目在一行显示，主轴在左边，从左往右排列*/
+        flex-direction:row-reverse;/*项目在一行显示，主轴在右边，从右往左排列*/
+        flex-direction:column;/*项目垂直排列，由上到下顺序，横向占据满屏*/
+        flex-direction:column-reverse;/*项目垂直排列，由下到上倒序*/
+        flex-wrap:nowrap;/*不换行，默认属性*/
+        flex-wrap:wrap;/*正序换行，缩小浏览器窗口时会根据窗口大小自动将后面内容换至下一行*/
+        flex-wrap:wrap-reverse;/*倒序换行，最前面的在排最下面*/
+        flex-flow:row-reverse wrap;/*组合写法，第一个值为显示方向，第二个值为换行与否*/
+        横向：
+        justify-content:flex-end;/*右对齐，相当于给列表项包了一个div并让它右浮*/
+        justify-content:center;/*内容居中对齐，相当于给列表项包了一个div并让它margin:0 auto;居中*/
+        justify-content:space-between;/*使各项目等间隔占满父元素，最左和最右与边框间不会出现相应间隔*/
+        justify-content:space-around;/*使各项目等间隔占满父元素，同时最左和最右与边框间也会出现相应间隔*/
+        纵向：
+        align-items:stretch;/*默认值，列表项高度会自适应父元素高度*/
+        align-items:flex-start;/*项目会靠着容器的最上面显示*/
+        align-items:flex-end;/*项目会靠着容器的最下面显示*/
+        align-items:center;/*项目会在纵轴的中间位置显示*/
+        align-items:baseline;/*以文字基线对齐，项目中的内容会在一条线上显示*/
+        align-content:flex-start;/*项目在容器的顶部开始显示，高度不会被拉伸*/
+        align-content:flex-end;/*项目在容器的底部开始显示，高度不会被拉伸*/
+        align-content:center;/*多行项目在容器的纵向中部显示，高度不会被拉伸*/
+        align-content:space-between;/*多行项目在容器的纵向等距铺满显示，首尾与边框不会出现相应间隔*/
+        align-content:space-around;/*多行项目在容器的纵向等距铺满显示，首尾与边框也会出现相应间隔*/
+        条目排序：
+        order:0;/*各项默认值都是0*/
+        order:1;/*值越大则显示排列顺序越在后面*/
+        order:-1;/*可为负值*/
+        条目尺寸：
+        flex-grow:0;/*列表项默认宽度，即其内容宽度*/
+        flex-grow:1;/*各列表项等宽度平分父元素总宽度，也可给某个列表项单独设置以放大，后面的数字代表几倍单位宽度，单位宽度由各数字和平分*/
+        flex-basis:40px;/*设置各项初始宽度，也可为某一项单独设置*/
+        flex-shrink:0;/*缩小设置，默认为0不缩小*/
+        flex-shrink:1;/*缩小设置，缩小浏览器窗口时，列表项也会缩小，不能设置换行*/
+        flex:0 1 auto;/*组合写法，三个值分别表示flex-grow、flex-shrink、flex-basis*/
+        某个条目：
+        align-self:flex-start;/*自己在纵轴方向上的对齐方式，顶部*/
+        align-self:flex-end;/*自己在纵轴方向上的对齐方式，底部*/
+        align-self:center;/*自己在纵轴方向上的对齐方式，中部*/
+        align-self:stretch;/*拉伸，适应父元素高度*/
+        align-self:baseline;/*基线对齐，要有参考点*/
+    </p>
+    <hr/><h4 class="lh-1 tc">方向（设置在父容器上）、换行（设置在父容器上）、顺序（设置在条目上）</h4><hr/>
+    <div>
+        <h4>默认1：条目不设置尺寸（主轴默认auto，交叉轴默认stretch拉伸）</h4>
+        <ul class="flex-box wh-auto">
+            <li>item1</li>
+            <li>item2</li>
+            <li>item3</li>
+        </ul>
+        <h4>默认2：条目有显示地设置尺寸</h4>
+        <ul class="flex-box">
+            <li>item1</li>
+            <li>item2</li>
+            <li>item3</li>
+        </ul>
+    </div>
+
+    <div>
+        <h4>主轴方向：默认横向row，现改为纵向flex-direction: column;</h4>
+        <ul class="flex-box direction-column">
+            <li>item1</li>
+            <li>item2</li>
+            <li>item3</li>
+        </ul>
+    </div>
+
+    <div>
+        <h4>超出容器范围时换行与否：默认不换行nowrap，现改为换行flex-wrap: wrap;</h4>
+        <ul class="flex-box wrap">
+            <li>item1</li>
+            <li>item2</li>
+            <li>item3</li>
+            <li>item4</li>
+            <li>item5</li>
+        </ul>
+    </div>
+
+    <div>
+        <h4>调整条目顺序：默认都为0按html出现先后顺序排列，现将item1的order设为1</h4>
+        <ul class="flex-box">
+            <li class="order">item1</li>
+            <li>item2</li>
+            <li>item3</li>
+        </ul>
+    </div>
+
+    <hr/><h4 class="lh-1 tc">对齐方式（设置在父元素上）</h4><hr/>
+    <div>
+        <h4 class="lh-1 mgt-15">对齐方式：使用自动空白边（即值为auto的margin）</h4>
+        <p>1、在使用自动空白边时，容器中额外的空白空间会被声明为 auto 的空白边占据</p>
+        <p>2、若容器在交叉轴上有多余的尺寸，则默认情况下这些多余空间也会平均分给各行的空白距离（相当于增加到各行交叉轴的margin上），所以此时我们看到交叉轴上的各行间并未紧挨着，而是有一段间隔</p>
+        <ul class="h100 flex-box wrap">
+            <li>item1</li>
+            <li>item2</li>
+            <li style="margin-left: auto;">margin-left: auto</li>
+            <li>item4</li>
+            <li style="margin: auto;">margin: auto</li>
+        </ul>
+    </div>
+
+    <div>
+        <h4>对齐方式：主轴方向上的对齐，justify-content属性</h4>
+        <p class="mgb-10">查看示意图：<img src="../../images/justify-content.jpg" title="查看示意图"/></p>
+        <ul class="flex-box">
+            <li>默认flex-start</li>
+            <li>item2</li>
+            <li>item3</li>
+        </ul>
+        <ul class="flex-box jc-flexEnd">
+            <li>flex-end</li>
+            <li>item2</li>
+            <li>item3</li>
+        </ul>
+        <ul class="flex-box jc-center">
+            <li>center</li>
+            <li>item2</li>
+            <li>item3</li>
+        </ul>
+        <ul class="flex-box jc-spaceBetween">
+            <li>space-between</li>
+            <li>item2</li>
+            <li>item3</li>
+        </ul>
+        <ul class="flex-box jc-spaceAround">
+            <li>space-around</li>
+            <li>item2</li>
+            <li>item3</li>
+        </ul>
+    </div>
+
+    <div>
+        <h4>对齐方式：交叉轴方向上的对齐（只有一行时），align-items属性</h4>
+        <p class="mgb-10">查看示意图：<img src="../../images/align-items.jpg" title="查看示意图"/></p>
+        <ul class="flex-box h100 ai-stretch">
+            <li style="height:auto;">默认stretch</li>
+            <li style="height:auto;">此情况下，若条目的交叉轴尺寸计算值为auto(本例就是)</li>
+            <li style="height:auto;">则其交叉轴尺寸将被拉伸为父容器的尺寸</li>
+        </ul>
+        <ul class="flex-box h100 ai-flexStart">
+            <li>flex-start</li>
+            <li>item2</li>
+            <li>item3</li>
+        </ul>
+        <ul class="flex-box h100 ai-flexEnd">
+            <li>flex-end</li>
+            <li>item2</li>
+            <li>item3</li>
+        </ul>
+        <ul class="flex-box h100 ai-center">
+            <li>center</li>
+            <li>item2</li>
+            <li>item3</li>
+        </ul>
+        <ul class="flex-box ai-baseline">
+            <li style="text-decoration: underline;">*******baseline******</li>
+            <li class="lh-1" style="text-decoration: underline;"> *******1倍行高******</li>
+            <li class="lh-2" style="text-decoration: underline;"> *******2倍行高******</li>
+            <li class="lh-3" style="text-decoration: underline;"> *******3倍行高******</li>
+        </ul>
+        <h4>条目自身在交叉轴上的对齐方式：align-self属性（设置在条目上，可复写父容器align-items属性在该条目上的作用）</h4>
+        <ul style="width: auto;" class="flex-box h100">
+            <li class="as-auto">默认auto(从父)</li>
+            <li style="height: auto;" class="as-stretch">stretch（此条目交叉轴尺寸计算值为auto）</li>
+            <li class="as-flexStart">flex-start</li>
+            <li class="as-flexEnd">flex-end</li>
+            <li class="as-center">center</li>
+            <li class="as-baseline">baseline</li>
+        </ul>
+    </div>
+
+    <div>
+        <h4>对齐方式：交叉轴方向上的对齐（有多行时），align-content属性</h4>
+        <p class="mgb-10">查看示意图：<img src="../../images/align-content.jpg" title="查看示意图"/></p>
+        <ul class="flex-box h150 wrap">
+            <li style="height:auto;">此时，若各行交叉轴尺寸计算值是"auto"</li>
+            <li style="height:auto;">则将伸展行来占满剩余的空间</li>
+            <li style="height:auto;">多余的空间在各行之间平均分配</li>
+            <li style="height:auto;">使得每一行的交叉轴尺寸变大</li>
+            <li style="height:auto;">默认stretch</li>
+            <li style="height:auto;">item6</li>
+        </ul>
+        <ul class="flex-box h100 wrap">
+            <li>交叉轴有设置尺寸时</li>
+            <li>若父容器有多余空间</li>
+            <li>将平均分配给每行</li>
+            <li>使各行下多一些间隔</li>
+            <li>效果上相当于增加了</li>
+            <li>margin-bottom</li>
+        </ul>
+        <ul class="flex-box w350 h150 wrap ac-flexStart">
+            <li>flex-start</li>
+            <li>item2</li>
+            <li>item3</li>
+            <li>item4</li>
+            <li>item5</li>
+            <li>item6</li>
+        </ul>
+        <ul class="flex-box w350 h150 wrap ac-flexEnd">
+            <li>flex-end</li>
+            <li>item2</li>
+            <li>item3</li>
+            <li>item4</li>
+            <li>item5</li>
+            <li>item6</li>
+        </ul>
+        <ul class="flex-box w350 h150 wrap ac-center">
+            <li>center</li>
+            <li>item2</li>
+            <li>item3</li>
+            <li>item4</li>
+            <li>item5</li>
+            <li>item6</li>
+        </ul>
+        <ul class="flex-box w350 h150 wrap ac-spaceBetween">
+            <li>space-between</li>
+            <li>item2</li>
+            <li>item3</li>
+            <li>item4</li>
+            <li>item5</li>
+            <li>item6</li>
+        </ul>
+        <ul class="flex-box w350 h150 wrap ac-spaceAround">
+            <li>space-around</li>
+            <li>item2</li>
+            <li>item3</li>
+            <li>item4</li>
+            <li>item5</li>
+            <li>item6</li>
+        </ul>
+    </div>
+
+<script type="text/javascript" charset="UTF-8">
+    var img = document.querySelectorAll('img');
+    for(var i=0;i<img.length;i++){
+        img[i].addEventListener('click',function(event){
+            var currentClass = this.classList.value;
+            if(currentClass=="open"){
+                this.classList.remove('open');
+            }else{
+                for(var j=0;j<img.length;j++){
+                    img[j].classList.remove('open');
+                }
+                this.classList.add('open');
+            }
+        },false);
+    }
+</script>
+</body>
+</html>

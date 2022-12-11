@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>canvas绘图</title>
+    <!--[if lt IE 9]>
+        <script type="text/javascript" src="../plugins/ieonly/excanvas.js"></script>
+    <![endif]-->
+    <style type="text/css">
+        .page-body {position: absolute;left: 0;right: 0;top: 0;bottom: 0;}
+        .view-box {float: left;height: 100%;overflow: auto;}
+        pre {width: calc(100% - 715px);margin: 0;}
+        #cvs-script {display: block;}
+        img {max-width: 100%;border-left: 1px solid silver;}
+    </style>
+</head>
+<body>
+<div class="page-body">
+<!--canvas,可减少flash、图片的应用-->
+<!--canvas的宽高最好在元素属性上设置，或JS中属性设置，用style和外部CSS控制会出问题，其他属性可以CSS设置-->
+<div id="page-cont" class="view-box" style="width: 705px;border-right: 1px solid silver;margin-left: 5px;">
+    <canvas id="myCanvas" width="700" height="600" style="border-bottom: 1px solid silver;">你的浏览器不支持canvas，请升级或更换浏览器！</canvas>
+    <img src="../知识点截图/canvas/canvas角度.png" title="canvas角度" width="340">
+    <img src="../知识点截图/canvas/canvas之arcTo.png" title="canvas之arcTo" width="340">
+    <img src="../知识点截图/canvas/canvas变换矩阵.png" title="变换矩阵" width="300">
+    <img src="../知识点截图/canvas/canvas之封闭区域非零环绕原则.png" title="【非零环绕原则】区域内向外引一条射线与绘图路径边界相交，取一个(顺时针或者逆时针)方向为1，则反方向为-1，所有相交路径相加为非0则表示内部，否则为内部。【奇偶环绕原则】不管相交路径的方向，只管相交路径的数量，奇数表示内部，偶数表示外部" width="340">
+    <img src="../知识点截图/canvas/canvas之drawImage.png" title="s即source为原始图像上裁剪，d即destination为画布上目标绘制位置" width="680">
+    <img src="../知识点截图/canvas/canvas之putImageData.png" title="注意最终更新位置为(dx+dirtyX，dy+dirtyY)" width="680">
+    <img src="../知识点截图/canvas/canvas之imageData中data数据.png" title="像素数据" width="680">
+    <img src="../知识点截图/canvas/canvas之图形重叠globalCompositeOperation.png" title="图形层叠" width="680">
+</div>
+<pre class="view-box">
+<script type="text/javascript" contenteditable="true" id="cvs-script">
+    /**
+     * DOM对象的getBoundingClientRect()方法获取对应元素的包围框的位置(值可能会是小数)和大小信息，返回的对象中除了width和height，其他left、top、right和bottom属性值都是相对于视口的左上角位置而言，即窗口原点，IE9+支持
+     * canvas中的绘图状态都是叠加影响后面的所有操作的，要避免这种影响就要随时使用save()和restore()方法保存和恢复之前的绘图环境
+     * 最好所有的绘图都已原点为几何中心绘制，然后再经过变换到其他位置，一方面是避免变换始终以原点为中心带来的影响，二是更有利于代码的可控和扩展
+     * /
+    /*获取画布及绘图上下文，该两步是后续绘图的基础*/
+
+    // 1. 获取canvas对象；
+    var canvas = document.getElementById("myCanvas");   //也可在此时通过 canvas.width 或 canvas.height 设置画布宽高
+    // 2. 获取绘图上下文环境(画布)，并指明为"2d"
+    var ctx = canvas.getContext("2d");
+
+    console.log(ctx);   //查看ctx下的属性和方法
+    console.log(ctx.canvas,canvas);   //ctx下的canvas属性保存着当前画布元素(即所在canvas元素，其与上面使用byId方法获得的canvas元素是一样的)
+    console.log(canvas.getBoundingClientRect());   //ctx下的canvas属性保存着当前画布元素(即所在canvas元素，其与上面使用byId方法获得的canvas元素是一样的)
+
+    /**==================================================== 绘制矩形 ====================================================*/
+    // stroke()方法表示在设置好绘制参数后的绘图操作
+    // fill()方法用于填充轮廓内部，可以是先绘制出图形在填充，也可以是先设置好填充再绘制图形，区别在于后填充时将覆盖路径线宽度的一半，而先填充则不会，因为路径是以轮廓线的中心为界的，内外各一半线宽，谁在后谁就在更上面
+    // 注意canvas中封闭图形的默认绘制路径方向是顺时针的
+
+    // 按惯例，无论开始绘制何种图形，第一个需要调用的就是beginPath()方法，以开始一个路径；若不以beginPath()开始，则此位置到上一个beginPath()位置之间定义的路径在后面调用stroke()或fill()方法时会被重绘
+    // 与beginPath()方法对应的是closePath()方法，表示闭合路径，其会自动将终点与起点进行连接，形成闭环，两者用了beginPath，并不是就必须用closePath结束
+    ctx.beginPath();
+
+    // 3. 设置填充 或 绘制的样式；
+    ctx.strokeStyle="purple";//设置边框颜色(绘制样式)，fillStyle为填充样式
+    ctx.lineWidth=5;//设置边框线宽(不加单位)
+    // 4. 定义一个矩形；
+    ctx.rect(20,0,100,100);//（x,y,w,h），（绘制起始点横坐标，纵坐标，宽度，高度）
+    // 5. 填充 或 绘制。
+    ctx.stroke();//此方法对应strokeStyle，表应用绘制边线这个方法；fill()是对应fillStyle的方法(填充内部)
+
+    // 合并第4、5步，绘制矩形框
+    ctx.strokeRect(28,8,84,84);
+
+    ctx.fillStyle="red";//第3步, 设置填充样式，如果没有设置，则颜色默认是黑色。
+    // 合并第4、5步，绘制一个填充矩形
+    ctx.fillRect(35,15,70,70);//（x,y,w,h），用红色填充画一个从坐标(x,y)开始的宽w，高h的矩形；
+
+    // ctx.clearRect(0,0,1200,600);//（x,y,w,h），清除画布指定区域内容，并恢复到初始状态，即透明色
+
+
+    /**================================================= 设置渐变色模式 =================================================*/
+    // 创建渐变对象
+    var grd=ctx.createLinearGradient(0,340,100,340);    //线性渐变，（x0，y0，x1，y1）,(渐变起点x坐标，渐变起点y坐标，渐变终点x坐标，渐变终点y坐标)，注意颜色是按起点与终点的连线方向渐变
+    //    var grd=ctx.createRadialGradient(50,365,10,50,365,50);    //放射性渐变，（x0，y0，r0，x1，y1，r1），前三个参数为第一个圆的圆心和半径，后三个参数为第二个圆的圆心和半径，渐变将在两个圆之间的区域出现，最小半径之内和最大半径之外都是纯色，且色值就为对应位置的颜色
+    grd.addColorStop(0,"#FF0000");  //渐变颜色设置，（停止位置比例，颜色值），比例为0到1之间的数字，颜色值支持css中的颜色值写法
+    grd.addColorStop(1,"#00FF00");  //并非最后一个颜色值的比例一定要设置到1，非1时则最后一个比例到1之间都为同一个颜色值，如此处将比例改为0.5且后面不再添加其他颜色值，则0.5到1之间就为纯绿色，不存在渐变过渡
+
+    ctx.fillStyle=grd;  //设置填充样式为渐变色
+    ctx.fillRect(0,340,100,50);
+
+
+    /**==================================================== 绘制文本 ====================================================*/
+//    ctx.font = 设置字体，同css中font属性一样，是几个属性的简写，可设置字体大小和字体种类，注意与css中一样，若要使用font属性，则其值中必需包含字体种类和大小
+//    ctx.textAlign = 设置文本对齐方式，默认为start，待选值有start、end、left、right、center
+//    ctx.textBaseline = 设置文本垂直方向上对齐基线，有top、middle、bottom等和其他一些值，默认为alphabetic
+
+    //font与css中一样是一个综合属性，包含字体大小、样式、种类、粗细等，大小和种类是必须设置的，且支持CSS3中使用@font-face注册的字体
+    ctx.font = '30px a';    // 这里将字体大小设置为30px，字体种类设置a（实际并没有a这个字体，只是必须要设置，所以拿来占位，可使用逗号隔开设多个字体）
+    //文本对齐，其是决定坐标点轴线在文字的什么方向
+    ctx.textAlign = 'left';  //水平对齐，注意其是以文本位置(x,y)的横坐标所在纵轴为参照边界的，left为文本左边缘左靠齐该轴，right为文本右边缘右靠齐该轴，center则为该轴在文本正中
+    ctx.textBaseline = 'top';    //垂直对齐，与水平对齐同理，垂直对齐则是以纵坐标所在横轴为参照边界，有值top、middle、bottom和另外三个值
+    // 文本也有绘制轮廓和填充两种方式，它们的填充和轮廓颜色与绘制其他图形的颜色设置方式是一样的，未单独设置就使用前面的设置
+    ctx.fillText('填充',130,30);  //（test，x，y，[maxWidth]），(文本，文本位置x坐标，y，可选设置文本最大宽度)，填充文本，设置了最大文本宽度时超过宽度将被压缩
+    ctx.lineWidth=1;
+    ctx.strokeText('轮廓',130,65);    //文本轮廓，参数与fillText方法一样
+    ctx.font = '10px a';
+    //文本度量
+    console.log(ctx.measureText('str').width);  //measureText()方法可对传入的字符串进行实际显示宽度计算，通过width属性可得到文本宽度，注意该结果是受font设置影响的，且只有一个宽度属性
+
+
+    /**================================================= 绘制路径(线条) =================================================*/
+    ctx.save();
+    // 1. 开始一个路径；
+    ctx.beginPath();
+    // 2. 设置样式，线条粗细等
+    ctx.strokeStyle="pink";//设置或返回线条颜色、渐变、模式
+    ctx.lineWidth=10; //线条宽度，在绘制时，是以线条的中心点为参考连接和设置位置的，所以线宽会向横向或纵向扩展而占据空间
+    // 直线的两端点效果(线冒)，round为圆角，square为方形，默认为butt(也是方的，但不会额外在端点外绘制)。该属性不能与closePath()同时用，效果将失效。
+    ctx.lineCap="round"; //单独设置圆角和方形是在端点上额外添加的，所以其会超出指定位置
+    //miter效果有效的最大内外角距离值，lineJoin属性值为miter时有用；
+    //即线段的中心轴线(因线有宽度)的交点到形成的线段形成的整个尖角的外顶点的距离，以使尖角不太过于尖锐，由线宽和形成的夹角大小决定，超过的部分将被截断从而显示成bevel效果，
+    ctx.miterLimit=10;      //不设置时默认为10，一半不会轻易修改，除非特殊需求
+    // 拐点处的过渡形式设为平滑(round即圆角，bevel为斜切角，默认为尖角miter)，拐点即线段的连接处，注意miter值的有效性受miterLimit属性限制
+    ctx.lineJoin="round";
+    // 3. 移动到一个开始坐标点
+    ctx.moveTo(0,10);//起点坐标，相当于是把画笔移动到一个坐标点(注意是以线条中心点为准，因为上面设置线宽20，此处起点横坐标为0，所以在画布左边缘的线条一半的宽度将无法显示，x设为10将显示完整)。
+    // 4. 依次连接到下一个坐标点，两点间会产生一条直线。
+    ctx.lineTo(10,120);
+    ctx.lineTo(100,120);
+//    ctx.lineTo(0,210);//与起点重合，表示闭合整个曲线段，即闭合路径
+    // 5. 闭合路径
+//    ctx.closePath();//将终点与起点自动连接，形成闭合曲线，只绘制一条曲线不用闭合
+    // 6. 绘制直线
+    ctx.stroke();//绘制线条方法
+
+    ctx.restore();
+
+    // 清除画布
+//    ctx.clearRect(0,0,1200,600);//（x,y,w,h），清除画布指定区域内容，并恢复到初始状态，即透明色
+
+
+    /* 画箭头(三角+直线/矩形) */
+    //三角形
+    ctx.beginPath();
+    ctx.fillStyle="green";//设置或返回填充颜色、渐变、模式
+    ctx.moveTo(50,135);
+    ctx.lineTo(0,185);
+    ctx.lineTo(100,185);
+    ctx.closePath();    //闭合路径，将自动连接起点
+    ctx.fill();//绘制填充
+    // 矩形，也可用直线替换
+    ctx.fillStyle="green";
+    ctx.fillRect(40,185,20,40);
+
+//    ctx.clearRect(0,0,1200,600);//（x,y,w,h），清除画布指定区域内容，并恢复到初始状态，即透明色
+
+
+    /**====================================================== 画圆 ======================================================*/
+    /**
+     * 须注意，canvas中圆的角度计算方向与数学通常的直观方向相反，数学中以X轴正方向逆时针旋转算正角度，而canvas中以X轴正方向顺时针旋转算正角度，
+     * 但0度位置一样都为X轴正方向，且实际都是以X轴正方向朝Y轴正方向旋转为正角度，可参看知识点截图
+     * 因为数学中默认的直角坐标系的Y轴正方向是朝上的，而前端中是朝下的，前端的元素原点是以左上角为参照的
+     */
+    ctx.beginPath();
+    ctx.strokeStyle="red";
+    ctx.lineWidth=3;
+    /**===== arc() =====*/
+    //第1、2个参数，表示圆心坐标；第三个参数，表示 半径。第4，5个参数，分别表示开始角度和结束的角度。
+    //0度，在时钟的三点方向，即直角坐标系中的X轴正方向，但是其角度是按顺时针计算，而非常见的直角坐标系中的逆时针
+    //角度：Math.PI/180*N
+    //第6个参数，是否按逆时针方向绘制，false 按顺时针（默认值），true 为逆时针绘制；
+    //注意坐标系中角度的位置是固定的，只是绘制方向不同得到的弧段不同，两个方向的弧段是互补的，可组成一个完整的圆
+    ctx.arc(52,280,50,Math.PI/180*0,Math.PI/180*360,true);//arc表定义一个圆，（x，y，r，angle，angle，boolean），(圆心x坐标，圆心y坐标，半径，起始弧度，终止弧度，是否按逆时针绘制(默认false))
+    //如果闭合了路径，则是一种不完全的圆，其会直接将起点与终点用直线连接起来，而不是期望的用圆弧连接。
+    //    ctx.closePath();
+    ctx.stroke();
+    //绘制与两条直线相切的圆弧
+    //==========start==========
+    ctx.beginPath();
+    ctx.moveTo(110,230);           // 创建开始点
+    ctx.lineTo(110,280);          // 创建直线线1
+    /**===== arcTo() =====*/
+    // 创建弧,(x1,y1,x2,y2,r)，(切线交点x坐标，切线交点y坐标，切线另一点x坐标，切线另一点y坐标，圆弧半径)，
+    // (x1,y1)与(x2,y2)两点确定一条切线，(x0,y0)与(x1,y1)两点确定一条切线，这里的(x0,y0)是创建圆弧前绘图的终点，
+    // 注意(x0,y0)与(x2,y2)并非一定是切点，且绘出的曲线段起点是(x0,y0)，但终点并非一定是(x2,y2)，而是以(x1,y1)与(x2,y2)直线上的切点为终点
+    ctx.arcTo(110,330,60,335,60);   // (x1,y1,x2,y2,r)，(切线交点x坐标，切线交点y坐标，切线另一点x坐标，切线另一点y坐标，圆弧半径)，可参考知识点截图
+    ctx.lineTo(10,335);         // 创建直线2
+    ctx.stroke();                // 进行绘制
+    //===========end===========
+
+    //画各种不同角度的图形
+    ctx.beginPath();
+    ctx.arc(52,280,38,Math.PI/180*135,Math.PI/180*45,true);//true逆时针绘制
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(52,280,44,Math.PI/180*135,Math.PI/180*45,false);//false顺时针绘制
+    ctx.stroke();
+    //通过以上两个图形的比较，我们发现角度位置不受顺时针或逆时针这个参数的影响；
+    //顺时针或逆时针时，画笔经过的路径不一样，所以画出来的图形就不一样，总之两者是互补的，若其他参数一样可拼成一个完整的圆。
+
+    //如果闭合一个路径。
+    ctx.beginPath();
+    ctx.strokeStyle="blue";
+    ctx.arc(52,280,38,Math.PI/180*225,Math.PI/180*315,false);
+    ctx.closePath();//闭合路径，直接将起点与终点用直线连接起来，而不是期望的用圆弧连接。
+    ctx.stroke();
+    //实心圆
+    ctx.beginPath();
+    ctx.fillStyle="blue";
+    ctx.arc(52,280,30,Math.PI/180*315,Math.PI/180*225,false);//非完整圆
+//    ctx.lineTo(52,280);     //若将圆弧终点在连接到圆心，可形成扇形
+    ctx.closePath();
+    ctx.fill();//上面闭合与否都将少一个圆冠，因为这是绘制的一个填充圆，它并不会像我们期望的那样是以圆心为中心的扇形
+
+
+    /**==================================================== 绘制曲线 ====================================================*/
+    ctx.save();
+    ctx.translate(0,400);
+
+    ctx.beginPath();
+    ctx.moveTo(0,0);
+    ctx.fillText('二次曲线',30,20);
+    // 二次(贝塞尔)曲线，一个在曲线外的控制点(x,y)对线段产生吸引力使线段弯曲，实际就是一个二次函数(抛物线)，该抛物线的的起点和终点都是切点，而控制点就是两条切线的交点
+    ctx.quadraticCurveTo(80,70,100,10);    // (cpx,cpy,x1,y1)，(控制点x坐标，控制点y坐标，曲线终点x坐标，曲线终点y坐标)，其以上一个终点为起点(x0,y0)
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(0,80);
+    ctx.fillText('三次贝塞尔曲线',20,70);
+    // 三次贝塞尔曲线
+    ctx.bezierCurveTo(40,10,80,100,120,30);     // (cpx1,cpy1,cpx2,cpy2,x1,y1)，(第一控制点x坐标，第一控制点y坐标，第二控制点x坐标，第二控制点y坐标，曲线终点x坐标，曲线终点y坐标)，其以上一个终点为起点(x0,y0)
+    // 创建两切线之间的弧/曲线,(x1,y1,x2,y2,r)，(切线交点x坐标，切线交点y坐标，切线另一点x坐标，切线另一点y坐标，圆弧半径)，
+    // (x1,y1)与(x2,y2)两点确定一条切线，(x0,y0)与(x1,y1)两点确定一条切线，这里的(x0,y0)是创建圆弧前绘图的终点，
+    // 注意(x0,y0)与(x2,y2)并非一定是切点，且绘出的曲线段起点是(x0,y0)，但终点并非一定是(x2,y2)，而是以(x1,y1)与(x2,y2)直线上的切点为终点
+//    ctx.arcTo(110,430,60,335,60);   // (x1,y1,x2,y2,r)，(切线交点x坐标，切线交点y坐标，切线另一点x坐标，切线另一点y坐标，圆弧半径)，可参考知识点截图
+    // 创建圆形或部分圆
+//    ctx.arc(52,480,50,Math.PI/180*90,Math.PI/180*180,true);      //（x，y，r，angle，angle，boolean），（圆心x左边，圆心y坐标，半径，起始弧度角，结束弧度角，是否逆时针方向绘制），绘制方向不同得到的圆弧也不同
+
+    ctx.stroke();
+    ctx.restore();
+
+
+    /**=============================================== 插入图片/画布/视频 ===============================================*/
+    // 首先要创建图像
+    var img = new Image();
+    img.src = 'images/logo.jpg';
+
+    // 图片加载完后才能让其在canvas上显示，否则对图片的操作是无效的
+    img.onload = function () {
+
+        // 将图像绘制在canvas上
+        /** drawImage()方法可传入3个参数(img,dx,dy)、5个参数(img,dx,dy,dw,dh)、9个参数(img, sx, sy, sw, sh, dx, dy, dw, dh)
+         * drawImage(img/canvas/video, [sx, sy, sw, sh,] dx, dy, dw, dh)，(图片/画布/视频对象，[裁剪起点X坐标，裁剪起点Y坐标，裁剪宽度，裁剪高度]，绘制起点X坐标，绘制起点Y坐标，绘制宽度，绘制高度)
+         * 带s参数source表示原始图像裁剪操作，带d参数destination表示目标图像绘制操作(即将原始图像上裁剪下的部分进行绘制显示)
+         * 中括号中[sx, sy, sw, sh]为可选参数，不传入时默认为：0，0，图像原始宽度，图像原始高度，即刚好对整个图像进行显示绘制
+         * 不传入dw，dh时，默认为图像裁剪大小或原始大小，可参考知识点截图
+         */
+        ctx.drawImage(img,5,490,100,100);   //（img,x,y,w,h），（图片对象，图像放置点x坐标，图像放置点y坐标，图像显示宽度，图像显示高度）
+        ctx.fillText('图像',20,490);
+
+        // 使用背景图（但似乎没有方法设置背景图的大小，若要设置大小则采用另建一个canvas绘制图像设置大小，再将该canvas用于背景绘制）
+        var into = document.createElement("canvas");
+        into.width = 100;
+        into.height = 100;
+        console.log(into);
+        var ctx2 = into.getContext('2d');
+        ctx2.drawImage(img,0,0,150,100);
+        //createPattern()方法用于在指定方向上重复指定的元素，可以是图片、视频、其他canvas画布元素，第二个参数为重复方式，其值与'background-repeat'属性的值一样
+        //实测该方法不管重复与否，都是从画布左上角原点开始，fillRect()绘制的图形只是显示的一个窗口，就像探照灯的视图区，所以非完全重复模式下有些位置可能看不到图像或者不完整
+        ctx.fillStyle = ctx.createPattern(into,'repeat');
+        ctx.fillRect(130,100,100,100);
+    };
+
+
+    /**============================================== 画布移动、放缩、旋转 ==============================================*/
+    ctx.save(); //可在变换前保存当前绘图状态，以方便在不需要下面的变换绘图环境时，恢复到变换前的绘图环境，否则变换将影响后面的所有绘制
+
+    //绘制变形图形，以画布的坐标原点为参考中心，需在绘制前就设置，设置后将改变画布的坐标系位置
+    ctx.translate(10,20);//移动坐标轴原点，（x轴，y轴）
+    ctx.scale(0.5,0.7);//放缩，（x轴，y轴）,注意其以坐标原点为参考进行放缩，即对图形上的每个点进行坐标变换
+    ctx.rotate(Math.PI/180*10);//旋转角度(幅度角度)，负值表逆时针旋转
+    //绘图code...
+
+    //变换矩阵的参数（水平缩放，水平倾斜，垂直倾斜，垂直缩放，水平位移，垂直位移），默认未变换的值是（1,0,0,1,0,0）,请参考截图，图形上的每个点与变换矩阵叉乘即得到变换后的坐标点
+    //（横缩，横斜，纵斜，纵缩，横移，纵移）
+    //    ctx.transform(a,b,c,d,e,f);     //变换矩阵，其会叠加前面的transform变换
+    //    ctx.setTransform(a,b,c,d,e,f);     //设置变换矩阵，其会忽略前面的所有transform变换
+
+    ctx.restore();  //恢复先前保存的绘图状态，这样后面的绘图就还是以上面的变换前的环境为准
+
+
+    /**=================================================== 像素数据 ===================================================*/
+    //canvas提供了其底层像素数据的访问和设置
+    /**获取：getImageData(x,y,w,h)方法获取当前canvas状态并以数值数组的方式显示，包含三个属性width、height、data */
+    var ctxData = ctx.getImageData(20,20,30,30);      //(x,y,w,h)，（区域起点x坐标，区域起点y坐标，区域宽，区域高），若要获取整个画布的像素数据则参数为(0, 0, canvas.width, canvas.height)
+    console.log(ctxData.width);   //width属性为截取区域宽度，即像素数
+    console.log(ctxData.height);  //height属性为截取区域高度，即像素数
+    //data属性是一个一维数组，保存着每个像素点的rgba值，每四个值算一组(依次是红、绿、蓝、透明度)，其值范围都是0-255，包括透明度。对应区域中点的顺序是从左到右，从上到下，访问其中某个像素的数据可参考知识点截图
+    console.log(ctxData.data);
+    /**
+    * 在区域内的一点(x0,y0)处的像素数据访问，以下(x,y)为传入的区域起点坐标
+    * 红R：ctxData.data[((x0-x)+(y0-y)*w)*4]
+    * 绿G：ctxData.data[((x0-x)+(y0-y)*w)*4+1]
+    * 蓝B：ctxData.data[((x0-x)+(y0-y)*w)*4+2]
+    * 透A：ctxData.data[((x0-x)+(y0-y)*w)*4+3]
+    * */
+    //将获取的原始像素数据处理成二维数组后返回
+    function getImgData(ctx,x,y,w,h) {
+        var ctxData = ctx.getImageData(x,y,w,h);
+        var res = {};
+        res.width = ctxData.width;
+        res.height = ctxData.height;
+        var i = 0,
+            data = ctxData.data,
+            len = data.length,
+            arr = [];
+
+        while (!!len && i<len){
+            arr.push(data.slice(i,i+4));
+            i += 4;
+        }
+        res.data = arr;     //处理后在区域内的一点(x0,y0)处的像素数据访问：arr[(x0-x)+(y0-y)*w]，(x,y)为传入的区域起点坐标
+
+        return res;
+    }
+    console.log(getImgData(ctx,20,20,30,30));
+
+    /**
+     * 设置更新像素数据：putImageData
+     * putImageData(imageData,dx,dy,[dirtyX,dirtyY,dirtyW,dirtyH])方法重置当前canvas上(dx,dy)点开始的像素数据，调用后画布上会显示也会更新，imageData的格式与getImageData()方法返回的格式要一样，注意别弄成了只有data数组数据，
+     * dirty污染指被新像素数据覆盖，中括号中可选参数dirtyX、dirtyY、dirtyW、dirtyH用于截取新的像素数据中某一部分用于更新，表示截取新像素数据块imageData中(dirtyX，dirtyY)坐标位置开始，宽高dirtyW/H部分像素用于更新到画布上，
+     * 不传入可选部分参数时，默认为imageData整个部分都用于更新(即[0,0,imageData.width,imageData.height])，注意更新位置时dirtyX、dirtyY的偏移是叠加在dx、dy上的，相当于真正开始更新的位置是(dx+dirtyX,dy+dirtyY)，可参看知识点截图
+     * */
+    /*进制转换，不传入基数base则默认转换为16进制，可用于IE滤镜是计算透明度*/
+    function transposition(num, base) {
+//        var dataStore = [],
+//            remainder = 0;
+//        base = base || 16;
+//        num = Math.floor(num);
+//        do {
+//            switch(num % base){
+//                case 10: remainder = 'A';break;
+//                case 11: remainder = 'B';break;
+//                case 12: remainder = 'C';break;
+//                case 13: remainder = 'D';break;
+//                case 14: remainder = 'E';break;
+//                case 15: remainder = 'F';break;
+//                default: remainder = num % base;
+//            }
+//            dataStore.push(remainder);
+//            num = Math.floor(num/base);
+//        }while(num>0);
+//
+//        if(dataStore.length>0){
+//            return dataStore.reverse().join('');
+//        }
+
+        //原生简单实现
+        num = Math.floor(num);
+        base = base || 16;
+        return num.toString(base);
+
+    }
+    console.log(transposition(255*0.4));
+
+    /**创建一组空的像素数据：createImageData(w,h)方法创建一组宽w，高h的区域内的空像素数据，并绑定在canvas对象上 */
+
+
+    /**===================================================== 其他 =====================================================*/
+    ctx.save();
+    /**====== 阴影 ======*/
+    //包含四个属性：shadowColor、shadowOffsetX、shadowOffsetY、shadowBlur，分别为阴影颜色、阴影X方向偏移量、阴影Y方向偏移量、阴影模糊偏移量，用法与css一样，其与字体颜色。填充颜色等一样，也是一种状态描述
+    ctx.shadowColor = 'gray';
+    ctx.shadowOffsetX = 10;
+    ctx.shadowOffsetY = 10;
+    ctx.shadowBlur = 10;
+
+    /**====== global特性 ======*/
+    //globalAlpha设置全局绘图透明度(一直作用到下一次设置覆盖)，默认为1，表示不额外透明
+    ctx.globalAlpha = 0.7;
+    //globalCompositeOperation设置图形重叠的效果，默认为‘source-over’后来居上覆盖(source指当前源图形)，‘destination-over’为后来居下被覆盖(destination指之前的目标图形)，总共有11个值可选，可参考知识点截图
+    ctx.globalCompositeOperation = 'source-over';
+
+    /**====== 剪辑 ======*/
+    //clip()方法用于剪辑，其会将其调用位置前面确认的封闭路径剪辑为后面的绘图区域范围(显示范围，在该区域以外的部分不显示)
+    //剪纸效果采用非零环绕原则，根据路径的绘制方向(作辅助线)确认图形的内外部，非零则为内部，可参考知识点截图（另有奇偶环绕原则）
+//    ctx.clip();
+
+    /**====== 点击检测 ======*/
+    //isPointInPath(x,y)方法检测(x,y)坐标点是否在当前路径区域内，返回布尔值；注意是当前路径，且对fillRect和strokeRect无效(因为它们不是路径，是直接绘图，可使用先定义rect再fill或stroke的形式来绘制，此时isPointInPath就有效)
+    ctx.isPointInPath(100,200);
+
+    /**====== 保存下载文件 ======*/
+    //在canvas中绘出的图片只是canvas标签而已，并非是真正的图片，是不能右键另存为的，我们可以利用canvas.toDataURL()这个方法把canvas绘制的图形生成一幅图片，生成图片后，就能对图片进行相应的操作了
+    //canvas.toDataURL(MIME);返回一个包含图片展示的 data URI（base64），可直接放在img的src属性中
+    var dataUrl = canvas.toDataURL("image/png");   //返回一个包含图片展示的 data URI，将该 dataUrl 赋给 a 标签(添加download属性)的 href 属性可实现图片下载
+
+    /**====== 下载导出图片 ======*/
+    /**
+     * @canvas: canvas对象或图片dataUrl
+     * @filename: 下载文件名
+     * @type: 下载图片格式
+     * */
+    function saveImg(canvas,filename,type) {
+        var a = document.createElementNS('http://www.w3.org/1999/xhtml', 'a'),
+            typeArr = ['png','jpeg','bmp','gif'];
+
+        type = type ? type==='jpg' ? 'jpeg' : type : 'jpeg';
+        if (typeArr.indexOf(type)<0){
+            return alert('不支持下载该格式！');
+        }
+        a.href = canvas.tagName ? canvas.toDataURL("image/"+type) : canvas;     /*简单判断若传入的是canvas元素还是dataUrl*/
+        a.download = (filename || new Date().getTime()) + '.' + type;  /*download属性定义下载和下载文件名，Firefox下不显示后缀，所以这里指定*/
+//        a.click();
+        var ev = null;
+        if (MouseEvent){
+            ev = new MouseEvent('click', {
+                cancelable: true,
+                bubble: true,
+                view: window
+            });
+        }else {
+            //过时的创建事件方式
+            ev = document.createEvent("MouseEvents");
+            ev.initMouseEvent("click",true,true);
+        }
+        a.dispatchEvent(ev);
+    }
+
+    /**====== 扩展context ======*/
+    //扩展其原型，使像内部方法一样调用自定义的方法
+    CanvasRenderingContext2D.prototype.methodName = function () {
+        //扩展context的原型，此时在使用ctx时应用this关键字，因为此时本就是在context上下文对象内部
+    };
+
+    ctx.restore();
+
+    /*跟随鼠标画图*/
+    window.onload = function() {
+        let canv = document.getElementById('myCanvas');
+        let ctx = canv.getContext('2d');
+        ctx.strokeStyle = grd;
+//        ctx.lineWidth = 30;
+//        ctx.lineJoin="round";
+//        ctx.lineCap="round";
+        canv.onmousedown = function(e) {
+            var e = e || window.event;
+            ctx.beginPath();
+            ctx.moveTo(e.clientX-canv.offsetLeft,e.clientY-canv.offsetTop); //e.clientX-canv.offsetLeft,e.clientY-canv.offsetTop鼠标在当前画布上X,Y坐标
+            canv.onmousemove = function(event) {
+                var event = event || window.event;//获取event对象
+                ctx.lineTo(event.clientX-canv.offsetLeft,event.clientY-canv.offsetTop);
+                ctx.stroke();
+            };
+        };
+        canv.onmouseup = function() {
+            canv.onmousemove = null;
+        };
+    };
+
+
+
+</script>
+</pre>
+
+<script>
+    document.getElementById('cvs-script').addEventListener('blur',function () {
+//        var commentRegExp = /\/\*[\s\S]*?\*\/|([^:"'=]|^)\/\/.*$/mg;
+//        var code = this.innerHTML.replace(commentRegExp,'');
+        var code = this.innerHTML;
+        var pageCont = document.getElementById('page-cont');
+        var pageHtml = pageCont.innerHTML;
+        pageCont.innerHTML = '';
+        pageCont.innerHTML = pageHtml;
+//        console.log(code);
+        eval(code);
+    },false);
+</script>
+</div>
+</body>
+</html>

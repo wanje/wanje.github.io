@@ -1,0 +1,101 @@
+--  使用SELECT 来执行聚合函数
+-- 2. 标准结构：SELECT COUNT(<计数规范>) FROM <表名>
+-- 计数规范：* , all, distinct 
+-- 统计所有学生人数
+SELECT COUNT(*) FROM stu  -- 对所有行进行计数统计，包括NULL值的行。
+
+-- 统计已经登记的学生人数：
+SELECT COUNT(s_c_name) FROM stu  -- 对非NULL值进行计数统计；
+SELECT COUNT(ALL s_c_name) FROM stu -- ALL,可以省略，表示对所有非NULL值的行进行计数统计。
+
+-- 统计当前开班的数量
+SELECT COUNT(DISTINCT s_c_name) AS "开班数量" FROM stu
+
+-- 统计性别的数量
+SELECT COUNT(DISTINCT s_sex) FROM stu
+
+-- 统计男生的人数
+
+SELECT COUNT(*) FROM stu WHERE s_sex='男'
+
+-- 2.  sum  
+-- 标准结构：SELECT sum(<计数规范>) FROM <表名>
+-- 计数规范： all, distinct 
+-- 显示出总成绩数
+SELECT SUM(ALL s_score) 总分 FROM score
+
+SELECT SUM(s_score) 总分 FROM score -- 可以省略ALL。
+
+
+-- 统计各分数段的成绩的总和
+
+SELECT SUM(DISTINCT s_score) FROM score
+
+-- 3. avg(), 平均函数
+
+-- 标准结构：SELECT avg(<计数规范>) FROM <表名>
+-- 计数规范： all, distinct 
+-- all ,求平均时，不统计NULL的数量。
+-- 求平均分
+SELECT AVG(s_score) FROM score -- 排除了NULL值。ALL 可以省略。
+
+SELECT SUM(s_score)/COUNT(ALL s_score) FROM score
+
+SELECT SUM(DISTINCT s_score)/COUNT(DISTINCT s_score) FROM score
+SELECT CEIL(AVG(DISTINCT s_score)) FROM score
+
+-- ifNULL(字段名,值)
+SELECT SUM(IFNULL(s_score,0))/COUNT(ALL s_score) FROM score
+
+-- 4. Max ,最大数
+-- 标准结构：SELECT max(字段名) FROM <表名>
+-- 求最高分
+SELECT MAX(s_score) FROM score
+-- 5. min,最小数
+-- 标准结构：SELECT min(字段名) FROM <表名>
+-- 求最低分
+SELECT MIN(s_score) FROM score
+-- 显示出所有学生的人数，总分，平均分，最高分，最低分。
+SELECT COUNT(*) 人数,SUM(s_score) 总分,AVG(s_score) 平均分,MAX(s_score) 最高分,MIN(s_score) 最低分 FROM score
+
+-- 思考： 统计各班的人数。
+SELECT COUNT(*) FROM stu WHERE s_c_name="一班";
+SELECT COUNT(*) FROM stu WHERE s_c_name="二班";
+SELECT COUNT(*) FROM stu WHERE s_c_name="三班";
+
+-- 
+SELECT COUNT(s_c_name) FROM stu
+/*
+SELECT 列A, 聚合函数(聚合函数规范) FROM 表名
+WHERE 过滤条件
+GROUP BY 列A …
+
+*/
+-- 在分组中，SELECT 子句中的投影列，什么情况下才是有效的分组数据？
+-- SELECT 子句中的投影列,只能是group by 子句中出现过的列 和 聚合函数。
+
+-- 统计各班的人数。
+SELECT s_c_name,COUNT(*) FROM stu WHERE s_c_name IS NOT NULL GROUP BY s_c_name
+
+-- 统计男生、女生的人数
+
+SELECT s_sex,COUNT(*) FROM stu
+GROUP BY s_sex
+-- 统计男生、女生的平均年龄
+SELECT s_sex,AVG(s_age) FROM stu
+GROUP BY s_sex
+
+-- 查询平均年龄大于20岁以上的班级信息
+
+SELECT s_c_name,AVG(s_age) AS age FROM stu
+WHERE s_c_name IS NOT NULL
+GROUP BY s_c_name
+ HAVING AVG(s_age)>20
+ ORDER BY age DESC
+-- 聚合函数做条件时，是不能写在WHERE子句中，只能定在HAVING子句中。
+-- having,是对group by子句的结果，进行条件过滤。只能放在group by 子句后。
+-- WHERE运行在分组前，因此不能执行任何聚合函数。HAVING是运行在分组后，只能用做聚合函数的过滤
+
+-- 查询每个班的男生、女生人数：
+SELECT s_c_name,s_sex,COUNT(*) FROM stu WHERE s_c_name IS NOT NULL
+GROUP BY s_c_name,s_sex

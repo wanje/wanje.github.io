@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<div id="box">测试</div>
+<div id="box1">12351</div>
+<div>
+    <ul>
+        <li>1</li>
+        <li>1</li>
+        <li>1</li>
+        <li>1</li>
+        <li>1</li>
+    </ul>
+
+</div>
+
+<script src="../jquery-1.11.3.js"></script>
+<script>
+    var  mybox=document.getElementById("box");
+    console.log(mybox);
+    var myBox=jQuery("#box");//jq获取到的是一个JQ对象
+    console.log(myBox);
+//    var myBox=$("#box");//简写
+////    alert($===jQuery);
+//
+//    $(function(){//3.$(document).ready(function(){})简写;
+//        $("#box").css("color","red");
+//        console.log( $("#box").css("color","red"));
+//
+//        $("#box").css("color","green").css("font-size","50px").click(function(){});//链式代码风格，可以一直调用
+//
+//    })(jQuery);/*4*/
+//
+//    $(document).ready(function(){
+//        alert("1");
+//    });
+//    $(document).ready(function(){
+//        alert("1");
+//    });
+//    $(document).ready(function(){
+//        alert("1");
+//    });
+/*$(document).ready(function(){ });
+* 好处：
+* 1.不需要等待图片css等资源，只需要dom加载完毕就可以执行
+* 2.可以执行多次，不会被覆盖，从上到下依次执行
+* 4.*/
+
+//    var $$=jQuery;
+//    $$("#box1").css("background","red");
+
+    /*选择器*/
+    $(function(){
+        var myli=$("div ul li");
+        console.log(myli);
+        console.log(myli.size());
+        console.log($("#box1").length);//返回的是对象的长度，JQ的对象的属性
+        console.log(document.getElementById("box1").length);//JS的数组或者集合才能测出长度
+    })
+
+</script>
+</body>
+</html>

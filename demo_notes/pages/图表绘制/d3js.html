@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>D3js</title>
+  <style type="text/css">
+    body {
+      font-size: 0;
+      margin: 0;
+    }
+    .chart-box {
+      box-sizing: border-box;
+      display: inline-block;
+      font-size: 14px;
+      width: 31vw;
+      height: 46vh;
+      margin: 1vw;
+      outline: 1px solid #dadada;
+    }
+  </style>
+</head>
+
+<body>
+  <div>
+    <div class="chart-box" id="chart1"></div>
+  </div>
+
+  <script type="text/javascript" charset="UTF-8" src="../../js/jquery-1.11.3.js"></script>
+  <!-- <script type="text/javascript" charset="UTF-8" src="../../plugins/d3/d3.v4.min.js"></script> -->
+  <!-- <script type="text/javascript" charset="UTF-8" src="../../plugins/d3/d3.v5.min.js"></script> -->
+  <script type="text/javascript" charset="UTF-8" src="../../plugins/d3/d3.v6.min.js"></script>
+  <script type="text/javascript">
+    // 图论
+    function graphTheory() {
+      var n; // 设n为顶点数，图论中称为`顺序`order
+      var s; // 设s为由顶点连接的线条(边)数，图论中称为`尺寸`size
+      
+      // 可最多连接的线条数（最大尺寸）
+      var max_s = n*(n-1)/2;
+
+      // 顶点的连线条数称为`度`degree，每个顶点最多可连线数 = n - 1
+
+      // 所有点的连接次数和必然是一个偶数（因每条线两个点，所有顶点连接次数和 = 连线数 * 2）
+
+      // 计算一个顶点连接序列(度序列)是否可组成一个图（Havel-Hakimi算法）
+      function isGraph(arr) {
+        var result = arr.reduce((prev, next) => {
+          return Math.abs(prev - next)
+        });
+        if (result === 0) return true;
+      }
+    }
+
+    // 参考：https://juejin.cn/post/6844904134269747213
+    // 比例尺
+    !function() {
+      // scaleLinear线性比例尺
+      // domain为源数据集输入域，range为映射数据集输出域，线性比例尺中两者都是连续区间
+      let scaleLinear = d3.scaleLinear().domain([1,5]).range([0,100]);
+      console.log('scaleLinear', scaleLinear(1), scaleLinear(2.5), scaleLinear(5));
+
+      // scaleBand不是一个连续性的比例尺
+      // domain输入是离散的，而range输出是连续的，输入集的长度等于输出级分成的段数，从起点开始依次对应一个断点（最后一个对应不到）
+      let scaleBand = d3.scaleBand().domain([1,3,4,5]).range([0,100]);
+      console.log('scaleBand', scaleBand(3), scaleBand(2)); // 输入数据不是domain中的值时，输出undefined
+
+      // 默认 scale(domain) 是输出 domain 中值对应的 range 中的值
+      // 而 scale.invert(range) 是输出 range 中值对应的 domain 中的值，逆向数据查询，只对domain是连续域有效
+      // scale.invertExtent(range) 也是输出 range 中值对应的 domain 中的值，逆向数据查询，只对domain是连续域有效（range为离散数据）
+
+      // 其他类型比例尺...
+
+    }();
+
+    $(function () {
+      const svg1 = d3.select('#chart1').append('svg').attr('width', '100%').attr('height', '100%');
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,12 @@
+.idea
+.svn
+.git
+node_modules
+dist
+yarn.lock
+package-lock.json
+*.iml
+out
+gen
+demo_notes/assets
+demo_notes/file

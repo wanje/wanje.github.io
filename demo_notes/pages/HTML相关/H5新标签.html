@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1">
+    <title>H5新标签</title>
+    <style>
+        body * { margin: 0;}
+        body *:before { content: attr(data-tag); color: red; margin-right: 0.3em;}
+    </style>
+</head>
+<body>
+
+<header data-tag="header">用于标识通常放在页面顶部或页眉的内容，或头部(如一篇论文，头部可包含标题、副标题、作者、日期、子主题、图片等等)，也可用于某区块的头部，块级元素</header><br>
+
+<footer data-tag="footer">用于标识通常放在页面底部或页脚的内容，也可用于某区块的底部，块级元素</footer><br>
+
+<main data-tag="main">放置页面主要内容，块级元素</main><br>
+
+<section data-tag="main">用于划分一个内容区块（该区块应存在一个标题表示该部分是一个整体），块级元素</section><br>
+
+<article data-tag="article">表示一个完整的、自成一体的内容块，如博客文章或新闻报道，其应包含所有相关内容(如标题、作者署名及正文)，块级元素</article><br>
+
+<nav data-tag="nav">用于标识一组导航链接，也可包含其他内容（但原则上不能只用于包含其他内容而没有导航内容），块级元素</nav><br>
+
+<figure data-tag="figure">添加插图，包裹img图片，常与 figcaption 合用，块级元素
+    <figcaption data-tag="figcaption">插图的图题(标题)，可包含任何内容，一般放在 figure 元素中，块级元素</figcaption>
+</figure><br>
+
+<aside data-tag="aside">放置与周围文本没有密切关系的内容，块级元素</aside><br>
+
+<details data-tag="details">
+    <summary data-tag="summary">作为details标题，块级元素，点击该标题可对</summary>
+    <p>details详细信息，块级元素</p>
+</details><br>
+
+<time data-tag="time">用于标注日期或时间，2018-11-19，行内元素</time><br>
+
+<wbr>wbr 自闭和元素用于单词换行，如某个词太长一行放不下时会再该处换行(不同于 br 的强制换行)<br>
+
+embed 自闭和元素用于向页面中加入插件 <embed src="" type="">
+
+</body>
+</html>

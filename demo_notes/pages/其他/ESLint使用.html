@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1">
+    <title>ESLint使用</title>
+    <link rel="stylesheet" href="../../plugins/highlight/styles/androidstudio.css">
+    <script src="../../plugins/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <style type="text/css">
+        body,pre {margin: 0;}
+        .code {display: block;white-space: pre;font-family: monospace;}
+    </style>
+</head>
+<body>
+<pre><code class="js" id="show-script"></code></pre>
+<script type="text/javascript" charset="UTF-8" id="script">
+/**====================================================================================================================*/
+/**============================================== ESLint安装与webpack配置 ==============================================*/
+/**====================================================================================================================*/
+/** 独立使用 ESLint */
+/*
+ * 全局安装：$ npm install -g eslint
+ * 初始化配置文件：$ eslint --init
+ * 可在任何文件或目录运行检查js代码：$ eslint yourfile.js
+ * 注意相应的配置文件和用到的插件等此时也都要是全局安装的才行
+ * */
+
+/*
+ * 本地安装(当前项目)：$ npm install eslint --save-dev
+ * 初始化配置文件：$ ./node_modules/.bin/eslint --init
+ * 项目根目录下运行检查js代码：$ ./node_modules/.bin/eslint yourfile.js
+ * 注意相应的配置文件和用到的插件等此时也都要是本地安装的才行
+ * */
+
+/**
+ * 在webpack中使用eslint时还要额外安装 eslint-loader 来解析eslint的配置文件
+ * 使用说明参考：https://github.com/webpack-contrib/eslint-loader
+ * 且要在webpack的配置文件的rules规则中加入该loader设置（示例，具体所有可配项可查看官方文档）
+ * */
+webpackConfOpt.module.rules[0] = {
+    test: /\.(js|jsx|vue)$/,    //这里支持vue需要安装相应的支持插件，因为ESLint默认是检查ES5代码，通过配置也支持其他版本js语法(如ES6)和jsx语法（该jsx语法不支持对React使用，因为React中用了一些ESLint无法识别的jsx语法）
+    enforce: 'pre',     //强制转译前阶段就检测，目的是为保证检测的js代码不受其他插件或工具的影响（如 babel-loader，最初写的代码符合规则，转译后可能有的就不适应设定的规则而“出错”）
+    use: [{         //['babel-loader', 'eslint-loader']，这种用法时将eslint-loader放在要影响js代码的loader后面
+        //若用到多个loader，设置use选项时，不是这样单个对象设置每个loader的options，而是直接使用loader名字字符串(相当于都是用默认options配置)，则需要注意在用到可能影响代码的loader(如babel-loader)时要将eslint-loader其后面（因为处理顺序在数组和!写法中是从右到左使用loader）
+        loader: 'eslint-loader',
+        options: {  //options选项支持webpack中loader的options通用配置项，这里还包括是否自动修复、格式、错误/警告信息提示、eslint插件路径、检测不通过时是否组织打包进程等等设置
+            formatter: require('eslint-friendly-formatter'),   //应用的ESLint格式，需要安装
+        },
+    }],
+    include: [path.resolve('src'), path.resolve('test')], //需要检测的目录或文件，多个则用数组；也可以用exclude排除不需要检查的目录或者用.eslintignore
+    exclude: '/node_modules/'
+};
+
+
+/**
+ * 配置文件及优先级顺序说明
+ * 独立配置文件前面有个“.”点号，表示属于配置文件，此时在文件夹中是看不到的，在编辑器中可看到该文件并进行编辑配置，这些配置文件是通用型（就像git的配置文件，编辑器或其他打包器也可以安装相关插件支持来使用，不一定是webpack下使用）
+ * 另一点须注意：独立配置文件可有多个(一般不同文件层级)，默认从离待检测文件最近的的配置文件开始应用规则，然后会向上查找父级是否存在配置文件，若存在也会应用父级中的规则(相当于继承，可用 root:true 配置限制向上查找)
+ *
+ * .eslintrc.js     - 使用 .eslintrc.js 然后输出一个配置对象
+ * .eslintrc.yaml   - 使用 .eslintrc.yaml 或 .eslintrc.yml 去定义配置的结构（yaml>yml）
+ * .eslintrc.json   - 使用 .eslintrc.json 去定义配置的结构，ESLint 的 JSON 文件允许 JavaScript 风格的注释
+ * .eslintrc（已弃用）
+ * package.json     - 在 package.json 里创建一个 eslintConfig 属性用来定义配置
+ * */
+/**====================================================================================================================*/
+/**=========================================== 忽略文件配置 .eslintignore 文件 ===========================================*/
+/**====================================================================================================================*/
+/** 若不存在独立忽略文件，也可在 package.json 文件中通过 eslintIgnore 选项进行忽略配置 */
+/*
+ * 该文件设置忽略进行 ESLint 代码检测的文件或文件夹，node_modules 目录会默认被忽略，例如：
+ * build/*.js
+ * config/*.js
+ * src/assets
+ *
+ * 以井号“#”开头时表示该行为注释，
+ * 以感叹号“!”开头的行为否定模式，表示重新包含之前被忽略的一个文件/文件夹(可用于前面忽略了某个大文件夹但里面某个文件或子文件夹又要应用规则的情况)，如：
+ * # Ignore built files except build/index.js
+ * build/*
+ * !build/index.js
+ * */
+
+
+/**====================================================================================================================*/
+/**========================================== 文件中临时禁用或启用规则(局部禁用) ==========================================*/
+/**====================================================================================================================*/
+// 我们在全局设置了规则，但有时在JS代码中某个局部位置我们不想应用规则，希望忽略掉此处的代码检测，在需要的地方又恢复检测，这时可通过在文件中相应位置添加指定格式的注释来达目的
+
+/* eslint-disable */    /**该注释语句以后的部分将禁用所有eslint规则，放在js文件顶部时可使整个文件不应用规则，也可在后面跟上指定的规则名，表示禁用指定的规则*/
+/* eslint-enable */     /**该注释语句以后的部分将重启所有eslint规则，与disable联用时可是某块代码不应用规则，也可在后面跟上指定的规则名，表示重启指定的规则*/
+// eslint-disable-line
+/* eslint-disable-line */         /**这两种注释都表示所在行上禁用所有规则，也可在后面跟上指定的规则名，表示禁用指定的规则*/
+// eslint-disable-next-line
+/* eslint-disable-next-line */    /**这两种注释都表示下一行上禁用所有规则，也可在后面跟上指定的规则名，表示禁用指定的规则*/
+
+
+/**====================================================================================================================*/
+/**============================================= 规则配置 .eslintrc.js 文件 =============================================*/
+/**====================================================================================================================*/
+module.exports = {
+    root: true,     //此项是用来告诉eslint找当前配置文件不能往父级查找(将当前位置就当做已是根路径，不再向上查找其他配置文件进行合并使用)
+    parser: 'babel-eslint',   //此项是用来指定eslint解析器的，解析器必须符合规则，babel-eslint解析器是对babel解析（需要自己安装）
+    parserOptions: {    //解析器选项配置
+        ecmaVersion: 6,     //此项可设置要使用的js版本，默认是3、5，也可以使用用年份命名的版本号，如：2015(同6)
+        sourceType: 'module',      //此项用来指定js导入的方式，默认是script(即script标签引入方式)，此处设置为module，指模块导入方式
+        ecmaFeatures: {     //此项为对象，设置你想使用的额外的语言特性
+            globalReturn: true,     //允许在全局作用域下使用 return 语句
+            impliedStrict: true,    //启用全局 strict mode (如果 ecmaVersion 是 5 或更高)
+            jsx: true,              //启用jsx语法检测（该jsx语法不支持对React使用，因为React中用了一些ESLint无法识别的jsx语法）
+        }
+    },
+    env: {      //此项用于预定义指定环境的全局变量(每个环境中有预定义的全局变量，如浏览器中有window对象等)，下面的配置指定表示浏览器环境、node环境、es6运行环境
+        browser: true,      //在JS文件中可以使用注释来指定环境，格式如：/* eslint-env browser, node */
+        node: true,
+        es6: true,
+    },
+    extends: ['plugin:vue/recommended', 'eslint:recommended'],  // 此项是用来配置扩展应用/继承其他一些已经写好的规则，'eslint:recommended'表示使用eslint推荐的规则，'plugin:vue/recommended'表示使用vue开发中推荐的推责(须自己安装)，扩展中的具体规则也可以被下面自定义的覆盖
+    plugins: ['vue'],     // 此项是用来提供插件的，插件名称省略了前缀eslint-plugin-
+    // 脚本在执行期间访问的默认全局变量。当访问所在源文件内未定义的变量时，no-undef 规则将发出警告，若要使用未显式定义的全局变量，可使用这里的配置
+    globals: {      //同样可在文件中通过注释配置，格式：/* global var1:false, var2 */，默认为true可被重写，注意注释中global是单数，配置文件中是复数
+        document: false,
+        navigator: false,
+        window: false,
+        "var1": true,   //true表示该变量可被重写
+        "var2": false   //false表示该变量不可被重写
+    },
+
+    //可参考1：https://www.jianshu.com/p/a4966ddf9b0c
+    //可参考2：https://blog.csdn.net/chi1130/article/details/83863008
+    //可参考3：https://www.cnblogs.com/yinluhui0229/p/8579967.html
+    /*
+     * 官方规则列表：https://cn.eslint.org/docs/rules/
+     * "off" 或 0 - 关闭规则
+     * "warn" 或 1 - 开启规则，使用警告级别的错误：warn (不会导致程序退出),
+     * "error" 或 2 - 开启规则，使用错误级别的错误：error (当被触发的时候，程序会退出)
+     */
+    // add your custom rules here
+    //it is base on https://github.com/vuejs/eslint-config-vue/blob/master/index.js
+    //亦可在文件注释中配置规则(可用于局部覆盖全局配置)，格式如：/* eslint quotes: ["error", "double"], curly: 2 */
+    /*
+    * 默认用一个数字或者字符串表示对应规则的错误级别，若有额外的选项，则可使用数组来指定值，但数组第一项始终是表示错误级别
+    * 如上面的："quotes": ["error", "double"]，数组第一项指定了错误级别为报错，且第二项指定尽量使用双引号
+    * */
+    rules: {
+        "vue/max-attributes-per-line": [2, {
+            "singleline": 10,
+            "multiline": {
+                "max": 1,
+                "allowFirstLine": false
+            }
+        }],
+        "vue/name-property-casing": ["error", "PascalCase"],    //配置定义在插件中的规则时，键名必须使用 "插件名/规则ID" 的形式
+        'accessor-pairs': 2,            //强制 getter 和 setter 在对象中成对出现
+        'arrow-spacing': [2, {          //强制箭头函数的箭头“=>”前后使用一致的空格
+            'before': true,
+            'after': true
+        }],
+        'block-spacing': [1, 'always'],     //可移除，禁止或强制在代码块中花括号前后有空格
+        'brace-style': [1, '1tbs', {        //可移除，强制在代码块中使用一致的大括号风格（这里要求左花括号后另起一行，允许左右花括号在同一行）
+            'allowSingleLine': true
+        }],
+        'camelcase': [2, {                  //变量声明中强制使用骆驼拼写法命名约定(不使用下划线_)，但会忽略前导和尾部的下划线，只检查在变量名称中间的下划线
+            'properties': 'always'
+        }],
+        'comma-dangle': [2, 'never'],       //禁止在对象最后一个属性后使用逗号
+        'comma-spacing': [2, {              //强制在逗号后使用一个空格隔开（逗号前不允许使用空格，除非是连续的空元素）
+            'before': false,
+            'after': true
+        }],
+        'comma-style': [2, 'last'],         //要求逗号放在语句末尾
+        'constructor-super': 2,             //es6，要求继承类的constructor构造函数中必需调用super方法，而非继承类中不允许调用super方法
+        'curly': [2, 'multi-line'],         //强制要求所有控制语句使用一样的大括号风格，这里允许单行时省略花括号，多行时必须使用花括号包裹
+        'dot-location': [2, 'property'],    //强制要求统一点号‘.’操作符的位置(因为js中点方式访问对象属性时可换行)，这里‘property’表示若要换行的话点号跟属性在同一行，而‘object’表示点与对象放在同一行
+        'eol-last': 2,                      //要求在js文件内容末尾一定要有换行符存在（即至少留有一个空白行）
+        'eqeqeq': 2,                        //强制要求使用严格相等和不等（=== 和 !==）
+        'generator-star-spacing': [2, {     //es6，在使用generator时要求星号*前后使用一样的风格（这里要求前后使用一样的空格）
+            'before': true,
+            'after': true
+        }],
+        'handle-callback-err': [2, '^(err|error)$'],    //要求回调函数中有容错处理
+        'indent': [2, 2, {
+            'SwitchCase': 1
+        }],
+        'jsx-quotes': [2, 'prefer-single'],
+        'key-spacing': [2, {
+            'beforeColon': false,
+            'afterColon': true
+        }],
+        'keyword-spacing': [2, {
+            'before': true,
+            'after': true
+        }],
+        'new-cap': [2, {
+            'newIsCap': true,
+            'capIsNew': false
+        }],
+        'new-parens': 2,
+        'no-array-constructor': 2,
+        'no-caller': 2,
+        'no-console': 'off',
+        'no-class-assign': 2,
+        'no-cond-assign': 2,
+        'no-const-assign': 2,
+        'no-control-regex': 0,
+        'no-delete-var': 2,
+        'no-dupe-args': 2,
+        'no-dupe-class-members': 2,
+        'no-dupe-keys': 2,
+        'no-duplicate-case': 2,
+        'no-empty-character-class': 2,
+        'no-empty-pattern': 2,
+        'no-eval': 2,
+        'no-ex-assign': 2,
+        'no-extend-native': 2,
+        'no-extra-bind': 2,
+        'no-extra-boolean-cast': 2,
+        'no-extra-parens': [2, 'functions'],
+        'no-fallthrough': 2,
+        'no-floating-decimal': 2,
+        'no-func-assign': 2,
+        'no-implied-eval': 2,
+        'no-inner-declarations': [2, 'functions'],
+        'no-invalid-regexp': 2,
+        'no-irregular-whitespace': 2,
+        'no-iterator': 2,
+        'no-label-var': 2,
+        'no-labels': [2, {
+            'allowLoop': false,
+            'allowSwitch': false
+        }],
+        'no-lone-blocks': 2,
+        'no-mixed-spaces-and-tabs': 2,
+        'no-multi-spaces': 2,
+        'no-multi-str': 2,
+        'no-multiple-empty-lines': [2, {
+            'max': 1
+        }],
+        'no-native-reassign': 2,
+        'no-negated-in-lhs': 2,
+        'no-new-object': 2,
+        'no-new-require': 2,
+        'no-new-symbol': 2,
+        'no-new-wrappers': 2,
+        'no-obj-calls': 2,
+        'no-octal': 2,
+        'no-octal-escape': 2,
+        'no-path-concat': 2,
+        'no-proto': 2,
+        'no-redeclare': 2,
+        'no-regex-spaces': 2,
+        'no-return-assign': [2, 'except-parens'],
+        'no-self-assign': 2,
+        'no-self-compare': 2,
+        'no-sequences': 2,
+        'no-shadow-restricted-names': 2,
+        'no-spaced-func': 2,
+        'no-sparse-arrays': 2,
+        'no-this-before-super': 2,
+        'no-throw-literal': 2,
+        'no-trailing-spaces': 2,
+        'no-undef': 2,
+        'no-undef-init': 2,
+        'no-unexpected-multiline': 2,
+        'no-unmodified-loop-condition': 2,
+        'no-unneeded-ternary': [2, {
+            'defaultAssignment': false
+        }],
+        'no-unreachable': 2,
+        'no-unsafe-finally': 2,
+        'no-unused-vars': [2, {
+            'vars': 'all',
+            'args': 'none'
+        }],
+        'no-useless-call': 2,
+        'no-useless-computed-key': 2,
+        'no-useless-constructor': 2,
+        'no-useless-escape': 0,
+        'no-whitespace-before-property': 2,
+        'no-with': 2,
+        'one-var': [2, {
+            'initialized': 'never'
+        }],
+        'operator-linebreak': [2, 'after', {
+            'overrides': {
+                '?': 'before',
+                ':': 'before'
+            }
+        }],
+        'padded-blocks': [2, 'never'],
+        'quotes': [2, 'single', {
+            'avoidEscape': true,
+            'allowTemplateLiterals': true
+        }],
+        'semi': [2, 'never'],
+        'semi-spacing': [2, {
+            'before': false,
+            'after': true
+        }],
+        'space-before-blocks': [2, 'always'],
+        'space-before-function-paren': [2, 'never'],
+        'space-in-parens': [2, 'never'],
+        'space-infix-ops': 2,
+        'space-unary-ops': [2, {
+            'words': true,
+            'nonwords': false
+        }],
+        'spaced-comment': [2, 'always', {
+            'markers': ['global', 'globals', 'eslint', 'eslint-disable', '*package', '!', ',']
+        }],
+        'template-curly-spacing': [2, 'never'],
+        'use-isnan': 2,
+        'valid-typeof': 2,
+        'wrap-iife': [2, 'any'],
+        'yield-star-spacing': [2, 'both'],
+        'yoda': [2, 'never'],
+        'prefer-const': 2,
+        'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
+        'object-curly-spacing': [2, 'always', {
+            objectsInObjects: false
+        }],
+        'array-bracket-spacing': [2, 'never']
+    }
+}
+
+
+</script>
+<script>
+    document.getElementById('show-script').innerHTML = document.getElementById('script').innerHTML;
+</script>
+</body>
+</html>

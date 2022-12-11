@@ -1,0 +1,100 @@
+@mixin clearfix {
+  *zoom: 1;
+
+  &:before,
+  &:after {
+    content: "";
+    display: table;
+  }
+  &:after {
+    clear: both;
+    font-size:0;
+    line-height:0;
+    visibility:hidden;
+    height:0;
+  }
+}
+@mixin flex {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+}
+@mixin gradient2top($startColor, $endColor) {
+  background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0%, $startColor), color-stop(100%, $endColor));
+  background-image: -webkit-linear-gradient(bottom, $startColor, $endColor);
+  background-image: -o-linear-gradient(bottom, $startColor, $endColor);
+  background-image: -moz-linear-gradient(bottom, $startColor, $endColor);
+  background-image: -ms-linear-gradient(bottom, $startColor, $endColor);
+  background-image: linear-gradient(to top, $startColor, $endColor);
+  //filter: progid:DXImageTransform.Microsoft.Gradient(GradientType='1', StartColorStr='#fff5157c', EndColorStr='#ff5a19d4'); /* GradientType为1时表示水平方向(此时可不设置该属性)，为0时表示垂直方向，颜色值中前两位表示透明度*/
+}
+@mixin gradient2right($startColor, $endColor) {
+  background-image: -webkit-gradient(linear, left top, right top, color-stop(0%, $startColor), color-stop(100%, $endColor));
+  background-image: -webkit-linear-gradient(left, $startColor, $endColor);
+  background-image: -o-linear-gradient(left, $startColor, $endColor);
+  background-image: -moz-linear-gradient(left, $startColor, $endColor);
+  background-image: -ms-linear-gradient(left, $startColor, $endColor);
+  background-image: linear-gradient(to right, $startColor, $endColor);
+}
+@mixin gradientRadial($color...) {
+  background-image: -webkit-radial-gradient($color);
+  background-image:-o-radial-gradient($color);
+  background-image:-moz-radial-gradient($color);
+  background-image: radial-gradient($color);
+
+}
+@mixin boxShadow($shadow...) {
+  -webkit-box-shadow: $shadow;
+  -moz-box-shadow: $shadow;
+  box-shadow: $shadow;
+}
+@mixin keyframes($name) {
+  @-webkit-keyframes #{$name} {
+    @content;
+  }
+  @-moz-keyframes #{$name} {
+    @content;
+  }
+  @-o-keyframes #{$name} {
+    @content;
+  }
+  @keyframes #{$name} {
+    @content;
+  }
+}
+@mixin hoverLink($color:$-color-blue) {
+  &:hover {
+    cursor: pointer;
+    color: $color;
+    @content;
+  }
+}
+@mixin ellipsis($line:1) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: $line;
+  -webkit-box-orient: vertical;
+  text-align: justify;
+}
+@mixin transition($value...) {
+  -webkit-transition: $value;
+  -moz-transition: $value;
+  -o-transition: $value;
+  transition: $value;
+}
+@mixin transform($value...) {
+  -webkit-transform: $value;
+  -moz-transform: $value;
+  -ms-transform: $value;
+  -o-transform: $value;
+  transform: $value;
+}
+@mixin select-none() {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}

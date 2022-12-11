@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1">
+    <title>Math对象</title>
+    <link rel="stylesheet" href="../../plugins/highlight/styles/androidstudio.css">
+    <script src="../../plugins/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <style type="text/css">
+        body,pre {margin: 0;}
+        .code {display: block;white-space: pre;font-family: monospace;}
+    </style>
+</head>
+<body>
+<pre><code class="css" id="show-script"></code></pre>
+<script type="text/javascript" charset="UTF-8" id="script">
+    /**========== Math对象 ==========*/
+
+    /**=== 属性，注意属性都是大写 ===*/
+    console.log(Math.PI);                //Math.PI，返回圆周率 π 的值
+    console.log(Math.E);                 //Math.E，返回算数常量自然对数的底数 e 的值
+    console.log(Math.LN2);               //Math.LN2，返回 2 的自然对数
+    console.log(Math.LN10);              //Math.LN10，返回 10 的自然对数
+    console.log(Math.LOG2E);             //Math.LOG2E，返回以 2 为底数的 e 的对数
+    console.log(Math.LOG10E);            //Math.LOG10E，返回以 10 为底数的 e 的对数
+    console.log(Math.SQRT2);             //Math.SQRT2，返回 2 的平方根
+    console.log(Math.SQRT1_2);           //Math.SQRT1_2返回 2 的平方根的倒数，即 2 的负二分之一次方，注意1与2之间是下划线而不是中划线
+
+    /**=== 方法，注意方法都是小写 ===*/
+    console.log(Math.random());          //Math.random()，返回一个 0~1 之间的随机数，注意能取到0，取不到1
+    console.log(Math.abs(-1));           //Math.abs(x)，返回 x 的绝对值
+    console.log(Math.min(1,2,3));        //Math.min(x,y,z...n)，返回传入参数中的最小值，可任意多个参数
+    console.log(Math.max(1,2,3));        //Math.max(x,y,z...n)，返回传入参数中的最大值，可任意多个参数
+    /* 取舍 */
+    console.log(Math.ceil(1.3));         //Math.ceil(x)，对 x 只进不舍
+    console.log(Math.floor(1.7));        //Math.floor(x)，对 x 只舍不进
+    console.log(Math.round(1.5));        //Math.round(x)，对 x 四舍五入
+    /* 指数、对数 */
+    console.log(Math.exp(2));            //Math.exp(x)，返回常量 e 的 x 次幂
+    console.log(Math.sqrt(4));           //Math.sqrt(x)，返回 x 的平方根，即二分之一次幂
+    console.log(Math.pow(5,2));          //Math.pow(x,y)，返回 x 的 y 次幂
+    console.log(Math.log(Math.E));       //Math.log(x)，返回以 e 为底数的 x 的对数
+    /* 三角函数 */
+    console.log(Math.sin(Math.PI/2));    //Math.sin(x)，返回 x 弧度角的正弦值，注意是弧度
+    console.log(Math.cos(0));            //Math.cos(x)，返回 x 弧度角的余弦值，注意是弧度
+    console.log(Math.tan(Math.PI/6));    //Math.tan(x)，返回 x 弧度角的正切值，注意是弧度
+    console.log(Math.asin(1));           //Math.asin(x)，返回 x 的反正弦值，即由正弦值得到弧度值
+    console.log(Math.acos(1));           //Math.acos(x)，返回 x 的反余弦值，即由余弦值得到弧度值
+    console.log(Math.atan(1));           //Math.atan(x)，返回 x 的反正切值，即由正切值得到弧度值
+    console.log(Math.atan2(2,1));        //Math.atan2(y,x)，返回(x,y)点与原点连线形成的弧度角值(-π ~ π 之间)，注意参数是(y,x)，横纵坐标位置相反
+
+
+
+</script>
+<script>
+    document.getElementById('show-script').innerHTML = document.getElementById('script').innerHTML;
+</script>
+</body>
+</html>

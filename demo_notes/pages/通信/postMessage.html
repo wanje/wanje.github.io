@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>内嵌iframe</title>
+    <link rel="stylesheet" href="../../css/defaultPc.css">
+    <link rel="stylesheet" href="../../plugins/highlight/styles/androidstudio.css">
+    <script src="../../plugins/vue2.6.7.min.js"></script>
+    <script src="../../plugins/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <style type="text/css">
+        .layout-box {height: 100vh;}
+        .code-area {overflow: auto;background: #282b2e;}
+        .code {white-space: pre;color: #ffffff;padding-left: 1em;}
+    </style>
+</head>
+<body>
+<div id="app" class="flex-box layout-box">
+    <div class="flex-5 code-area">
+        <div class="code flex-box pdt-20"><br>
+            <div>
+                <textarea class="vb" placeholder="请输入" v-model="msg"></textarea>
+                <button @click="sendMsg">发送/回复</button>
+            </div>
+            <div class="mgl-30">收到iframe子页面发来的消息: {{ message }}</div>
+        </div>
+        <pre><code class="js" id="show-script"></code></pre>
+    </div>
+    <iframe ref="receiverWin" id="receiverWin" src="./iframe.html" frameborder="0" class="flex-1"></iframe>
+</div>
+<script type="text/javascript" charset="UTF-8">
+  new Vue({
+    el: '#app',
+    data: {
+      msg: '',
+      message: ''
+    },
+    mounted() {
+      window.addEventListener('message', e => {
+        // 判断消息来源
+        if (e.origin !== location.origin) return;
+        this.message = e.data;
+      }, false);
+    },
+    methods: {
+      sendMsg() {
+        // 给子页面发送消息
+        this.$refs.receiverWin.contentWindow.postMessage(this.msg, location.origin);
+      }
+    }
+  });
+</script>
+<script type="text/javascript" charset="UTF-8" id="script">
+function foo() {
+  /**
+   * IE8+支持，主要用于内嵌iframe和frame的页面或使用 window.open()【该方法会返回新窗口的引用，也就是其window对象】打开的页面间跨域通信，
+   * 因为通过这样的方式两个页面间才存在联系，也才允许它们之间通信，若单独将iframe中页面的地址在浏览器新标签中打开，这时两个页面间是不会通过postMessage建立有效通信的
+   * IE8/9只持支持iframe嵌套关系的页面使用；而IE10/11名义上支持 open() 方式，但实际有问题，解决方法见后面说明（未实测）
+   * 发送信息方法：
+   * otherWindow.postMessage(message, targetOrigin, [transfer])
+   * 注意其中的 otherWindow 是指要向其发送信息的那个窗口的 window 对象(不是当前页面的window对象，而是在当前页面对要接受消息的页面的window对象的引用)，
+   * 这里只要是对那个窗口window对象的引用即可，不要求有权限访问其内部方法或属性(跨域时也无法访问，但调用其窗口上的postMessage方法是可以的)
+   * 参数：
+   * message 要发送的信息，可以是字符串或对象；
+   * targetOrigin 要发送信息的目标域名，也可以是'*'表示无限制；
+   * transfer 可选
+   * */
+  document.getElementById('receiverWin').contentWindow.postMessage('我是父页面', location.origin);
+
+  /**
+   * 接收信息方法（就是window对象上的'message'事件监听）：
+   * window.addEventListener('message', callback, false)
+   * 当前页面接受信息，所以window就是当前页面的window对象，
+   * 虽然调用`postMessage`发消息的window也是该接受消息的window，但发消息是在另一个页面（其只是对这个接受消息页面window的引用）
+   * */
+  window.addEventListener('message', function (e) {
+    // e.origin 属性指向消息来源，因为所有通过postMessage发送过来的信息都可以被接受，所以需要自己判断哪个信息源的消息可使用，以免引起安全问题
+    if (e.origin !== location.origin) return;
+    // e.data 属性保存接收到的消息
+    console.log(`来自${location.origin}的消息:`, e.data);
+    // e.source 属性保存着消息源的window对象引用，所以可以用于接收到消息时自动回复消息
+    e.source.postMessage('消息回执', e.origin);
+
+  }, false);
+}
+
+function foo2() {
+  /** 
+   * IE10/11下解决 window.open() 方式打开的页面无法与主页面使用 postMessage 通信的问题方案
+   */
+  // 使用下面的方式来打开加载页面，使实际页面与主页面通过 opener 建立关系
+  var openedWin = window.open("/", "_blank"); // 调用open时不直接加载实际的页面
+  openedWin.location.href = 'about:blank';
+  openedWin.location.href = '实际要打开的页面地址';
+}
+</script>
+<script>
+    document.getElementById('show-script').innerHTML = document.getElementById('script').innerHTML;
+</script>
+</body>
+</html>

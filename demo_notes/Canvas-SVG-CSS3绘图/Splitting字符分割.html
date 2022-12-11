@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Splitting字符分割动画</title>
+  <link rel="stylesheet" href="../css/water-light.min.css">
+  <!-- 下面这个文件包括许多额外的CSS变量和伪元素，有助于增强高级动画，尤其是文本 -->
+  <link rel="stylesheet" href="../plugins/splitting/splitting.css">
+  <!-- 下面这个文件针对网格布局有效 -->
+  <link rel="stylesheet" href="../plugins/splitting/splitting-cells.css">
+  <style type="text/css">
+    body {margin: 0;font: 14px/1.8 PingFang;}summary{cursor: pointer;font-size: 16px;}code{white-space: nowrap;}
+    .flex-box {display: flex;height: 100vh;padding: 10px;box-sizing: border-box;}
+    .flex-item {width: 40%;overflow: auto;margin: 0;}
+    .splitting .add,
+    .splitting .word,
+    .splitting .char {
+      font-size: 32px;
+      transition: transform .3s cubic-bezier(.3,0,.3,1), opacity 0.3s linear;
+      transition-delay: calc(20ms + (30ms * var(--char-index)));
+      opacity: 0.4;
+      transform: translate(calc(1em * var(--char-index)), calc(1em * var(--char-index)));
+    }
+    .splitting .word {
+      transition-delay: calc(20ms + (30ms * var(--word-index)));
+      transform: translate(calc(1em * var(--word-index)), calc(1em * var(--word-index)));
+    }
+    .splitting .add {
+      display: inline-block;
+      transition-delay: calc(20ms + (30ms * var(--add-index)));
+      transform: translate(calc(1em * var(--add-index)), calc(1em * var(--add-index)))
+    }
+    .splitting.anim-in .add,
+    .splitting.anim-in .word,
+    .splitting.anim-in .char {
+      opacity: 1;
+      transform: translate(0, 0);
+    }
+    span.col {
+      display: inline-block;
+      width: 70px;
+      height: 20px;margin: 5px;background: #1c94f5;
+    }
+    #cells {height: 100px;}
+    #cells .cell {
+      background: hsl(
+        calc( 360 * var(--col-index) / var(--col-total) ),
+        75%,
+        calc( 5% + (90% * (1 - var(--row-index) / var(--row-total))) )
+      );
+      transition: transform 0.2s cubic-bezier(.75,0,.15,1);
+      transition-property: transform, box-shadow;
+      box-shadow: 0 0em 0em transparent;
+      visibility: visible;
+    }
+    #cells .cell:hover {
+      transform: scale(1.5);
+      box-shadow: 0 1em 2em rgba(0,0,0,0.5);
+      z-index: 2;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="flex-box">
+    <div class="flex-item">
+      <div data-splitting="chars">ABC by chars</div>
+      <div data-splitting="words">Splitting By words</div>
+      <div data-splitting="lines">Splitting <br> By lines</div>
+      <div data-splitting="items"><span>Splitting</span> By <span>items</span></div>
+      <p>Splitting By grid</p>
+      <div id="grid">
+        <div>
+          <span class="col">0-0</span>
+          <span class="col">0-1</span>
+          <span class="col">0-2</span>
+        </div>
+        <div>
+          <div class="col">1-0</div>
+          <div class="col">2-0</div>
+          <div class="col">3-0</div>
+        </div>
+        <span class="col">4-0</span>
+        <span class="col">4-1</span>
+        <span class="col">4-2</span>
+      </div>
+      <p>Splitting By cells</p>
+      <div id="cells" data-splitting="cells" data-columns="10" data-rows="10"></div>
+      <p>Splitting By Custom Add</p>
+      <div id="add">custom <span>add</span></div>
+    </div>
+    <div class="flex-item" style="width: 60%;">
+      <a href="https://splitting.js.org/guide.html" target="_blank" style="position: absolute;right: 50px;">官方文档</a>
+      <details open>
+        <summary><code>data-splitting</code></summary>
+        <p>该属性一方面是插件获取待分割DOM元素的默认属性选择器，一方面设置内容的分割模式，其可以设置的值同<code>Splitting()</code>方法的<code>by</code>配置项</p>
+      </details>
+      <details open>
+        <summary><code>Splitting()</code></summary>
+        <p>调用该方法就会执行分割操作，该方法也提供了可选配置参数options对象。该方法会返回一个数组，包含分割后的结构对象，可用于DOM操作。</p>
+        <ul>
+          <li><code>target</code>选项：执行分割操作的目标对象，值可以是合法的CSS选择器、DOM对象、包含多个DOM对象的数组、NodeList，默认为<code>[data-splitting]</code></li>
+          <li><code>key</code>选项：设置插入的CSS变量名的前缀，比如设置为`pre`则默认的字符索引变量`--char-index`会变成`---prechar-index`(前面会多一个横线)，该值默认为空</li>
+          <li><code>by</code>选项：通过哪种模式对内容进行分割，默认为"chars"按字符分割，其值跟上面提到的<code>data-splitting</code>属性值一致，但这里的优先级更高。
+            可通过开发者功能句查看被分割后的结构，插入了哪些CSS变量和自定义属性。
+            <ul>
+              <li><code>words</code>：按单词分割，索引变量 <code>--word-index</code>，其会在分隔后的单词元素class上添加一个`word`</li>
+              <li><code>chars</code>：按字符分割，<b>默认值</b>，索引变量 <code>--char-index</code>，其会在分隔后的字符元素class上添加一个`char`，其会先按`words`分隔
+                <ul>
+                  <li>若配置<code>whitespace: true</code>选项，则单词间的空格也会被当做一个字符（连续多个空格只会被当做一个）</li>
+                </ul>
+              </li>
+              <li><code>lines</code>：按行分割，索引变量 <code>--line-index</code>，其没有对应的新class，其会先按`words`分隔</li>
+              <li><code>items</code>：按后代元素标签分割，默认为直接子元素，索引变量 <code>--item-index</code>，其没有对应的新class
+                <ul>
+                  <li><code>matching</code>选项，指定要匹配的后代元素，若不指定则默认为目标元素的直接子元素</li>
+                </ul>
+              </li>
+              <li><code>grid</code>：按后代元素的网格化布局(表现上)标签分割，默认为直接子元素，索引变量 <code>--row-index</code>和<code>--col-index</code>，即表示对应元素的行与列索引，其没有对应的新class
+                <ul>
+                  <li><code>matching</code>选项，指定要匹配的后代元素，若不指定则默认为目标元素的直接子元素</li>
+                  <li>这里的网格化布局指界面样子表现上，并非<code>display: grid</code>，其会计算每个匹配元素相对其容器元素边缘的距离来判断该匹配元素表现出的的所在行与列</li>
+                  <li>其实际就是同时按`rows`和`cols`分隔</li>
+                </ul>
+              </li>
+              <li><code>cols</code>：同上面`grid`，只是其只计算列索引(通过比较与容器左边缘的距离)，索引变量 <code>--col-index</code></li>
+              <li><code>rows</code>：同上面`grid`，只是其只计算行索引(通过比较与容器上边缘的距离)，索引变量 <code>--row-index</code></li>
+              <li><code>cells</code>：按单元格分割，依赖于元素本身是<code>display: grid</code>网格布局，需引入<code>splitting-cells.css</code>样式文件，其主要是在容器中插入元素形成指定的网格布局，
+                具有行、列、单元格等索引
+                <ul>
+                  <li><code>image</code>选项，具体查看官方文档（感觉没啥用）</li>
+                  <li><code>cols</code>选项(实际`columns`有效)，设置要分割的列数，也可在目标元素上通过<code>data-columns</code>属性设置</li>
+                  <li><code>rows</code>选项，设置要分割的行数，也可在目标元素上通过<code>data-rows</code>属性设置</li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </details>
+      <details open>
+        <summary><code>Splitting.html()</code></summary>
+        <ul>
+          <li>该方法适用于直接对HTML字符串进行分割处理，其返回分割后的HTML字符串可插入到文档中，适用于初始内容不在页面中而是后面动态插入的情况，可应用于Vue/React等框架下。</li>
+          <li>其使用的方式和接收的配置项与<code>Splitting()</code>方法的基本都一样，只是该方法多一个必选项<code>content</code>用于传入待分割的HTML字符串(注意不是DOM对象，是字符串形式的HTML)</li>
+          <li>如Vue中示例：<code>&lt;div v-html="Splitting.html({ content: contentHtmlString, by: 'chars' })">&lt;/div></code></li>
+        </ul>
+      </details>
+      <details open>
+        <summary><code>Splitting.add()</code></summary>
+        <p>该方法用于添加自定义的分隔策略。配置项如下：</p>
+        <ul>
+          <li><code>by</code>选项，该策略的名字，必须唯一</li>
+          <li><code>key</code>选项，给元素添加`index/total`等自定义CSS变量的前缀</li>
+          <li><code>depends</code>选项，数组，依赖的分隔策略，即前面已有的一些`by`模式，可依赖多个，运行当前具体分割策略前会先执行这里的依赖分隔策略</li>
+          <li><code>split</code>选项，函数，具体的分割方法，其返回的结果(应该是个数组)会被放入`Splitting()`方法返回的数组对象中对应该`by`选项传入的同名属性中。
+            在分割过程中还要考虑如何将原DOM内容替换成分割后的DOM内容(包括要添加的class，插入分割后的DOM时似乎会自动添加对应的索引CSS变量)。该函数接收三个参数：
+            <ul>
+              <li>参数1：target目标DOM对象(运行`depends`依赖之后的结果)</li>
+              <li>参数2：调用当前分割策略时传入的配置对象(所以调用时也可以传入一些自定义的数据)</li>
+              <li>参数3：当前结果对象(包含运行`depends`依赖之后的结果)</li>
+            </ul>
+          </li>
+        </ul>
+      </details>
+    </div>
+  </div>
+
+  <script src="../plugins/splitting/splitting.min.js"></script>
+  <script>
+    const splitResult = Splitting();
+    console.log(splitResult);
+
+    Splitting({
+      target: '#grid',
+      by: 'grid',
+      matching: '.col'
+    });
+
+    Splitting.add({
+      by: 'adds',
+      key: 'add',
+      depends: ['words'],
+      split: function(el, opt, preResult) {
+        console.log(el);
+        console.log(opt);
+        console.log(preResult);
+        
+        var result = [];
+        preResult.words.forEach((word) => {
+          var wordText = word.innerText;
+          word.innerText = '';
+          wordText.split('').forEach((char, index) => {
+            var span = document.createElement('span');
+            span.classList.add('add');
+            span.innerText = char;
+            word.appendChild(span);
+            result.push(span);
+          });
+        });
+        return result;
+      }
+    });
+    var cusAdd = Splitting({
+      target: '#add',
+      by: 'adds',
+      cus: 'data' //  传入自定义内容
+    });
+    console.log(cusAdd);
+
+    window.onclick = () => {
+      document.querySelectorAll('.splitting').forEach((item, index) => {
+        item.classList.toggle('anim-in');
+      });
+    };
+  </script>
+</body>
+
+</html>

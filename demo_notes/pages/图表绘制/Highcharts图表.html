@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Highcharts</title>
+    <style type="text/css">
+        #chart1-wrap {
+            width: 400px;
+            min-height: 300px;
+            margin-right: 50px;
+            border: 1px solid #dadada;
+        }
+    </style>
+</head>
+<body>
+    <div id="chart1-wrap"></div>
+    <div id="chart-client"></div>
+
+<script type="text/javascript" charset="UTF-8" src="../../js/rem.js"></script>
+<script type="text/javascript" charset="UTF-8" src="../../js/jquery-1.11.3.js"></script>
+<!-- Highcharts 从 4.2.0 开始，已经不依赖 jQuery，此处使用5.0.11版本，所以就Highcharts来说可不引入jQuery文件 -->
+<script type="text/javascript" charset="UTF-8" src="../../js/highcharts.js"></script>
+<script type="text/javascript" charset="UTF-8">
+    /*
+     Highcharts是国外一个比较成熟的图表库，具有丰富的图表类型，其采用svg渲染图形，具有很高的兼容性(能兼容IE6)，对于一些兼容性要求较高的项目是一个不错的选择（注意授权）。
+     该图表库个人可以免费使用，但用于商业项目要收费，目前也有国内代理商，在其中文网站上也能看到完整的中文文档，所以也很容易上手。
+     由于Highcharts采用svg渲染图形，存在大量DOM渲染，所以当数据量非常庞大时就不再适用，此时应选择canvas模式渲染的图表库(如国内的Echarts，可以处理千万级的数据)。
+     下面用一个Highcharts的实例将其比较常用的API简单介绍一下。
+    * */
+    $(function(){
+        //全局配置，针对页面上所有图表有效，这样就不用每次实例化都重复这部分配置，同时每个实例里面也可以覆写这些配置
+        Highcharts.setOptions({
+            chart: {
+                backgroundColor: {                      //图表区域背景色，此处是渐变，也可直接设置一个纯色
+                    linearGradient: [0, 0, 400, 300],
+                    stops: [
+                        [0, 'rgb(255, 255, 255)'],
+                        [1, 'rgb(200, 200, 200)']
+                    ]
+                },
+                spacing: 0,                             //内边距
+                zoomType: 'xy',                         //拖动鼠标对图表进行缩放，可选值：x、y、xy，表示可缩放轴向
+                borderWidth: 0,                         //整个图表的边框宽度，不带单位，以像素计
+                plotBorderWidth: 0                      //主图表(图形区域)的边框宽度，默认为0
+            },
+            //版权信息配置
+            credits: {
+                enabled: false,                        //是否显示版权信息，默认true显示
+                text: '显示文本',                       //编辑右下角的链接水印文本（默认是：Highcharts.com）
+                href: 'http://www.example.com'          //链接地址
+            },
+        });
+
+        //实例化具体图表，实例化时的配置可覆盖上面 Highcharts.setOptions()方法中相同的配置部分
+        var chart = new Highcharts.Chart({
+            //图表配置
+            chart: {
+                renderTo: 'chart1-wrap',                // 图表放置的容器（id）
+                type: 'bar'                             //指定图表的类型，默认是折线图（line），其他：横条状（bar）、区块图（area）、分段区块图（areaspline，需highcharts-more.js支持）、
+                                                        // 柱状图（column）、饼图（pie）、 散点图（scatter）、 趋势图（spline，类似折线，但为平滑过渡）
+            },
+            //标题
+            title: {
+                text: '标题',                           //文本
+//                align: 'center',                        //水平对齐方式
+//                verticalAlign: 'top'                    //垂直对齐方式
+//                x: 10,                                  //相对偏移x轴距离，以像素计
+//                y: 100,                                 //相对偏移y轴位置
+//                floating: false,                        //是否浮动，若为true将偏离主图表区，可配合x、y属性使用
+//                margin: 15,                             //标题与副标题之间或者主图表区间的间距
+                //设置CSS样式
+                style: {
+                    color: '#ff0000',
+                    fontSize: '16px'                      //字体大小，可带单位，也可不带单位默认px
+                }
+            },
+            //副标题
+            subtitle:  {
+                text: '副标题'
+            },
+            //X轴配置
+            xAxis: {
+                categories: ['苹果', '香蕉', '橙子'],     //x轴分类名称
+//                labels: { },                              //各分类名称的样式style，格式formatter，角度rotation，显示步长step(每几个显示一个)，显示与否enabled等
+//                max: 15,                                  //X轴最大值(categories为空时)，如果为null，则最大值会根据X轴数据自动匹配一个最大值
+//                min: 0,                                   //X轴最小值(categories为空时)，如果为null，则最小值会根据X轴数据自动匹配一个最小值
+//                gridLineColor: '#ffffff',                 //网格线颜色
+//                gridLineWidth: 1,                         //网格线宽度
+//                lineColor: '#0000ff',                     //轴线颜色
+//                lineWidth: 1,                             //轴线宽度
+//                tickPosition: 'inside',                   //坐标刻度延伸方向（inside向内、outside向外），默认向外
+//                tickmarkPlacement: 'on',                  //坐标刻度与坐标值的对齐方式（on坐标刻度上，between坐标刻度之间）
+                //X轴名称，支持text、enabled、align、rotation、style等属性
+                title: {
+//                    enable: false,                         //显示标题与否，默认true
+                    text: '水果',
+                    rotation: -90                         //旋转角度（非弧度）
+                }
+            },
+            //Y轴配置，与X轴基本一致
+            yAxis: {
+                title: {
+                    text: '数量'
+                },
+                gridLineColor: '#ffffff',
+                gridLineWidth: 1,
+                lineColor: '#ffffff',
+                lineWidth: 1
+            },
+            //鼠标移入信息提示配置
+            tooltip: {
+//                enabled: false,                       //是否启用信息提示框，默认true
+//                shared: true,                         //是否共享（默认false，即多个图形时内容是否显示在同一个提示框中）
+//                split: true,                          //是否分开显示（默认false，即多个图形时是否各自显示一个提示框）
+                valuePrefix: '有',                     //数据值前缀
+                valueSuffix: '个'                      //数据值后缀（单位）
+            },
+            //图例信息展示配置
+            legend: {
+//                enabled: false,                       //是否显示图例，默认true显示
+                layout: 'horizontal',                  //各项排列方向，水平（horizontal）、垂直（vertical）
+                align: 'center',                       //水平方向对齐方式：left、center、right
+                verticalAlign: 'bottom',               //垂直方向对齐方式：top、middle、bottom
+                borderWidth: 0                         //边框宽度
+            },
+            //数据组信息
+            series: [{
+                type: 'line',                          //数据展示类型，默认是折线图（line），此处未显示设置则按上面设置的chart.type展示，有显示设置则会覆盖上面的chart.type
+                name: '小明',                          //数据组名
+                lineWidth: lib.flexible.rem2px(0.04),  //线宽
+                marker: {                              //数据点标记样式
+                    symbol: 'circle',                  //形状
+                    lineWidth: 2,                      //边框宽度
+                    lineColor: 'rgba(255,255,255,0.7)',//边框颜色
+                    fillColor: '#F6496A'               //内部填充颜色
+                },
+                data: [2, 1, 4]                        //数据值，可以为数组或者JSON格式的数据，这个数组中直接一个值就代表JSON格式中的y值
+            },{
+                name: '小红',
+                color: '#00ffff',                      //该组数据图形和说明文字颜色
+                data: [{                               //JSON格式数据
+                    name: 'point1',                    //鼠标移入时显示的提示信息中的标题，默认是坐标轴上的条目
+                    y: 3                               //数据值
+                },{
+                    name: 'point2',
+                    y: 2
+                },{
+                    name: 'point3',
+                    y: 1
+                }]
+            }],
+            //数据点配置
+            plotOptions: {
+                enabled: true,
+                allowPointSelect: true
+            }
+        });
+
+        //环形图
+        var clientChart = new Highcharts.Chart({
+            chart: {
+                type: 'pie',
+                renderTo: 'chart-client'
+            },
+            title: {
+                floating:true,
+                text: '<sapn style="font-size: 0.64rem;">16</sapn>',
+                y: lib.flexible.rem2px(2.5)
+            },
+            subtitle: {
+                floating:true,
+                text: '<span style="font-size:0.32rem;color:#9c9c9c;">在售商品(件)</span>',
+                y: lib.flexible.rem2px(3.2)
+            },
+            tooltip: {
+                enabled: false
+            },
+            plotOptions: {
+                pie: {
+                    size: '70%',    //环的尺寸
+                    innerSize: '90%',   //  环内部尺寸
+                    dataLabels: {
+                        format: '{point.name}<br/>{point.percentage:.1f}%',      //显示百分比占比，其中:.1f表示保留一位小数
+                        style: {
+                            fontSize: lib.flexible.rem2px(0.32),
+                            color: '#9c9c9c',
+                            fontWeight: 'normal',
+                            lineHeight: lib.flexible.rem2px(0.5),
+                            textOutline: 0              //文本轮廓线
+                        },
+                        padding: 0,
+                        distance: 10,                   //说明文字与图形的距离（即指示线长度）
+                        softConnector: false            //指示线是否曲线过渡，默认true
+                    },
+		    //showInLegend: true			//显示图例
+                }
+            },
+            series: [{
+                data: [
+                    {name:'老客交易额占比', y: 1, color: '#ffba01'},
+                    {name:'新客交易额占比', y: 1, color: '#72abff'}
+                ]
+            }]
+        });
+
+        //窗口尺寸改变时重新适应（图表默认是自适应的，但是在窗口改变时，实际效果有出现尺寸偏短或偏长，所以延迟一段时间手动触发重新适应宽度）
+        //窗口尺寸改变时重新适应（图表默认是自适应的，但是在窗口改变时，实际效果有出现尺寸偏短或偏长，所以延迟一段时间手动触发重新适应宽度，
+        // 一般情况下界面渲染完较少出现窗口大小再改变的情况，即使改变，延迟时间不长，在用户体验上也不会造成负面影响，反而能更好的适配窗口尺寸）
+        $(window).on('resize',function(){
+            setTimeout(function(){
+                chart.reflow();
+                clientChart.reflow();
+            },300);
+        });
+    });
+</script>
+</body>
+</html>
