@@ -2,11 +2,11 @@
 .svn
 .git
 node_modules
-dist
 yarn.lock
 package-lock.json
 *.iml
 out
 gen
+dist
 demo_notes/assets
 demo_notes/file

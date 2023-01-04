@@ -14,12 +14,12 @@
     1、链接网址：<a href="http://www.baidu.com">href="http://www.baidu.com"</a>
     target="打开位置"，默认当前窗口打开，target="_blank"表示在新窗口打开连接，target="iframeName"表示在名为iframeName的iframe中打开
     2、打开文件：<a href="../../images/15.jpg" target="_blank">href="images/15.jpg"图片</a>
-               <a href="../../file/爱康体检报告.pdf">href="file/爱康体检报告.pdf"pdf文件</a>
+               <a href="../../file/报告.pdf">href="file/报告.pdf"pdf文件</a>
                支持图片文件、pdf文件
     3、a.下载文件(直接href指向资源位置，不需要添加额外属性，支持IE)：<a href="../../file/Desktop.rar">rar压缩文件</a>
-                <a href="../../file/试用期阶段评估模板.ppt">ppt文件</a>
-                <a href="../../file/个人review项目资料.xlsx">excel表格</a>
-                <a href="file/正式员工-劳动合同三方协议-20170329.docx">word文档</a>
+                <a href="../../file/模板.ppt">ppt文件</a>
+                <a href="../../file/资料.xlsx">excel表格</a>
+                <a href="file/文档.docx">word文档</a>
                 支持压缩文件、ppt文件、excel文件、word文档
        b.下载文件(添加download属性，只有Firefox和chrome支持)：<a href="../../images/15.jpg" download="下载文件名" title="download中下载文件名可不设置，但download属性要保留">href="images/15.jpg" download="文件名可选"</a>
 
@@ -97,7 +97,7 @@
             })()
         }
     }
-    var aLink = parseURL("http://www.cnblogs.com/luoqian/p/5901780.html?id=wj&pwd=123456#ada");
+    var aLink = parseURL("http://www.xxx.com/index.html?id=wj&pwd=123456#ada");
     console.log(aLink);
 
 </script>

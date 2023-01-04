@@ -74,7 +74,7 @@
 
     console.log(/&.+;/g.test('frank &abc; beans'));     //true
 
-    console.log("abcdef".match("d"));   //["d", index: 3, input: "abcdef"]，返回数组
+    console.log("abcdef".match("d"));   //["d", index: 3, input: "abcdef", groups: undefined]，返回数组
     console.log("abcdef".search("d"));   //3，只返回第一次出现的下标
     console.log("abcded".search(/\w/));   //0
 

@@ -168,13 +168,14 @@
     /** 当目标元素内部有节点增加时可用jQuery监听'DOMNodeInserted'事件(IE9+，及其他主流)，但这些DOM变动事件在DOM3级事件规范中已被移除 */
     $(document).on('DOMNodeInserted',function(){ });
 
-    /** 鼠标滚动事件；注意滚动事件scroll与鼠标滚动事件mousewheel/DOMMouseScroll不一样，滚动事件只要绑定对象有滚动就会触发，而鼠标滚动事件只有通过鼠标相关设备触发滚动时才触发(例如拖动滚动条就只会触发滚动事件，而不会触发鼠标滚动事件) */
+    /** 鼠标滚动事件；注意滚动事件scroll与鼠标滚动事件wheel/mousewheel/DOMMouseScroll不一样，滚动事件只要绑定对象有滚动或是滚动操作(如滚动鼠标但是是缩放操作)就会触发，而鼠标滚动事件只有通过鼠标相关设备触发滚动时才触发(例如拖动滚动条就只会触发滚动事件，而不会触发鼠标滚动事件) */
     $(document).on('mousewheel DOMMouseScroll',function(event){  //鼠标滚动监听mousewheel事件，但是在Firefox下却是DOMMouseScroll事件
         //jquery中，最终传入事件处理程序的 event 其实已经被 jQuery 做过标准化处理，其原有的事件对象则被保存于 event 对象的 originalEvent 属性之中
         //可根据滚动事件中的wheelDelta属性(Firefox中为detail属性)的正负来判断滚动条是向上滚动还是向下滚动的，因为这两个属性是原生事件对象中的，jQuery标准化改造后的event对象中并不包含这两个属性，所以需要用到原生事件对象
         var e = event.originalEvent || window.event.originalEvent;
         console.log('鼠标在滚动，触发' + e.type +'事件！',e.wheelDelta>0, e.detail>0);
     });
+    // 标准的都支持的 wheel 事件已替代 mousewheel/DOMMouseScroll 事件
     document.addEventListener('mousewheel',function(event){ //非Firefox中鼠标滚动监听mousewheel事件
         var e = event || window.event;
 //        console.log('鼠标在滚动，触发' + e.type +'事件！',e.wheelDelta>0);//非Firefox浏览器中wheelDelta属性值大于0表示向上滚动，小于0则表示向下滚动，与Firefox中的detail属性刚好相反
