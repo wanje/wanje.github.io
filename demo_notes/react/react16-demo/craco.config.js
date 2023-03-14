@@ -90,6 +90,7 @@ module.exports = {
         if (newRule) oneOfRule.oneOf.splice(cssIndex + 1, 0, newRule);
       }
       webpackConfig.module.rules.push({
+        //! @craco/craco 升级到5.8.0 会导致 module.less 等相关错误，应该是版本不兼容的问题
         test: /\.module\.less$/,
         use: [
           { loader: 'style-loader' },
@@ -180,6 +181,7 @@ module.exports = {
         // },
         lessLoaderOptions: {
           sourceMap: !isProduction,
+          //! 高版本可能是 additionalData 字段
           prependData: `
             @import "~@/style/variables.less";
             @import "~@/style/mixins.less";
