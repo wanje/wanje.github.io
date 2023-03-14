@@ -1,0 +1,17 @@
+.less-scoped {
+  background: #ff0000;
+  color: #ffffff;
+
+  &-nest {
+    color: #000;
+
+    b {
+      color: #eee;
+      background: @-blue;
+
+      &:hover {
+        color: #000;
+      }
+    }
+  }
+}

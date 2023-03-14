@@ -1,0 +1,46 @@
+{
+  "name": "react16-demo",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "craco start",
+    "build": "GENERATE_SOURCEMAP=false craco build",
+    "build:test": "GENERATE_SOURCEMAP=false REACT_APP_ENV=test_build craco build",
+    "test": "craco test",
+    "dev": "craco start"
+  },
+  "dependencies": {
+    "antd": "^4.6.1",
+    "axios": "^0.20.0",
+    "craco-less": "^1.17.0",
+    "craco-plugin-scoped-css": "^1.1.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-router-config": "^5.1.1",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "3.4.3"
+  },
+  "devDependencies": {
+    "@craco/craco": "5.8.0",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2",
+    "babel-plugin-import": "^1.13.0",
+    "webpack-bundle-analyzer": "^3.8.0"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "last 3 versions",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

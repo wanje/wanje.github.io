@@ -1,0 +1,104 @@
+.clearfix {
+  *zoom: 1;
+
+  &:before,
+  &:after {
+    content: "";
+    display: table;
+  }
+  &:after {
+    clear: both;
+    font-size:0;
+    line-height:0;
+    visibility:hidden;
+    height:0;
+  }
+}
+.flex {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+}
+.gradient2top(@startColor; @endColor) {
+  background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0%, @startColor), color-stop(100%, @endColor));
+  background-image: -webkit-linear-gradient(bottom, @startColor, @endColor);
+  background-image: -o-linear-gradient(bottom, @startColor, @endColor);
+  background-image: -moz-linear-gradient(bottom, @startColor, @endColor);
+  background-image: -ms-linear-gradient(bottom, @startColor, @endColor);
+  background-image: linear-gradient(to top, @startColor, @endColor);
+}
+.gradient2right(@startColor; @endColor) {
+  background-image: -webkit-gradient(linear, left top, right top, color-stop(0%, @startColor), color-stop(100%, @endColor));
+  background-image: -webkit-linear-gradient(left, @startColor, @endColor);
+  background-image: -o-linear-gradient(left, @startColor, @endColor);
+  background-image: -moz-linear-gradient(left, @startColor, @endColor);
+  background-image: -ms-linear-gradient(left, @startColor, @endColor);
+  background-image: linear-gradient(to right, @startColor, @endColor);
+}
+.gradientRadial() {
+  background-image: -webkit-radial-gradient(@arguments);
+  background-image:-o-radial-gradient(@arguments);
+  background-image:-moz-radial-gradient(@arguments);
+  background-image: radial-gradient(@arguments);
+}
+.boxShadow() {
+  -webkit-box-shadow: @arguments;
+  -moz-box-shadow: @arguments;
+  box-shadow: @arguments;
+}
+.keyframes(@name; @content) {
+  @-webkit-keyframes @name {
+    @content();
+  }
+  @keyframes @name {
+    @content();
+  }
+}
+.hoverLink(@color:@-color-blue;...) {
+  &:hover {
+    cursor: pointer;
+    color: @color;
+    @rest();
+  }
+}
+.hoverBth(@color:@-blue;...) {
+  &:hover {
+    background: darken(@color, 10);
+    @rest();
+  }
+}
+.text-overflow(@line:1) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: @line;
+  -webkit-box-orient: vertical;
+  text-align: justify;
+}
+.transition() {
+  -webkit-transition: @arguments;
+  -moz-transition: @arguments;
+  -o-transition: @arguments;
+  transition: @arguments;
+}
+.transform() {
+  -webkit-transform: @arguments;
+  -moz-transform: @arguments;
+  -ms-transform: @arguments;
+  -o-transform: @arguments;
+  transform: @arguments;
+}
+.animation() {
+  -webkit-animation: @arguments;
+  -moz-animation: @arguments;
+  -o-animation: @arguments;
+  animation: @arguments;
+}
+.select-none() {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}

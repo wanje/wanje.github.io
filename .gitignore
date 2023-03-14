@@ -7,6 +7,7 @@ package-lock.json
 *.iml
 out
 gen
-dist
+/**/static/mock
+/**/static/mock-json
 demo_notes/assets
 demo_notes/file
