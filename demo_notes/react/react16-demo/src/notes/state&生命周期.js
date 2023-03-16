@@ -88,7 +88,7 @@ class StateLifeCycle extends React.Component {
     console.log("4.组件属性更新了-componentWillReceiveProps");
   }
 
-  shouldComponentUpdate() {
+  shouldComponentUpdate(nextProps, nextState) {
     // 组件是否需要更新，返回布尔值，优化点
     console.log("5.组件是否应该更新？-shouldComponentUpdate");
     return true;
@@ -99,7 +99,7 @@ class StateLifeCycle extends React.Component {
     console.log("6.组件将要更新-componentWillUpdate");
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(preProps, preState) {
     console.log("7.组件已经更新-componentDidUpdate");
   }
 
