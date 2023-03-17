@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { message } from 'antd';
+// import { message } from 'antd';
 
 // 可在scripts命令行中设置以`REACT_APP_`开头的额外环境变量，须注意该方式设置的变量只能在执行shell时被读取到，平时在js中是不能读取到的
 // axios.defaults.baseURL = process.env.REACT_APP_BASE_API;
@@ -11,7 +11,7 @@ axios.interceptors.request.use(
   error => {
     // Do something with request error
     console.error(error); // for debug
-    message.error(error.message);
+    // message.error(error.message);
     Promise.reject(error)
   }
 );

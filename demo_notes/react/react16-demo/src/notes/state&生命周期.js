@@ -78,7 +78,7 @@ class StateLifeCycle extends React.Component {
   }
 
   componentDidMount() {
-    // 组件已挂载（已被渲染到DOM中），可进行状态更新操作
+    // 组件已挂载（已被渲染到DOM中），可进行状态更新数据初始请求等操作
     console.log("3.组件已经挂载-componentDidMount");
   }
 
@@ -100,6 +100,7 @@ class StateLifeCycle extends React.Component {
   }
 
   componentDidUpdate(preProps, preState) {
+    // 可进行更新数据请求等非事件行为直接触发的操作
     console.log("7.组件已经更新-componentDidUpdate");
   }
 

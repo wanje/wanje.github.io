@@ -21,8 +21,6 @@ import {
   renderRoutes // 函数方法：renderRoutes(routerConfig,extraProps={},switchProps={})，渲染路由(不放在`Switch`中)，使用该方法渲染路由则其子路由中也要使用该方法(不能使用`Route`组件去渲染)，
                // 该方法会将匹配到的`route`(routerConfig中数据的引用)作为props参数之一传递给子组件，子组件通过`route.routes`访问子路由数据(根据自己设置子路由的属性，子路由使用`children`属性则通过`route.children`访问)
 } from "react-router-config";
-import { Typography } from 'antd';
-const { Text } = Typography;
 
 /**==================================*/
 /**========== `history`对象 ==========*/
@@ -156,20 +154,20 @@ function Home({ match, location, history }) {
   return (
     <div>
       <h3>这里是“首页”内容</h3>
-      <Text type="danger">BrowserRouter</Text>组件的作用同`vue-router`中的`history`模式(也需要服务端配置一起使用)，另有<Text type="danger">HashRouter</Text>组件的作用同`vue-router`中的`hash`模式
-      <p>一般将<Text type="danger">BrowserRouter</Text>或<Text type="danger">HashRouter</Text>组件包裹在入口文件`index.js`中<Text type="danger">App根组件</Text>外，这样其他地方就都可以不用使用</p>
+      <span className="color-red">BrowserRouter</span>组件的作用同`vue-router`中的`history`模式(也需要服务端配置一起使用)，另有<span className="color-red">HashRouter</span>组件的作用同`vue-router`中的`hash`模式
+      <p>一般将<span className="color-red">BrowserRouter</span>或<span className="color-red">HashRouter</span>组件包裹在入口文件`index.js`中<span className="color-red">App根组件</span>外，这样其他地方就都可以不用使用</p>
       <p>
-        <Text type="danger">Switch</Text>组件通过查找所有的子`Route`并渲染与当前URL<Text type="danger">匹配的第一个`Route`</Text>的内容(所以应尽量将更加具体的包含较长路径的路由放在前面，以免先匹配到前面的短路由)，
-        若同级只有一个路由也就不需要添加该组件了（作用类比js中的s`witch...case...`）。<Text type="danger">需要注意的是：</Text>
+        <span className="color-red">Switch</span>组件通过查找所有的子`Route`并渲染与当前URL<span className="color-red">匹配的第一个`Route`</span>的内容(所以应尽量将更加具体的包含较长路径的路由放在前面，以免先匹配到前面的短路由)，
+        若同级只有一个路由也就不需要添加该组件了（作用类比js中的s`witch...case...`）。<span className="color-red">需要注意的是：</span>
         不放在`Switch`中的`Route`将始终渲染(被匹配到时，但使用`chuildren`属性指定的渲染函数不管匹配与否此时都会执行)。
       </p>
       <p>
-        <Text type="danger">Route</Text>组件类似Vue中的<Text type="danger">router-view</Text>组件，
-        需要注意的是<Text type="warning">&lt;Route path&gt;</Text>匹配URL的开头，而不是整个开头。
-        所以，<Text type="warning">&lt;Route path ="/"&gt;</Text>将始终与任意一个URL匹配
+        <span className="color-red">Route</span>组件类似Vue中的<span className="color-red">router-view</span>组件，
+        需要注意的是<span className="color-orange">&lt;Route path&gt;</span>匹配URL的开头，而不是整个开头。
+        所以，<span className="color-orange">&lt;Route path ="/"&gt;</span>将始终与任意一个URL匹配
       </p>
-      <p><Text type="danger">Link</Text>组件类似Vue中的<Text type="danger">router-link</Text>组件，会渲染成一个实际的`a`标签</p>
-      <p><Text type="danger">NavLink</Text>是一种特殊的`Link`组件，相比`Link`组件，其多了一个激活状态：当与当前路由匹配时，其会有一个`active`的 class（可通过<Text type="warning">activeClassName</Text>属性自定义）</p>
+      <p><span className="color-red">Link</span>组件类似Vue中的<span className="color-red">router-link</span>组件，会渲染成一个实际的`a`标签</p>
+      <p><span className="color-red">NavLink</span>是一种特殊的`Link`组件，相比`Link`组件，其多了一个激活状态：当与当前路由匹配时，其会有一个`active`的 class（可通过<span className="color-orange">activeClassName</span>属性自定义）</p>
     </div>
   )
 }
@@ -188,7 +186,7 @@ class Error404 extends React.Component {
 
 function AboutIntro({ match, location, history }) {
   console.log("AboutIntro：", { match, location, history }); // 该组件不是`Route`直接指定渲染组件，直接访问不到这几个路由属性，可使用`withRouter`进行包装，其实也可以使用hook
-  return <Text type="danger" title="点击回到首页" onClick={() => history.push('/')}>PaaS的前身叫AC</Text>
+  return <span className="color-red" title="点击回到首页" onClick={() => history.push('/')}>PaaS的前身叫AC</span>
 }
 /** 
  * 使用`withRouter`对组件进行包装得到一个使原组件能访问`Route`特殊属性的新组件(要使用该新组件，直接使用原组件是访问不到相关属性的)

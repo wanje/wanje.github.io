@@ -13,7 +13,8 @@ import CodeSeparateLazy from './notes/代码分割&懒加载';
 import RouterView from './notes/路由';
 import Context from './notes/context';
 import ErrorBoundary from './notes/错误边界';
-import useHook from './notes/使用Hook';
+import UseHook from './notes/使用Hook';
+import './style/common.less';
 import './App.less'; // 放置位置会影响样式插入的顺序（放在组件之后引入，样式就会插入到组件内引入的样式之后）
 import './App.scoped.css';
 import './App.scoped.less';
@@ -52,8 +53,7 @@ function App() {
         <Context />
         <h2>错误边界</h2>
         <ErrorBoundary />
-        <h2>使用Hook</h2>
-        <useHook />
+        <UseHook />
       </div>
   )
 }
