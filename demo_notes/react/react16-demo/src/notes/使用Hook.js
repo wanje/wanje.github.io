@@ -37,7 +37,7 @@ function UseEffectHook() {
   //! 可以看做是componentDidMount、componentDidUpdate、componentWillUnmount 这三个生命周期函数的组合
   //* 第一个参数为一个effect函数，在 componentDidMount 和 componentDidUpdate 时调用，该effect函数在每次渲染中都会重新被react创建并替换原先的以便获取到的数据都是最新的(替换并不会导致里面的逻辑重复产生副作用)
   useEffect(() => {
-    document.title = '文档title';
+    document.title = '使用Hook';
     document.body.addEventListener('click', handleClick);
 
     //! 若返回一个函数(可选)，则该返回的函数将在 componentWillUnmount 时调用，用于清除相关副作用操作(一般用于需要成对的操作，像事件绑定与移除，消息订阅与取消等)，这里的清除操作实际每次渲染后都会执行而不只是组件卸载的时候
@@ -49,14 +49,28 @@ function UseEffectHook() {
     }
 
     //* 第二个参数(可选)为一个数组，用于指明该 effect 依赖哪些 props 或 state 数据（此时只有这些指定依赖数据发生变化时才执行该hook）
-    // 依赖数据项也可以是对象或数组下的某个数据：aProp、aProp.id、aState、aState[0]
+    // 依赖数据项也可以是对象或数组下的某个数据：[aProp, aProp.id, aState, aState[0]]
     //! 默认不传第二个参数则表示依赖所有导致渲染更新的数据，为空数组时表示不依赖任何数据，近似只在 componentDidMount 和 componentWillUnmount 时执行一次
-  }, []); //! 应确保确实无任何依赖数据(否则实际用到了却未添加进该依赖表的数据将始终是最初的旧数据)，故 useEffect 中用到的函数最好都放在 useEffect 中去声明(就近原则更容易注意到是否有依赖数据)
+  }, []); //! 应确保确实无任何依赖数据(否则实际用到了却未添加进该依赖表的数据将始终是最初的旧数据)，故只在 useEffect 中用到的函数最好都放在 useEffect 中去声明(就近原则更容易注意到是否有依赖数据)
+
+  //? 当依赖数据频繁变化，而又不需要如此频繁触发effect时(或从性能优化角度考虑)，可以考虑将频繁修改相关状态的逻辑换到effect内部并使用`setState`的函数参数形式
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    console.log('effect');
+    //以下为举例，实际场景下可能没有下例这样的
+    const id = setInterval(() => {
+      setCount(val => val + 1); // 在这不依赖于外部的 `count` 变量，而直接使用改变状态值时的函数参数形式来获取先关状态
+      //! 若换成如下依赖外部`count`的形式，则首先需要在依赖列表中添加`count`(易遗忘导致bug，一直是初始值)，然后将使得每次`count`更新都会导致这里的effect函数执行
+      // setCount(count + 1);   //? 虽然在外部用`useRef`hook创建一个对某状态的引用，在effect内部使用该引用的方式来避免直接添加进依赖表的方式也可达到目的，但不到万不得已不应这样做，因为这样导致依赖难以预测，不好维护和debug
+    }, 10000);
+    return () => clearInterval(id);
+  }, []); // 我们的 effect 不使用组件作用域中的任何变量，也就不会在DOM每次渲染频繁执行effect
 
   return (
     <div>
       <h3>useEffect</h3>
       <button data-event>测试事件委托</button>
+      <p>依赖数据频繁变化：{count}</p>
     </div>
   )
 }
