@@ -4,7 +4,12 @@ import React, {  //? 这里的 React 对象导入不能省略，使用JSX语法�
 } from "react";
 
 //! Hook 是 React 16.8+ 的新增特性，可以在函数组件中使用 state 以及其他的 React 特性，让函数组件也可成为有状态组件
-//! Hook 在 class 组件中无效，只只适用于函数组件或自定义hook
+//! Hook 在 class 组件中无效，只适用于函数组件或自定义hook（除此外的普通JS函数中也不能使用）
+
+//! Hook 只能在最顶层使用，不能在循环、条件或嵌套函数中调用，因为同一Hook可以多次使用是根据调用顺序来确定一一对应相关state或effect等内容的，初次渲染就决定了后续每次重渲染时hook调用顺序也要一致，
+//! 故要求每个声明的hook在每次渲染时要么都会调用，要么都不会调用，使得每次所有hook的执行顺序都一致，而不允许某hook这次调用了下次可能没调用，
+//! 若出现上面提到的不允许的方式，则调用顺序就不固定，也就造成Hook与其关联的state或effect对应错误（像条件语句就会导致条件中的hook只会在满足条件时调用，而不是每次都会调用到）,
+//! 若要用到上面提到的循环、条件或嵌套函数，可以将其逻辑转移到 hook 的内部去
 
 //* useState，可多次使用以分离逻辑
 // 该hook允许在函数组件中添加状态管理
@@ -75,12 +80,22 @@ function UseEffectHook() {
   )
 }
 
+//* 自定义 Hook
+function UseCustomHook() {
+  return (
+    <div>
+      <h3>自定义Hook</h3>
+    </div>
+  )
+}
+
 export default function() {
   return (
     <div>
       <h2>使用Hook</h2>
       <UseStateHook />
       <UseEffectHook />
+      <UseCustomHook />
     </div>
   )
 }
