@@ -30,7 +30,14 @@ input, textarea, select { font-family: inherit;font-size: inherit;font-weight: i
 legend { color: #4f4f4f;}
 a,
 button {outline: none;}
-a {text-decoration: none;}
+a {
+  color: #2199ed;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
 body {
   font: 14px/1.6 "Helvetica Neue", Helvetica, Arial, "Microsoft YaHei", "PingFang SC", "Hiragino Sans GB", "Heiti SC", "WenQuanYi Micro Hei", sans-serif;
   color: #363636;

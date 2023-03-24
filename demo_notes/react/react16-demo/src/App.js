@@ -27,7 +27,7 @@ function App() {
         <div className="less-scoped">less scroped 测试 <span className="less-scoped-nest">嵌套 <b>测试</b></span></div>
         <div className={LessModule['less-module']}>less module 测试</div>
         <Game />
-        <h2 className="autoprefixer">路由</h2>
+        <h2>路由</h2>
         <RouterView />
         <h2>JSX语法</h2>
         <JsxGrammar />

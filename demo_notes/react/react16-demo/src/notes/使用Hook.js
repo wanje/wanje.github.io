@@ -92,7 +92,7 @@ function UseCustomHook() {
 export default function() {
   return (
     <div>
-      <h2>使用Hook</h2>
+      <h2><a href="../src/notes/使用Hook.js">使用Hook</a></h2>
       <UseStateHook />
       <UseEffectHook />
       <UseCustomHook />
