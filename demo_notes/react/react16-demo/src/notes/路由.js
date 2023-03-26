@@ -291,6 +291,7 @@ function RouterView() {
       // children={<RouterCont />} /* 要渲染的子元素，其与将子元素写在标签直接的方式`<Router><RouterCont /></Router>`是一样的，须注意其值是元素标签，不只是一个元素名 */
       // hashType="slash" /* `HashRouter`组件专有属性，用于设置`window.location.hash`的编码类型(即`#`后挨着的符号)，默认`slash`(#/about/ued)，另有`noslash`(#about/ued)、`hashbang`(#!/about/ued) */
     >
+      <h2><a href="../src/notes/路由.js">路由</a></h2>
       <nav>
         路由：
         <NavLink exact className="mgl-10" to="/">Home</NavLink>

@@ -34,6 +34,7 @@ class ListKey extends React.Component {
   render() {
     return (
       <div>
+        <h2><a href="../src/notes/列表&key.js">列表&key</a></h2>
         <button onClick={this.handleClick}>增加一行</button>
         <ul>
           {

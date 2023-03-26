@@ -27,31 +27,18 @@ function App() {
         <div className="less-scoped">less scroped 测试 <span className="less-scoped-nest">嵌套 <b>测试</b></span></div>
         <div className={LessModule['less-module']}>less module 测试</div>
         <Game />
-        <h2>路由</h2>
         <RouterView />
-        <h2>JSX语法</h2>
         <JsxGrammar />
-        <h2>组件&props</h2>
         <ComponentProps />
-        <h2>state&组件生命周期</h2>
         <StateLifeCycle />
-        <h2>事件处理</h2>
         <EventHandle />
-        <h2>条件渲染</h2>
         <ConditionRender />
-        <h2>列表&key</h2>
         <ListKey />
-        <h2>表单&受控组件</h2>
         <FormWithCtrl />
-        <h2>状态提升</h2>
         <StateToUp />
-        <h2>组合vs继承</h2>
         <GroupInherit />
-        <h2>代码分割&懒加载</h2>
         <CodeSeparateLazy />
-        <h2>Context上下文</h2>
         <Context />
-        <h2>错误边界</h2>
         <ErrorBoundary />
         <UseHook />
       </div>

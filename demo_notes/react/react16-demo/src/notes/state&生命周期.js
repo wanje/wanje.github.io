@@ -122,14 +122,15 @@ class StateLifeCycle extends React.Component {
   render() {
     console.log("组件渲染-render");
 
+    let result = null;
     if (this.state.hasError) {
       //! 若作为错误边界处理组件，内部组件出错时进行UI降级
       // 你可以自定义降级后的 UI 并渲染
-      return <h1>出错啦！</h1>;
-    }
-    //! 若作为错误边界处理组件，内部组件未出错时则正常渲染内部组件(即children)
-    //! 这里只是功能介绍未传子组件就作为普通组件显示`||`后面定义的元素，可查看`错误边界`笔记部分例子
-    return this.props.children || (
+      result = <h1>出错啦！</h1>;
+    } else {
+      //! 若作为错误边界处理组件，内部组件未出错时则正常渲染内部组件(即children)
+      //! 这里只是功能介绍未传子组件就作为普通组件显示`||`后面定义的元素，可查看`错误边界`笔记部分例子
+      result = this.props.children || (
         <div>
           <p>
             <button onClick={this.handleCountClick}>计次+1</button>
@@ -140,7 +141,15 @@ class StateLifeCycle extends React.Component {
             <span>：{this.state.timer}</span>
           </p>
         </div>
-    );
+      );
+    }
+    
+    return (
+      <div>
+        <h2><a href="../src/notes/state&生命周期.js">state&组件生命周期</a></h2>
+        { result }
+      </div>
+    )
   }
 }
 

@@ -45,6 +45,7 @@ export default class Context extends Component {
       //! 须注意，若`value`属性指定的值是一个对象，则应该将该对象提升到`Provider`标签外存储或组件的`state`中，这里只引用，而不是直接将对象声明在`value`属性中，
       //! 避免每次`Provider`重渲染时，即使`value`值未变化，也会使其内部订阅该context的子孙组件都重渲染(因每次`value`的对象值都相当于是新声明的，与原对象不是同一个地址，被认为数据已变化)
       <ThemeContext.Provider value={this.state}> {/* 将主题切换函数也作为context数据传递到组件树中，可达到在子孙组件中修改context数据的目的 */}
+        <h2><a href="../src/notes/Context.js">Context</a></h2>
         <div className="border">
           <p>顶层组件</p>
           <MiddleComp />

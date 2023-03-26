@@ -89,12 +89,15 @@ class ComponentProps extends React.Component {
 
   render() {
     return (
+      <div>
+        <h2><a href="../src/notes/组件&props.js">组件&props</a></h2>
         <div>
           <button className="reduce" onClick={this.handleClick}>-</button>
           <SpanTag value={this.state.number}/>
           <button className="increase" onClick={this.handleClick}>+</button>
           <PropsOrder style={{color: 'red'}} title="传入的新title" />
         </div>
+      </div>
     );
   }
 }

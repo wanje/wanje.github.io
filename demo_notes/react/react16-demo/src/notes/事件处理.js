@@ -69,6 +69,7 @@ class EventHandle extends React.Component {
 
     return (
         <div>
+          <h2><a href="../src/notes/事件处理.js">事件处理</a></h2>
           <span>数量：{this.state.number}件</span>
           {/** 方式一 */}
           {/* JSX中事件绑定使用小驼峰命名，而非原生HTML中那样的全小写，传入的事件处理函数只是函数指向，不像HTML中要添加括号表示执行 */}

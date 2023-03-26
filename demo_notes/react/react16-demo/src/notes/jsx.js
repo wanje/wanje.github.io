@@ -35,6 +35,7 @@ const compData = {
 function JsxGrammar(props) {
   return (
       <div>
+        <h2><a href="../src/notes/jsx.js">JSX语法</a></h2>
         { /*注释，注意若是穿插在render中html间的注释(文本区域)，要使用花括号包裹，且只能使用斜杠/加星号*的方式，否者都会当做是html中的文本*/ }
         <div>{a1}{a2}</div>
         <div className="aClass">由于HTML中的 class 和 for 属性在JS中为保留关键字，故在 JSX 中元素标签上使用 className 和 htmlFor 替代，以免与JS中的 class 和 for 弄混</div>

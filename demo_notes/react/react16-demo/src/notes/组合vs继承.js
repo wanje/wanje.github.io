@@ -24,9 +24,12 @@ function GroupInherit() {
   const foot = (<p>尾部</p>);
 
   return (
-    <Dialog header={head} footer={foot} theme="blue">
-      <p>dialog主体内容</p>
-    </Dialog>
+    <div>
+      <h2><a href="../src/notes/组合vs继承.js">组合vs继承</a></h2>
+      <Dialog header={head} footer={foot} theme="blue">
+        <p>dialog主体内容</p>
+      </Dialog>
+    </div>
   );
 }
 
