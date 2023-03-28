@@ -25,7 +25,7 @@ function GroupInherit() {
 
   return (
     <div>
-      <h2><a href="../src/notes/组合vs继承.js">组合vs继承</a></h2>
+      <h2><a target="_blank" href="../src/notes/组合vs继承.js">组合vs继承</a></h2>
       <Dialog header={head} footer={foot} theme="blue">
         <p>dialog主体内容</p>
       </Dialog>

@@ -90,7 +90,7 @@ class ComponentProps extends React.Component {
   render() {
     return (
       <div>
-        <h2><a href="../src/notes/组件&props.js">组件&props</a></h2>
+        <h2><a target="_blank" href="../src/notes/组件&props.js">组件&props</a></h2>
         <div>
           <button className="reduce" onClick={this.handleClick}>-</button>
           <SpanTag value={this.state.number}/>

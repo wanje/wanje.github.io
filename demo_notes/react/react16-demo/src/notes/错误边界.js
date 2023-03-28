@@ -36,7 +36,7 @@ export default class ErrorBoundary extends Component {
     // render函数中必须返回 react 元素或空 null
     return (
       <div>
-        <h2><a href="../src/notes/错误边界.js">错误边界</a></h2>
+        <h2><a target="_blank" href="../src/notes/错误边界.js">错误边界</a></h2>
         {
           // 你可以自定义降级后的 UI 并渲染
           this.state.hasError ? (<h1>出错啦！</h1>) : this.props.children

@@ -81,10 +81,30 @@ function UseEffectHook() {
 }
 
 //* 自定义 Hook
-function UseCustomHook() {
+// 通过自定义Hook，可以将组件逻辑提取到可重用的函数中（就类似提取可在多个普通函数中公用的工具函数）
+//! 自定义hook是个函数，命名规定以`use`开头，其内部可调用其他hook（包括其他自定义hook，且同样要求不在循环、条件和嵌套函数中调用hook）
+//! 结构上自定义hook与普通函数无异，可自行根据hook的作用决定是否需要参数，是否返回内容，以及要返回内容的类型
+//! 与 useState 和 useEffect 一样，在同一组件中多次调用同一自定义hook时(若该hook的作用可用于多次调用)，其中的 state 都是独立的，并不会共享同一个而造成混乱
+function useFooHook(goodsID) {
+  // 假设这是一个显示某商品有无库存的自定义hook，还可以用于如表单处理、动画、订阅声明、计时器等等场景
+  const [isInStock, setIsInStock] = useState(null);
+
+  // do sth
+  goodsID > 3 ? setIsInStock(true) : setIsInStock(false);
+
+  return isInStock
+}
+// 使用自定义hook（与内置hook无区别）
+function UseCustomHook({id}) {
+  const isInStock = useFooHook(id);
+
   return (
     <div>
       <h3>自定义Hook</h3>
+      <p>
+        <span>该商品库存情况：</span>
+        <span>{typeof isInStock === 'boolean' ? (isInStock ? '有库存' : '无库存') : '未知'}</span>
+      </p>
     </div>
   )
 }
@@ -92,10 +112,10 @@ function UseCustomHook() {
 export default function() {
   return (
     <div>
-      <h2><a href="../src/notes/使用Hook.js">使用Hook</a></h2>
+      <h2><a target="_blank" href="../src/notes/使用Hook.js">使用Hook</a></h2>
       <UseStateHook />
       <UseEffectHook />
-      <UseCustomHook />
+      <UseCustomHook id={1} />
     </div>
   )
 }

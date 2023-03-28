@@ -30,7 +30,7 @@ class FormWithCtrl extends React.Component {
   render() {
     return (
       <form onSubmit={this.handleSubmit}>
-        <h2><a href="../src/notes/表单&受控组件.js">表单&受控组件</a></h2>
+        <h2><a target="_blank" href="../src/notes/表单&受控组件.js">表单&受控组件</a></h2>
         
         {/** 使用表单的`change`事件将表单的`value`与组件状态`state`关联在一起，使得表单变化受控(state成为表单的唯一数据源) */}
         {/** 注意单复选框的选中状态还是由`checked`属性控制的，对于输入型表单项若`value`已受控在未用change事件绑定修改输入内容时仍能自由输入，可能的原因是将value设置成了`undefined`或`null` */}

@@ -68,7 +68,7 @@ class StateToUp extends React.Component {
   render() {
     return (
       <form onSubmit={this.handleSubmit}>
-        <h2><a href="../src/notes/状态提升.js">状态提升</a></h2>
+        <h2><a target="_blank" href="../src/notes/状态提升.js">状态提升</a></h2>
         {/** 因温度输入组件中的状态都提升到了父组件，改由父组件传递属性给子组件，使得两个温度组件中的值可关联 */}
         <TemperatureInput name={names.c} value={this.state[names.c] || 38} onChange={this.handleChange}/><span style={{marginLeft: '5px'}}>℃</span>
         <span style={{margin: '0 10px'}}>=</span>

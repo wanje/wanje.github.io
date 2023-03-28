@@ -42,7 +42,7 @@ class ConditionRender extends React.Component {
 
     return (
       <div>
-        <h2><a href="../src/notes/条件渲染.js">条件渲染</a></h2>
+        <h2><a target="_blank" href="../src/notes/条件渲染.js">条件渲染</a></h2>
         <button onClick={this.handleClick}>切换</button>
         <WarningComp warn={this.state.warn}/>
         {/** 使用变量存储元素内容的方式 */}

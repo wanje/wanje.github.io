@@ -146,7 +146,7 @@ class StateLifeCycle extends React.Component {
     
     return (
       <div>
-        <h2><a href="../src/notes/state&生命周期.js">state&组件生命周期</a></h2>
+        <h2><a target="_blank" href="../src/notes/state&生命周期.js">state&组件生命周期</a></h2>
         { result }
       </div>
     )
