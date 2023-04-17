@@ -148,6 +148,7 @@ class StateLifeCycle extends React.Component {
       <div>
         <h2><a target="_blank" href="../src/notes/state&生命周期.js">state&组件生命周期</a></h2>
         { result }
+        <img src="static/images/component_lifecycle.jpg" alt="组件生命周期" style={{maxWidth: 'min(100%, 700px)'}} />
       </div>
     )
   }

@@ -13,9 +13,12 @@ import React, {  //? 这里的 React 对象导入不能省略，使用JSX语法�
 
 //* useState，可多次使用以分离逻辑
 // 该hook允许在函数组件中添加状态管理
+//! 调用 setXXX 时，状态 XXX 的更新是异步的，并不是同步更新(即并非调用完马上就更新了)，故不能在初始渲染时(render中，函数组件就是函数体内最外层)就立即调用 setXXX，否则将导致抛出“too many re-render”的循环渲染错误
+//! 因初始立即调用setXXX时（指render中，并非mount中），状态更新引起的组件重渲染与挂载时的初始渲染同时进行，导致组件内渲染机制混乱，如此就形成了循环渲染
+//! 若是因为一开始就要根据条件设置一次值，那么完全可以将这个条件初始值放在 useState 的参数中设置（直接通过条件表达式或函数参数方式均可）
 function UseStateHook() {
   // useState 返回两个内容，1单个state数据项(不限数据格式)，2改变该state数据项的函数方法（命名要求 set 开头）
-  // setNum 接受的参数是要给 state 赋予的新值
+  // setNum 接受的参数是要给 state 赋予的新值, //! setXXX的参数也可以是一个返回新状态值的函数(该函数接收前一个状态值为参数)
   const [num, setNum] = useState(0);  // 参数为该 state 的初始值
   //! 同一组件中可以多次调用 useState 创建不同state数据项(就像class组件在state属性下不同数据项)，之间互不影响
   const [bananaNum, setBananaNum] = useState(0);
@@ -24,9 +27,9 @@ function UseStateHook() {
     <div>
       <h3>useState</h3>
       <span>苹果：{num}</span>
-      <button className="mgl-10 mgr-10" onClick={() => setNum(num + 1)}>+</button>
+      <button className="mgl-10 mgr-10" onClick={() => setNum(num + 1)}>+(直接参数)</button>
       <span>香蕉：{bananaNum}</span>
-      <button className="mgl-10 mgr-10" onClick={() => setBananaNum(bananaNum + 1)}>+</button>
+      <button className="mgl-10 mgr-10" onClick={() => setBananaNum((pre) => pre + 1)}>+(函数参数)</button>
     </div>
   )
 }
@@ -86,17 +89,28 @@ function UseEffectHook() {
 //! 结构上自定义hook与普通函数无异，可自行根据hook的作用决定是否需要参数，是否返回内容，以及要返回内容的类型
 //! 与 useState 和 useEffect 一样，在同一组件中多次调用同一自定义hook时(若该hook的作用可用于多次调用)，其中的 state 都是独立的，并不会共享同一个而造成混乱
 function useFooHook(goodsID) {
+  console.log('useFooHook', goodsID)
   // 假设这是一个显示某商品有无库存的自定义hook，还可以用于如表单处理、动画、订阅声明、计时器等等场景
   const [isInStock, setIsInStock] = useState(null);
+  // const [isInStock, setIsInStock] = useState(goodsID > 3);  // 条件初始值
 
   // do sth
-  goodsID > 3 ? setIsInStock(true) : setIsInStock(false);
+  // setIsInStock(goodsID > 3); //! 直接调用将导致渲染循环
+  requestAnimationFrame(() => {
+    setIsInStock(goodsID > 3);
+  });
 
   return isInStock
 }
 // 使用自定义hook（与内置hook无区别）
-function UseCustomHook({id}) {
-  const isInStock = useFooHook(id);
+function UseCustomHook(props) {
+  console.log('UseCustomHook', props.id)
+  const isInStock = useFooHook(props.id);
+  console.log(isInStock)
+
+  useEffect(() => {
+    console.warn('mounted')
+  });
 
   return (
     <div>
@@ -115,7 +129,7 @@ export default function() {
       <h2><a target="_blank" href="../src/notes/使用Hook.js">使用Hook</a></h2>
       <UseStateHook />
       <UseEffectHook />
-      <UseCustomHook id={1} />
+      <UseCustomHook id={Math.ceil(Math.random()*10)} />
     </div>
   )
 }
