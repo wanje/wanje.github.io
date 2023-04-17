@@ -92,7 +92,7 @@ function useFooHook(goodsID) {
   console.log('useFooHook', goodsID)
   // 假设这是一个显示某商品有无库存的自定义hook，还可以用于如表单处理、动画、订阅声明、计时器等等场景
   const [isInStock, setIsInStock] = useState(null);
-  // const [isInStock, setIsInStock] = useState(goodsID > 3);  // 条件初始值
+  // const [isInStock, setIsInStock] = useState(goodsID > 3);  // 最佳应该初始就设置条件初始值（这里主要是为了演示自定义hook故未这样）
 
   // do sth
   // setIsInStock(goodsID > 3); //! 直接调用将导致渲染循环
