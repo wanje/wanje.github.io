@@ -14,8 +14,8 @@ import React, {  //? 这里的 React 对象导入不能省略，使用JSX语法�
 //* useState，可多次使用以分离逻辑
 // 该hook允许在函数组件中添加状态管理
 //! 调用 setXXX 时，状态 XXX 的更新是异步的，并不是同步更新(即并非调用完马上就更新了)，故不能在初始渲染时(render中，函数组件就是函数体内最外层)就立即调用 setXXX，否则将导致抛出“too many re-render”的循环渲染错误
-//! 因初始立即调用setXXX时（指render中，并非mount中），状态更新引起的组件重渲染与挂载时的初始渲染同时进行，导致组件内渲染机制混乱，如此就形成了循环渲染
-//! 若是因为一开始就要根据条件设置一次值，那么完全可以将这个条件初始值放在 useState 的参数中设置（直接通过条件表达式或函数参数方式均可）
+//! 因初始无条件立即调用setXXX时（指render中，并非mount中），状态更新引起的组件重渲染与挂载时的初始渲染同时进行，导致组件内渲染机制混乱，如此就形成了循环渲染
+//! 若是因为一开始就要设置一次值，那么应该是根据条件调用setXXX(而非初始就可能连续频繁调用)，且完全可以将这个条件初始值放在 useState 的参数中设置（直接通过条件表达式或函数参数方式均可）
 function UseStateHook() {
   // useState 返回两个内容，1单个state数据项(不限数据格式)，2改变该state数据项的函数方法（命名要求 set 开头）
   // setNum 接受的参数是要给 state 赋予的新值, //! setXXX的参数也可以是一个返回新状态值的函数(该函数接收前一个状态值为参数)
@@ -123,6 +123,18 @@ function UseCustomHook(props) {
   )
 }
 
+//* useContext
+function UseContextHook() {
+  return (
+    <div>
+      <h3>useContext</h3>
+      <p>
+        
+      </p>
+    </div>
+  )
+}
+
 export default function() {
   return (
     <div>
@@ -130,6 +142,7 @@ export default function() {
       <UseStateHook />
       <UseEffectHook />
       <UseCustomHook id={Math.ceil(Math.random()*10)} />
+      <UseContextHook />
     </div>
   )
 }
