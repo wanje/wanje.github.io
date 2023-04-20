@@ -11,17 +11,52 @@ import React, {  //? 这里的 React 对象导入不能省略，使用JSX语法�
 //! 若出现上面提到的不允许的方式，则调用顺序就不固定，也就造成Hook与其关联的state或effect对应错误（像条件语句就会导致条件中的hook只会在满足条件时调用，而不是每次都会调用到）,
 //! 若要用到上面提到的循环、条件或嵌套函数，可以将其逻辑转移到 hook 的内部去
 
+
 //* useState，可多次使用以分离逻辑
 // 该hook允许在函数组件中添加状态管理
 //! 调用 setXXX 时，状态 XXX 的更新是异步的，并不是同步更新(即并非调用完马上就更新了)，故不能在初始渲染时(render中，函数组件就是函数体内最外层)就立即调用 setXXX，否则将导致抛出“too many re-render”的循环渲染错误
 //! 因初始无条件立即调用setXXX时（指render中，并非mount中），状态更新引起的组件重渲染与挂载时的初始渲染同时进行，导致组件内渲染机制混乱，如此就形成了循环渲染
 //! 若是因为一开始就要设置一次值，那么应该是根据条件调用setXXX(而非初始就可能连续频繁调用)，且完全可以将这个条件初始值放在 useState 的参数中设置（直接通过条件表达式或函数参数方式均可）
-function UseStateHook() {
+function UseStateHook(props) {
   // useState 返回两个内容，1单个state数据项(不限数据格式)，2改变该state数据项的函数方法（命名要求 set 开头）
-  // setNum 接受的参数是要给 state 赋予的新值, //! setXXX的参数也可以是一个返回新状态值的函数(该函数接收前一个状态值为参数)
+  // setNum 接受的参数是要给 state 赋予的新值(此过程会将组件的一次重渲染加入队列), 
+  //! setXXX的参数也可以是一个返回新状态值的函数(函数式更新)，该函数接收前一个状态值为参数，以便用于新的状态值需要通过前一个状态值计算而得出的情况
+  // 后续的重渲染中，useState返回的第一个值将始终是更新后的最新的state
   const [num, setNum] = useState(0);  // 参数为该 state 的初始值
   //! 同一组件中可以多次调用 useState 创建不同state数据项(就像class组件在state属性下不同数据项)，之间互不影响
   const [bananaNum, setBananaNum] = useState(0);
+
+  // useState 返回的 setXXX 与class组件中的 this.setState 不同，setXXX 不会自动合并更新对象数据，其只会整个替换（多个子值的state可考虑使用useReducer更合适）
+  //! 故要通过 useState 的 setXXX 更新一个对象状态数据中的一部分字段，则需要使用函数式并借助展开运算符复制一份原数据其他字段（注意层级）来更新状态
+  /* setXXX(preState => {
+    return {
+      ...preState,
+      //其他需要更新的字段（同字段后面的自然会覆盖前面的）
+      ...needUpdateFiled
+    }
+  }); */
+
+  //! 惰性初始 state（指需要经过一些计算才得出初始状态值，且计算过程不依赖自身前一个状态），同函数式更新，也是传入一个函数，只是无需接收前一个状态值，此时该函数只会在初始渲染中执行一次，后续重渲染时会被忽略
+  /* const [oneState, setOneState] = useState(() => {
+    // do something
+    const obj = {
+      one: 1,
+      two: 2,
+      three: 3
+    };
+    return obj[props.id]
+  }); */
+  //? 与在外部声明函数，初始时传入函数执行结果有区别？
+  /* function getValue(id) {
+    // do something
+    const obj = {
+      one: 1,
+      two: 2,
+      three: 3
+    };
+    return obj[id]
+  }
+  const [oneState, setOneState] = useState(getValue(props.id)); */
 
   return (
     <div>
@@ -33,6 +68,7 @@ function UseStateHook() {
     </div>
   )
 }
+
 
 //* useEffect，可多次使用以分离逻辑(会在相关时机按声明顺序依次调用每个effect)
 // 该hook可以在函数组件中执行副作用操作(部分生命周期钩子操作)，数据获取、设置订阅以及手动更改React组件中的DOM都属于副作用
@@ -83,6 +119,7 @@ function UseEffectHook() {
   )
 }
 
+
 //* 自定义 Hook
 // 通过自定义Hook，可以将组件逻辑提取到可重用的函数中（就类似提取可在多个普通函数中公用的工具函数）
 //! 自定义hook是个函数，命名规定以`use`开头，其内部可调用其他hook（包括其他自定义hook，且同样要求不在循环、条件和嵌套函数中调用hook）
@@ -122,6 +159,7 @@ function UseCustomHook(props) {
     </div>
   )
 }
+
 
 //* useContext
 function UseContextHook() {
