@@ -1,6 +1,8 @@
 import React, {  //? 这里的 React 对象导入不能省略，使用JSX语法时 React 必须局部引入(即使未直接到该对象)
   useState,
-  useEffect
+  useEffect,
+  useContext,
+  useReducer
 } from "react";
 
 //! Hook 是 React 16.8+ 的新增特性，可以在函数组件中使用 state 以及其他的 React 特性，让函数组件也可成为有状态组件
@@ -71,7 +73,7 @@ function UseStateHook(props) {
 
 
 //* useEffect，可多次使用以分离逻辑(会在相关时机按声明顺序依次调用每个effect)
-// 该hook可以在函数组件中执行副作用操作(部分生命周期钩子操作)，数据获取、设置订阅以及手动更改React组件中的DOM都属于副作用
+// 该hook可以在函数组件中执行副作用操作(部分生命周期钩子操作)，数据获取、添加订阅、设置定时器以及手动更改React组件中的DOM都属于副作用
 // !该hook在组件每次渲染后都会执行（此时DOM已更新完毕），可指定第二个参数表明依赖哪些数据更新后导致的渲染才执行而不是默认任何数据导致的渲染后都执行
 function UseEffectHook() {
   function handleClick(e) {
@@ -161,13 +163,85 @@ function UseCustomHook(props) {
 }
 
 
-//* useContext
+//* useContext（可结合 context.js 内容查看）
+// 该hook用于读取祖先组件中通过context注入的数据，注意只是读取，故仍然需要在祖先组件中使用`<MyContext.Provider>`为后代组件提供相关context
 function UseContextHook() {
+  const themes = {
+    light: {
+      bg: '#eee',
+      color: '#333'
+    },
+    dark: {
+      bg: '#333',
+      color: '#fff'
+    }
+  };
+  const ThemeContext = React.createContext(themes.light); // 参数为初始值
+
+  function Son() {
+    return (
+      <div className="border">
+        <p>子组件</p>
+        <Grandson />
+      </div>
+    )
+  }
+  function Grandson() {
+    return (
+      <div className="border">
+        <p>孙子组件</p>
+        <GreatGrandson />
+      </div>
+    )
+  }
+  function GreatGrandson() {
+    // 参数接收一个 context 对象（React.createContext 创建的值），并返回该 context 的当前值，
+    //! 注意这个当前值在初始时，并非是创建 MyContext 时传入 React.createContext 的初始值，而始终是上层离当前组件最近的 <MyContext.Provider> 的 value 属性提供的值（初始提供的值不一定就是创建 MyContext 时的初始值）
+    //! 当上层 <MyContext.Provider> 的 value 更新时，该hook就会触发重渲染（即使中间层组件有使用 React.memo 或 shouldComponentUpdate 限制更新渲染，也不会影响使用了 useContext 的更深层组件因 context 变化导致的重渲染）
+    const theme = useContext(ThemeContext);
+    // useContext(MyContext) 实际就相当于 class 组件中的 static contextType = MyContext 或 <MyContext.Consumer>，用于接收上层组件注入的数据
+
+    return (
+      <div className="border" style={{
+        background: theme.bg,
+        color: theme.color
+      }}>重孙组件</div>
+    )
+  }
+
+  const [curTheme, setCurTheme] = useState('dark');
+  function switchTheme() {
+    setCurTheme(pre => {
+      return pre === 'dark' ? 'light' : 'dark'
+    });
+  }
+
   return (
     <div>
       <h3>useContext</h3>
+      <button onClick={switchTheme}>切换主题(后代组件接收祖先组件注入的值)</button>
+      {/* 通过 context 向下注入数据 */}
+      <ThemeContext.Provider value={themes[curTheme]}>
+        <div className="border">
+          <p>外层组件（向下注入数据的组件）</p>
+          <Son />
+        </div>
+      </ThemeContext.Provider>
+    </div>
+  )
+}
+
+
+//* useReducer
+// 该hook可以看做 useState 的替代方案
+function UseReducerHook(props) {
+  const [state, dispatch] = useReducer();
+
+  return (
+    <div>
+      <h3>useReducer</h3>
       <p>
-        
+        <span>该商品库存情况：</span>
       </p>
     </div>
   )
