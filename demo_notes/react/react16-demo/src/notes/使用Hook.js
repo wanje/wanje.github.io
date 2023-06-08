@@ -2,7 +2,9 @@ import React, {  //? 这里的 React 对象导入不能省略，使用JSX语法�
   useState,
   useEffect,
   useContext,
-  useReducer
+  useReducer,
+  useMemo,
+  useCallback
 } from "react";
 
 //! Hook 是 React 16.8+ 的新增特性，可以在函数组件中使用 state 以及其他的 React 特性，让函数组件也可成为有状态组件
@@ -233,16 +235,98 @@ function UseContextHook() {
 
 
 //* useReducer
-// 该hook可以看做 useState 的替代方案
-function UseReducerHook(props) {
-  const [state, dispatch] = useReducer();
+// 该hook可以看做 useState 的替代方案，在某些场景下，useReducer 会比 useState 更适用，例如 state 逻辑较复杂且包含多个子值，或者下一个 state 依赖于之前的 state 等
+// 并且，使用 useReducer 还能给那些会触发深更新的组件做性能优化，因为你可以向子组件传递 dispatch 而不是回调函数，
+//! 实际就相当于将之前使用 useState 管理状态时，我们可能有个自定义方法去根据不同条件来设置 setState 值，而换成useReducer就相当于把这个自定义方法放在了useReducer的reducer中
+function UseReducerHook({average}) {
+  function resetInitVal(val) {
+    // 若有复杂的计算处理(或是有复杂重置初始值操作)才有单独提取函数的意义，这里只是使用示例
+    return val > 0 ? val : 0;
+  }
+  // useReducer 接收三个参数：参数1是一个返回新状态值的状态处理函数reducer，参数2为状态初始值initVal，可选的参数3为初始状态处理函数initFn(用于初始化前面的initVal，若传入此参数则其返回值才作为实际的初始状态值)
+  // 其返回两个值：状态及对应的触发状态改变的 dispatch 方法(变量名自定义)
+  //* 其数据变化和触发流程有点类似 Vuex 中的状态管理
+  // 参数1状态处理函数reducer也接收两个参数：第一个就是当前状态值state，第二个为动作action(由 dispatch 传入，即表示做什么操作，实际也就是一个自定义数据，函数内部根据相应的数据做对应处理)，最后返回新的状态值
+  const [num, dispatch] = useReducer((state, action) => {
+    // 这里的 action 即是调用 dispatch 时传入的值，react会确保该值传入后是稳定的，不会因为组件重渲染而丢失
+    switch (action.type) {
+      case '-': state--;break;
+      case '+': state++;break;
+      case 'reset': state = resetInitVal(action.payload);break; // 若 resetInitVal 有较复杂的计算，这里单独提取函数就能显示其价值
+      default: throw new Error('Invalid action');
+    }
+    return state; // 返回新的状态值
+  }, average, resetInitVal);  // 这里传入了可选的第3个参数，故其返回值才是 num 的实际初始值，前面的初始状态值 average 会作为参数自动传入 resetInitVal
 
   return (
     <div>
       <h3>useReducer</h3>
-      <p>
-        <span>该商品库存情况：</span>
-      </p>
+      <div>
+        {/* 可在事件处理函数中直接调用 dispatch(action) 处理相关操作 */}
+        <button onClick={() => dispatch({type: '-'})}>-</button>
+        <input type="text" value={num} style={{width: '50px', margin: '0 10px', textAlign: 'center'}} disabled />
+        <button onClick={() => dispatch({type: '+'})}>+</button>
+        <button onClick={() => dispatch({type: 'reset', payload: average})} style={{marginLeft: 10}}>reset</button>
+      </div>
+    </div>
+  )
+}
+
+//* useMemo
+// 返回一个具备缓存能力的数据值（任何可被当做值的内容，包括react元素和函数）
+// 该hook返回一个memoized值（函数式编程中的Memoization概念，可理解为记忆体、缓存体，即会缓存之前的值，若再次传入相同的入参将直接从缓存中取值而无需重新计算）
+// 可用于类似这样的场景：父组件重渲染（默认也会导致子组件重渲染），但是若传给子组件的props并未发生变化此情况下子组件的渲染就是不必要的，若恰好此子组件重渲染又很耗性能，那么此时使用 useMemo 就可以避免这样的情况
+function UseMemoHook({prop1, prop2}) {
+  function SonComp({index}) { return <span>子组件 {index}</span>}
+  // 参数1：一个函数，该函数会被 useMemo 立即调用执行，且其返回值会被缓存且由 useMemo 返回到外部
+  // 参数2：依赖项数组
+  const memoizedValue = useMemo(function() {
+    // do sth
+    //! 注意该函数会在渲染期间执行，故不应该在此处做副作用操作
+    return <SonComp index={prop1} />; // 返回一个值
+  }, [prop1]); // 依赖项发生变化时才再次执行参数1中的函数（这里相当于控制着其中的子组件是否重渲染，因为有缓存，只要 prop1 没变，父组件重渲染就不会导致这里面的子组件也重渲染）
+
+  return (
+    <div>
+      <h3>useMemo {prop2}</h3>
+      <p>useMemo(fn, depsArr)，缓存函数 fn 的返回值(fn 会被执行)，只有 depsArr 依赖数组中的值发生变化才会重新执行 fn</p>
+      { memoizedValue }
+    </div>
+  )
+}
+
+//* useCallback
+// 返回一个具备缓存能力的函数
+//! 基本与 useMemo 相同，但作用对象不一样，useMemo 缓存作用在函数的返回值上，
+//! 而 useCallback 缓存作用在传入的函数本身上，即使得依赖项不变的情况下也保持函数不变（将函数本身当做一个值理解即可）
+//* useCallback(fn, deps) 相当于 useMemo(() => fn, deps) 的简写方式
+function UseCallbackHook(prop1, prop2) {
+  function SonComp({fn}) {
+    fn();
+    return <span>子组件</span>
+  }
+  // 参数1：一个函数，该函数不会被调用执行，其只是会被缓存（注意缓存的是该函数，而不是其返回值）后返回到外部
+  // 参数2：依赖项数组
+  const memoizedCallback = useCallback(function() {
+    // do sth
+    Math.max(prop1, prop2);
+  }, [prop1, prop2]);  // 依赖项发生变化时才再次更新参数1中的函数
+
+  return (
+    <div>
+      <h3>useCallback</h3>
+      <p>useCallback(fn, depsArr)，缓存函数 fn (<b>注意不是其返回值</b>，fn 不会被执行)，只有 depsArr 依赖数组中的值发生变化才会重新 fn</p>
+      <SonComp fn={memoizedCallback} />
+    </div>
+  )
+}
+
+//* useRef
+function UseRefHook() {
+
+  return (
+    <div>
+      <h3>useRef</h3>
     </div>
   )
 }
@@ -255,6 +339,10 @@ export default function() {
       <UseEffectHook />
       <UseCustomHook id={Math.ceil(Math.random()*10)} />
       <UseContextHook />
+      <UseReducerHook average={7} />
+      <UseMemoHook />
+      <UseCallbackHook />
+      <UseRefHook />
     </div>
   )
 }
