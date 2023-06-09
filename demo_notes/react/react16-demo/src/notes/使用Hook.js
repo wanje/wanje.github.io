@@ -4,7 +4,11 @@ import React, {  //? 这里的 React 对象导入不能省略，使用JSX语法�
   useContext,
   useReducer,
   useMemo,
-  useCallback
+  useCallback,
+  useRef,
+  useImperativeHandle,
+  forwardRef,
+  useLayoutEffect
 } from "react";
 
 //! Hook 是 React 16.8+ 的新增特性，可以在函数组件中使用 state 以及其他的 React 特性，让函数组件也可成为有状态组件
@@ -65,6 +69,7 @@ function UseStateHook(props) {
   return (
     <div>
       <h3>useState</h3>
+      <p className="color-lightgray">该hook用于在函数组件中添加状态数据</p>
       <span>苹果：{num}</span>
       <button className="mgl-10 mgr-10" onClick={() => setNum(num + 1)}>+(直接参数)</button>
       <span>香蕉：{bananaNum}</span>
@@ -117,6 +122,7 @@ function UseEffectHook() {
   return (
     <div>
       <h3>useEffect</h3>
+      <p className="color-lightgray">该hook可以在函数组件中执行副作用操作(部分生命周期钩子操作)，数据获取、添加订阅、设置定时器以及手动更改React组件中的DOM都属于副作用</p>
       <button data-event>测试事件委托</button>
       <p>依赖数据频繁变化：{count}</p>
     </div>
@@ -221,6 +227,7 @@ function UseContextHook() {
   return (
     <div>
       <h3>useContext</h3>
+      <p className="color-lightgray">该hook用于读取祖先组件中通过context注入的数据，注意只是读取，故仍然需要在祖先组件中使用`&lt;MyContext.Provider&gt;`为后代组件提供相关context</p>
       <button onClick={switchTheme}>切换主题(后代组件接收祖先组件注入的值)</button>
       {/* 通过 context 向下注入数据 */}
       <ThemeContext.Provider value={themes[curTheme]}>
@@ -235,7 +242,7 @@ function UseContextHook() {
 
 
 //* useReducer
-// 该hook可以看做 useState 的替代方案，在某些场景下，useReducer 会比 useState 更适用，例如 state 逻辑较复杂且包含多个子值，或者下一个 state 依赖于之前的 state 等
+// 该hook可以看做 useState 的替代方案，在某些场景下，useReducer 会比 useState 更适用，例如 state 逻辑较复杂且包含多个子值(对象、数组等)，或者下一个 state 依赖于之前的 state 等
 // 并且，使用 useReducer 还能给那些会触发深更新的组件做性能优化，因为你可以向子组件传递 dispatch 而不是回调函数，
 //! 实际就相当于将之前使用 useState 管理状态时，我们可能有个自定义方法去根据不同条件来设置 setState 值，而换成useReducer就相当于把这个自定义方法放在了useReducer的reducer中
 function UseReducerHook({average}) {
@@ -261,6 +268,7 @@ function UseReducerHook({average}) {
   return (
     <div>
       <h3>useReducer</h3>
+      <p className="color-lightgray">该hook可以看做 useState 的替代方案，在某些场景下，useReducer 会比 useState 更适用，例如 state 逻辑较复杂且包含多个子值(对象、数组等)，或者下一个 state 依赖于之前的 state 等，其数据变化和触发流程有点类似 Vuex 中的状态管理</p>
       <div>
         {/* 可在事件处理函数中直接调用 dispatch(action) 处理相关操作 */}
         <button onClick={() => dispatch({type: '-'})}>-</button>
@@ -277,7 +285,7 @@ function UseReducerHook({average}) {
 // 该hook返回一个memoized值（函数式编程中的Memoization概念，可理解为记忆体、缓存体，即会缓存之前的值，若再次传入相同的入参将直接从缓存中取值而无需重新计算）
 // 可用于类似这样的场景：父组件重渲染（默认也会导致子组件重渲染），但是若传给子组件的props并未发生变化此情况下子组件的渲染就是不必要的，若恰好此子组件重渲染又很耗性能，那么此时使用 useMemo 就可以避免这样的情况
 function UseMemoHook({prop1, prop2}) {
-  function SonComp({index}) { return <span>子组件 {index}</span>}
+  function SonComp({index}) { return <span hidden>子组件 {index}</span>}
   // 参数1：一个函数，该函数会被 useMemo 立即调用执行，且其返回值会被缓存且由 useMemo 返回到外部
   // 参数2：依赖项数组
   const memoizedValue = useMemo(function() {
@@ -289,7 +297,7 @@ function UseMemoHook({prop1, prop2}) {
   return (
     <div>
       <h3>useMemo {prop2}</h3>
-      <p>useMemo(fn, depsArr)，缓存函数 fn 的返回值(fn 会被执行)，只有 depsArr 依赖数组中的值发生变化才会重新执行 fn</p>
+      <p className="color-lightgray">useMemo(fn, depsArr)，用于缓存函数 fn 的返回值(fn 会被执行)，只有 depsArr 依赖数组中的值发生变化才会重新执行 fn</p>
       { memoizedValue }
     </div>
   )
@@ -303,7 +311,7 @@ function UseMemoHook({prop1, prop2}) {
 function UseCallbackHook(prop1, prop2) {
   function SonComp({fn}) {
     fn();
-    return <span>子组件</span>
+    return <span hidden>子组件</span>
   }
   // 参数1：一个函数，该函数不会被调用执行，其只是会被缓存（注意缓存的是该函数，而不是其返回值）后返回到外部
   // 参数2：依赖项数组
@@ -315,18 +323,164 @@ function UseCallbackHook(prop1, prop2) {
   return (
     <div>
       <h3>useCallback</h3>
-      <p>useCallback(fn, depsArr)，缓存函数 fn (<b>注意不是其返回值</b>，fn 不会被执行)，只有 depsArr 依赖数组中的值发生变化才会重新 fn</p>
+      <p className="color-lightgray">useCallback(fn, depsArr)，用于缓存函数 fn (<b>注意不是缓存其返回值</b>，fn 不会被执行)，只有 depsArr 依赖数组中的值发生变化才会更新 fn</p>
+      <p className="color-orange">useCallback(fn, deps) 相当于 useMemo(() =&gt; fn, deps) 的简写方式</p>
       <SonComp fn={memoizedCallback} />
     </div>
   )
 }
 
 //* useRef
+//! 该hook返回一个可变的ref对象，注意其是一个通用容器，可以保存任何可变值，而不仅是DOM或react元素，其类似于 class 组件实例属性，可以手动给current赋值，如用于保存/清除定时器
+// 当其被传给元素或react组件时，其则是对DOM或react元素的引用包装对象，非直接引用，而是放在current属性中的，此时作用类似vue中的ref，但使用方式不一样
+//? 对于函数组件，若没有使用`useImperativeHandle`包装主动暴露给父组件可访问内容，则使用`ref`引用该组件时似乎访问不到任何内容
+//! useRef 会在每次渲染时返回同一个 ref 对象，不会像直接使用一个普通变量存值而导致每次渲染都被置为初始值
 function UseRefHook() {
+  // 参数(可选)为该hook返回的对象中`current`的初始值
+  const son = useRef(null);  //! 通过返回对象的 refObj.current 属性访问保存的值
+  const handleClick = () => {
+    // `current`指向已挂载到 DOM 上的文本输入元素
+    son.current.focus();
+  };
+
+  const timerId = useRef();
+  useEffect(() => {
+    // 手动更新保存的值
+    //! 注意当ref对象内容发送变化时，useRef并不会发出通知，更新 current 属性不会引发组件重渲染
+    timerId.current = setInterval(() => {
+      // do sth
+      son.current.value = Date.now();
+    }, 10000);
+
+    return () => {
+      clearInterval(timerId.current);
+    };
+  });
 
   return (
     <div>
       <h3>useRef</h3>
+      <p className="color-lightgray">该hook返回一个可变的ref对象，其是一个通用容器，可以保存任何可变值，作用类似class实例上的属性(因函数组件不是类，没有实例，内部普通变量每次重渲染都是初始值，而ref可使得不参与数据流的非状态类值在重渲染中也保持最新)</p>
+      <div>
+        {
+          //! 由于useRef不会通知变化，若想要在react绑定或解绑DOM节点的ref时执行某些操作，则需要使用回调ref来实现，这样组件每次重渲染都会调用该回调执行
+          // 回调ref即是给元素ref属性传入一个函数，该函数默认会接收当前节点对象为参数(此时不是用的useRef，故参数是直接节点对象)
+        }
+        <input ref={son} type="text" style={{marginRight: 10}} />
+        <button onClick={handleClick}>focus</button>
+      </div>
+    </div>
+  )
+}
+
+//* useImperativeHandle
+// 该hook用于自定义当前组件暴露给父组件的`ref`对象的可用实例内容(即提供给父组件可以通过ref访问哪些属性或方法等)，因为函数组件不像class类组件的属性和方法都挂载在类实例上，不显式暴露给外部就访问不到内部任何内容
+//! 该hook要与`forwardRef`一起使用
+function UseImperativeHandleHook() {
+  let SonComp = function(props, ref) {
+    const [style, setStyle] = useState({
+      display: 'inline-block',
+      background: 'orange',
+      transition: 'width 0.2s',
+      height: 20,
+      width: 20
+    });
+
+    useImperativeHandle(ref, () => ({
+      toggleSize() {
+        setStyle(preState => ({
+          ...preState,
+          width: preState.width === 20 ? 200 : 20
+        }))
+      }
+    }));
+
+    return <div style={style} onClick={() => setStyle({})}></div>
+  }
+  SonComp = forwardRef(SonComp);
+
+  const son = useRef(null);
+  const handleClick = () => {
+    son.current.toggleSize();
+  };
+
+  return (
+    <div>
+      <h3>useImperativeHandle</h3>
+      <p className="color-lightgray">该hook用于自定义当前组件暴露给父组件的`ref`对象的可用实例内容，需要与`forwardRef`方法一起使用</p>
+      <div style={{display: 'flex', alignItems: 'center', gap: 10}}>
+        <button onClick={handleClick}>resize</button>
+        <SonComp ref={son} />
+      </div>
+    </div>
+  )
+}
+
+//* useLayoutEffect
+// 该hook的作用与`useEffect`完全一样，一般使用`useEffect`就够了，除非使用`useEffect`有问题再使用`useLayoutEffect`
+//! 区别：该hook会在所有DOM变更后同步调用effect(时机是DOM已更新后但浏览器绘制在屏幕上之前)，该hook会阻塞渲染(若hook中有同步任务执行很耗时则影响就较大，故慎用)，而 useEffect 是异步调用
+//! 该hook与 componentDidMount、componentDidUpdate 的调用阶段是一样的（useEffect 的阶段只是近似一样）
+function UseLayoutEffectHook() {
+  //? 比较 useEffect 与 useLayoutEffect 的效果，除了这两个hook外，组件其他声明都一样
+  // useEffect 效果
+  function NormalEffect() {
+    const [count, setCount] = useState(0);
+    useEffect(() => {
+      console.log(count, document.querySelector('#t1').outerHTML);
+      if (count === 0) {
+        let i = 0;
+        while (i < 5000) {
+          i++;
+          console.log('t1');
+        }
+        setCount(10 + Math.random()*200);
+      }
+    }, [count]);
+    return (
+      <div style={{userSelect: 'none'}} onClick={() => setCount(0)}>
+        <span>useEffect（有闪烁跳跃感）：</span>
+        <span id="t1">{count}</span>
+      </div>
+    );
+  }
+  // useLayoutEffect 效果
+  function LayoutEffect() {
+    const [count, setCount] = useState(0);
+    useLayoutEffect(() => {
+      console.log(count, document.querySelector('#t2').outerHTML);
+      if (count === 0) {
+        let i = 0;
+        while (i < 5000) {
+          i++;
+          console.log('t2');
+        }
+        setCount(10 + Math.random()*200);
+      }
+    }, [count]);
+    return (
+      <div style={{userSelect: 'none'}} onClick={() => setCount(0)}>
+        <span>useLayoutEffect（无闪烁跳跃感）：</span>
+        <span id="t2">{count}</span>
+      </div>
+    );
+  }
+  
+  return (
+    <div>
+      <h3>useLayoutEffect</h3>
+      <p>
+        <span className="color-lightgray">该hook会在所有DOM变更后同步调用effect(时机是DOM已更新后但浏览器绘制在屏幕上之前)，该hook会阻塞渲染(若hook中有同步任务执行很耗时则影响就较大，故慎用)，
+          而 useEffect 是异步调用，该hook与 componentDidMount、componentDidUpdate 的调用阶段是一样的（而 useEffect 的阶段只是近似一样）
+        </span>
+        <span>故在下面“<i>点击文字将数字重置为 0，然后effect副作用回调中又会重新生成一个随机数来切换数字</i>”的示例场景中会看到切换过程中useEffect会存在闪烁跳跃感，而useLayoutEffect就没有，
+        原因就是在点击重置为0时，useEffect是异步调用effect，0渲染绘制出来后effect中更新又渲染绘制，就出现跳跃感，
+        而useLayoutEffect的effect是同步调用，更新0的DOM后而还未绘制前又执行effect中的数据更新从而阻塞前面的绘制，故就不会再有绘制0这一步，而直接绘制新产生的随机数</span>
+      </p>
+      <div>
+        <h5>点击数字切换：</h5>
+        <NormalEffect />
+        <LayoutEffect />
+      </div>
     </div>
   )
 }
@@ -343,6 +497,8 @@ export default function() {
       <UseMemoHook />
       <UseCallbackHook />
       <UseRefHook />
+      <UseImperativeHandleHook />
+      <UseLayoutEffectHook />
     </div>
   )
 }
