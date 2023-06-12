@@ -8,7 +8,8 @@ import React, {  //? 这里的 React 对象导入不能省略，使用JSX语法�
   useRef,
   useImperativeHandle,
   forwardRef,
-  useLayoutEffect
+  useLayoutEffect,
+  useDebugValue
 } from "react";
 
 //! Hook 是 React 16.8+ 的新增特性，可以在函数组件中使用 state 以及其他的 React 特性，让函数组件也可成为有状态组件
@@ -69,7 +70,7 @@ function UseStateHook(props) {
   return (
     <div>
       <h3>useState</h3>
-      <p className="color-lightgray">该hook用于在函数组件中添加状态数据</p>
+      <p className="color-gray">该hook用于在函数组件中添加状态数据</p>
       <span>苹果：{num}</span>
       <button className="mgl-10 mgr-10" onClick={() => setNum(num + 1)}>+(直接参数)</button>
       <span>香蕉：{bananaNum}</span>
@@ -122,7 +123,7 @@ function UseEffectHook() {
   return (
     <div>
       <h3>useEffect</h3>
-      <p className="color-lightgray">该hook可以在函数组件中执行副作用操作(部分生命周期钩子操作)，数据获取、添加订阅、设置定时器以及手动更改React组件中的DOM都属于副作用</p>
+      <p className="color-gray">该hook可以在函数组件中执行副作用操作(部分生命周期钩子操作)，数据获取、添加订阅、设置定时器以及手动更改React组件中的DOM都属于副作用</p>
       <button data-event>测试事件委托</button>
       <p>依赖数据频繁变化：{count}</p>
     </div>
@@ -146,6 +147,11 @@ function useFooHook(goodsID) {
   requestAnimationFrame(() => {
     setIsInStock(goodsID > 3);
   });
+
+  //? 该 useDebugValue hook用于在React开发者工具中debug时`hooks面板中`显示该自定义 hook 的标签名（例如这里可能是：FooHook: "有库存" 或 FooHook: "无库存"）
+  // 参数1为要显示的原始值，可选的参数二为延迟格式化参数1的值在需要的时候再执行返回实际显示值，
+  // 参数2的目的是若参数1的值需要格式化后显示时，若其格式化操作需要较大开销每次都直接在参数1位置处格式化就很浪费性能，而参数2只在检查该hook时才执行（其参数为原始显示值）
+  useDebugValue(isInStock ? '有库存' : '无库存', debug => '格式化：' + debug);
 
   return isInStock
 }
@@ -227,7 +233,7 @@ function UseContextHook() {
   return (
     <div>
       <h3>useContext</h3>
-      <p className="color-lightgray">该hook用于读取祖先组件中通过context注入的数据，注意只是读取，故仍然需要在祖先组件中使用`&lt;MyContext.Provider&gt;`为后代组件提供相关context</p>
+      <p className="color-gray">该hook用于读取祖先组件中通过context注入的数据，注意只是读取，故仍然需要在祖先组件中使用`&lt;MyContext.Provider&gt;`为后代组件提供相关context</p>
       <button onClick={switchTheme}>切换主题(后代组件接收祖先组件注入的值)</button>
       {/* 通过 context 向下注入数据 */}
       <ThemeContext.Provider value={themes[curTheme]}>
@@ -268,7 +274,7 @@ function UseReducerHook({average}) {
   return (
     <div>
       <h3>useReducer</h3>
-      <p className="color-lightgray">该hook可以看做 useState 的替代方案，在某些场景下，useReducer 会比 useState 更适用，例如 state 逻辑较复杂且包含多个子值(对象、数组等)，或者下一个 state 依赖于之前的 state 等，其数据变化和触发流程有点类似 Vuex 中的状态管理</p>
+      <p className="color-gray">该hook可以看做 useState 的替代方案，在某些场景下，useReducer 会比 useState 更适用，例如 state 逻辑较复杂且包含多个子值(对象、数组等)，或者下一个 state 依赖于之前的 state 等，其数据变化和触发流程有点类似 Vuex 中的状态管理</p>
       <div>
         {/* 可在事件处理函数中直接调用 dispatch(action) 处理相关操作 */}
         <button onClick={() => dispatch({type: '-'})}>-</button>
@@ -297,7 +303,7 @@ function UseMemoHook({prop1, prop2}) {
   return (
     <div>
       <h3>useMemo {prop2}</h3>
-      <p className="color-lightgray">useMemo(fn, depsArr)，用于缓存函数 fn 的返回值(fn 会被执行)，只有 depsArr 依赖数组中的值发生变化才会重新执行 fn</p>
+      <p className="color-gray">useMemo(fn, depsArr)，用于缓存函数 fn 的返回值(fn 会被执行)，只有 depsArr 依赖数组中的值发生变化才会重新执行 fn</p>
       { memoizedValue }
     </div>
   )
@@ -323,7 +329,7 @@ function UseCallbackHook(prop1, prop2) {
   return (
     <div>
       <h3>useCallback</h3>
-      <p className="color-lightgray">useCallback(fn, depsArr)，用于缓存函数 fn (<b>注意不是缓存其返回值</b>，fn 不会被执行)，只有 depsArr 依赖数组中的值发生变化才会更新 fn</p>
+      <p className="color-gray">useCallback(fn, depsArr)，用于缓存函数 fn (<b>注意不是缓存其返回值</b>，fn 不会被执行)，只有 depsArr 依赖数组中的值发生变化才会更新 fn</p>
       <p className="color-orange">useCallback(fn, deps) 相当于 useMemo(() =&gt; fn, deps) 的简写方式</p>
       <SonComp fn={memoizedCallback} />
     </div>
@@ -360,7 +366,7 @@ function UseRefHook() {
   return (
     <div>
       <h3>useRef</h3>
-      <p className="color-lightgray">该hook返回一个可变的ref对象，其是一个通用容器，可以保存任何可变值，作用类似class实例上的属性(因函数组件不是类，没有实例，内部普通变量每次重渲染都是初始值，而ref可使得不参与数据流的非状态类值在重渲染中也保持最新)</p>
+      <p className="color-gray">该hook返回一个可变的ref对象，其是一个通用容器，可以保存任何可变值，作用类似class实例上的属性(因函数组件不是类，没有实例，内部普通变量每次重渲染都是初始值，而ref可使得不参与数据流的非状态类值在重渲染中也保持最新)</p>
       <div>
         {
           //! 由于useRef不会通知变化，若想要在react绑定或解绑DOM节点的ref时执行某些操作，则需要使用回调ref来实现，这样组件每次重渲染都会调用该回调执行
@@ -407,7 +413,7 @@ function UseImperativeHandleHook() {
   return (
     <div>
       <h3>useImperativeHandle</h3>
-      <p className="color-lightgray">该hook用于自定义当前组件暴露给父组件的`ref`对象的可用实例内容，需要与`forwardRef`方法一起使用</p>
+      <p className="color-gray">该hook用于自定义当前组件暴露给父组件的`ref`对象的可用实例内容，需要与`forwardRef`方法一起使用</p>
       <div style={{display: 'flex', alignItems: 'center', gap: 10}}>
         <button onClick={handleClick}>resize</button>
         <SonComp ref={son} />
@@ -428,11 +434,11 @@ function UseLayoutEffectHook() {
     useEffect(() => {
       console.log(count, document.querySelector('#t1').outerHTML);
       if (count === 0) {
-        let i = 0;
-        while (i < 5000) {
-          i++;
-          console.log('t1');
-        }
+        // let i = 0;
+        // while (i < 5000) {
+        //   i++;
+        //   console.log('t1');
+        // }
         setCount(10 + Math.random()*200);
       }
     }, [count]);
@@ -449,11 +455,11 @@ function UseLayoutEffectHook() {
     useLayoutEffect(() => {
       console.log(count, document.querySelector('#t2').outerHTML);
       if (count === 0) {
-        let i = 0;
-        while (i < 5000) {
-          i++;
-          console.log('t2');
-        }
+        // let i = 0;
+        // while (i < 5000) {
+        //   i++;
+        //   console.log('t2');
+        // }
         setCount(10 + Math.random()*200);
       }
     }, [count]);
@@ -469,7 +475,7 @@ function UseLayoutEffectHook() {
     <div>
       <h3>useLayoutEffect</h3>
       <p>
-        <span className="color-lightgray">该hook会在所有DOM变更后同步调用effect(时机是DOM已更新后但浏览器绘制在屏幕上之前)，该hook会阻塞渲染(若hook中有同步任务执行很耗时则影响就较大，故慎用)，
+        <span className="color-gray">该hook会在所有DOM变更后同步调用effect(时机是DOM已更新后但浏览器绘制在屏幕上之前)，该hook会阻塞渲染(若hook中有同步任务执行很耗时则影响就较大，故慎用)，
           而 useEffect 是异步调用，该hook与 componentDidMount、componentDidUpdate 的调用阶段是一样的（而 useEffect 的阶段只是近似一样）
         </span>
         <span>故在下面“<i>点击文字将数字重置为 0，然后effect副作用回调中又会重新生成一个随机数来切换数字</i>”的示例场景中会看到切换过程中useEffect会存在闪烁跳跃感，而useLayoutEffect就没有，
@@ -481,6 +487,119 @@ function UseLayoutEffectHook() {
         <NormalEffect />
         <LayoutEffect />
       </div>
+    </div>
+  )
+}
+
+//* useDebugValue
+// 该hook用于在React开发者工具中debug时“hooks面板中”显示对应自定义 hook 的标签名（可在上面自定义hook useFooHook 中查看使用示例）
+function UseDebugValueHook() {
+  return (
+    <div>
+      <h3>useDebugValue</h3>
+      <p className="color-gray">该hook用于在React开发者工具中debug时“hooks面板中”显示对应自定义 hook 的标签名（较少使用到）</p>
+    </div>
+  )
+}
+
+//* useDeferredValue（v18+）
+// 该 hook 接收一个参数值，并返回该值的新副本，将该副本推迟到其他更紧急的更新之后再更新，注意其只是演示更新值，并不能阻止紧急更新期间导致的子组件重渲染(此问题仍需用memo/useMemo)
+function UseDeferredValueHook() {
+  //? 伪代码示例
+  /* const query = useSearchQuery('');
+  const deferredQuery = useDeferredValue(query);
+  //! Memoizing 告诉 React 仅当 deferredQuery 改变，而不是 query 改变的时候才重新渲染
+  const suggestions = useMemo(() => <SearchSuggestions query={deferredQuery} />, [deferredQuery]);
+  return (
+    <>
+      <SearchInput query={query} />
+      <Suspense fallback="Loading results...">
+        {suggestions}
+      </Suspense>
+    </>
+  ); */
+
+  return (
+    <div>
+      <h3>useDeferredValue（v18+）</h3>
+      <p className="color-gray">该 hook 接收一个参数值，并返回该值的新副本，将该副本推迟到其他更紧急的更新之后再更新，
+      比如响应用户输入中输入内容是实时显示渲染的，而在我们打完拼音显示完整的字词前实际是不需要每敲击一下键盘就实时更新文本内容的，这个间隙完全可以让给其他更紧急需要渲染的任务，
+      而 useDeferredValue 的目的就是为此，但需注意其延迟更新并不是等待任意固定时间，而是将其他认为更紧急的任务完成后就立即更新，且其延迟的是值的更新而非阻止子组件重渲染，
+      若要防止其他紧急更新期间子组件重渲染，则还是必须使用 memo/useMemo 记忆(缓存)该子组件。
+      其与使用防抖和节流去延迟更新用户空间hooks类似</p>
+    </div>
+  )
+}
+
+//* useTransition（v18+）
+// 该hook用于创建一个过渡任务并反馈其完成状态，例如常见的loading就属于过渡任务，因完成前后有肉眼可及的中间等待过程，触发加载任务时就开始等待结果，收到结果后就结束等待状态
+//? 由于 useTransition 是 react18+ 才有的新API，这里为演示使用方法，自定义了其内容，但无实际对应功能
+function useTransition() {
+  const [isPending, setIsPending] = useState(false);
+  return [isPending, async function(callback){
+    setIsPending(true);
+    await new Promise((resolve) => {
+      setTimeout(resolve, 500)
+    }).then(callback);
+    setIsPending(false)
+  }]
+};
+function UseTransitionHook() {
+  // 该hook无初始参数，但返回两个值：一个表示是否等待状态的布尔值 isPending、一个表示开始执行过渡任务的函数 startTransition
+  // startTransition 函数接收实际的我们自定义的过渡任务函数
+  const [isPending, startTransition] = useTransition();
+  const [count, setCount] = useState(0);
+  
+  function handleClick() {
+    startTransition(() => {
+      setCount(state => state + 1);
+    });
+  }
+
+  return (
+    <div>
+      <h3>useTransition（v18+）</h3>
+      <p className="color-gray">该hook用于创建一个过渡任务并反馈其完成状态，例如常见的loading就属于过渡任务，因完成前后有肉眼可及的中间等待过程，触发加载任务时就开始等待结果，收到结果后就结束等待状态</p>
+      <p>
+        <span>是否过渡等待状态：{isPending ? '是' : '否'}，{count}</span>
+        <button className="mgl-10" onClick={handleClick}>+1</button>
+      </p>
+    </div>
+  )
+}
+
+//* useId（v18+）
+// 该hook用于生成一个唯一ID（客户端和服务端均适用）
+//! 该 hook 生成的是一个包含`:`的字符串token，这在CSS选择器及与选择器相关的JS API中是不支持的，且其目的不是用于生成循环中的key或其他数据关联的id
+//? 由于 useId 是 react18+ 才有的新API，这里为演示使用方法，自定义了其内容
+function useId() { return ':' + Date.now() + ':' }
+function UseIdHook() {
+  const id = useId();
+
+  return (
+    <div>
+      <h3>useId（v18+）</h3>
+      <p className="color-gray">该 hook 无参数，其返回一个唯一ID（客户端和服务端均适用），
+      同一组件中用到多个id可使用一个useId然后添加不同后缀（主要是感觉上的关联性，也可每个都重新生成一个），
+      <span className="color-orange">注意：useId 生成的是一个包含`:`的字符串token（类似:xxx:），这在CSS选择器及与选择器相关的JS API中是不支持的。</span></p>
+      <label htmlFor={id}>通过id将label与input进行关联</label><input type="text" id={id} />
+    </div>
+  )
+}
+
+function LibraryHooks() {
+  return (
+    <div>
+      <h3>v18+ 下另两个主要提供给工具/UI库中使用的hook</h3>
+      <p>
+        <span className="fwb">useSyncExternalStor：</span>
+        <span className="color-gray">一个推荐用于读取和订阅外部数据源的hook</span>
+      </p>
+      <p>
+        <span className="fwb">useSyncExternalStor：</span>
+        <span className="color-gray">与 useEffect 相同，但它在所有 DOM 突变之前同步触发。使用它在读取 useLayoutEffect 中的布局之前将样式注入 DOM。
+        该 hook 不能访问 refs，也不能安排更新，其应仅限于 css-in-js 库作者使用。</span>
+      </p>
     </div>
   )
 }
@@ -499,6 +618,11 @@ export default function() {
       <UseRefHook />
       <UseImperativeHandleHook />
       <UseLayoutEffectHook />
+      <UseDebugValueHook />
+      <UseDeferredValueHook />
+      <UseTransitionHook />
+      <UseIdHook />
+      <LibraryHooks />
     </div>
   )
 }

@@ -234,7 +234,7 @@ body {
 
 /*color*/
 .color-white {color: #ffffff !important;}
-.color-black {color: #333333 !important;}
+.color-black {color: @-color-black !important;}
 
 /*background-color*/
 .bg-white {background-color: #ffffff !important;}
@@ -291,6 +291,9 @@ body {
 .height-full {height: 100% !important;}
 .height-auto {height: auto !important;}
 
+.color-gray {
+  color: @-color-gray !important;
+}
 .color-lightgray {
   color: @-color-lightgray !important;
 }
