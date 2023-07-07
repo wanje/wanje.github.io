@@ -4,20 +4,20 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 
-// 自动导入组件/工具库的API，使无需手动在头部import并注册即可用
-import AutoImport from 'unplugin-auto-import/vite'
+// 自动导入组件/工具库的API，使无需手动在头部import并注册即可用（似乎只在vue组件文件中有效）
+import AutoImport from 'unplugin-auto-import/vite'  // https://github.com/antfu/unplugin-auto-import
 import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 
 // https://vitejs.dev/config/
 export default defineConfig({
   // base: './',  // 资源基础路径，空字符串或'./'为相对路径，默认根路径'/'
-  publicDir: 'public',  // 静态资源目录位置，默认`public`，此目录中的内容不会经过vite处理，打包时会直接拷贝到设置的outDir目录，且访问时路径已`/`开始
+  // publicDir: 'public',  // 静态资源目录位置，默认`public`，此目录中的内容不会经过vite处理，打包时会直接拷贝到设置的outDir目录，且访问时路径已`/`开始
   plugins: [
     vue(),
     vueJsx(),
     AutoImport({
-      imports: ['vue', 'vue-router', 'pinia'],
+      // imports: ['vue', 'vue-router', 'pinia'],  // 注册要自动导入的库，底层依赖的 unimport 库已内置了大部分常用库，可查看 https://github.com/unjs/unimport/blob/main/src/presets/index.ts
       resolvers: [ElementPlusResolver()],
     }),
     Components({
@@ -38,6 +38,11 @@ export default defineConfig({
       }
     }
   },
+  // build: {
+  //   outDir: 'dist',  // 指定打包输出路径，默认‘dist’
+  //   assetsDir: 'assets',  // 打包后静态资源的存放路径（相对上面的`outDir`），默认`assets`
+  //   assetsInlineLimit: 4096,  // 静态资源内联限制大小(字节)，不超过此大小的图片等静态资源将转为base64内联，默认`4096`即`4kb`
+  // },
   server: {
     // base: '',  // http请求的基础前置路径
     host: true, // 此时将同时监听局域网和公网，可用于使用ip形式访问，默认 localhost
@@ -65,9 +70,4 @@ export default defineConfig({
       },
     }
   },
-  build: {
-    // outDir: 'dist',  // 指定打包输出路径，默认‘dist’
-    // assetsDir: 'assets',  // 打包后静态资源的存放路径（相对上面的`outDir`），默认`assets`
-    assetsInlineLimit: 4096,  // 静态资源内联限制大小(字节)，不超过此大小的图片等静态资源将转为base64内联，默认`4096`即`4kb`
-  }
 })
