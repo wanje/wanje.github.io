@@ -6,6 +6,7 @@ import vueJsx from '@vitejs/plugin-vue-jsx'
 
 // 自动导入组件/工具库的API，使无需手动在头部import并注册即可用（似乎只在vue组件文件中有效）
 import AutoImport from 'unplugin-auto-import/vite'  // https://github.com/antfu/unplugin-auto-import
+// 以下为针对 ElementPlus 组件库的自动导入
 import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 
@@ -17,7 +18,8 @@ export default defineConfig({
     vue(),
     vueJsx(),
     AutoImport({
-      // imports: ['vue', 'vue-router', 'pinia'],  // 注册要自动导入的库，底层依赖的 unimport 库已内置了大部分常用库，可查看 https://github.com/unjs/unimport/blob/main/src/presets/index.ts
+      // imports选项用于注册要自动导入的库，配置方法可查看插件文档，这里直接设置的字符串值是针对插件内presets预设的库（虽为预设，只是预设解析，并非预设使用，要使用仍需显式指明）
+      imports: ['vue', 'vue-router', 'pinia'],  // 底层依赖的 unimport 库已内置了大部分常用库，可查看 https://github.com/unjs/unimport/blob/main/src/presets/index.ts
       resolvers: [ElementPlusResolver()],
     }),
     Components({

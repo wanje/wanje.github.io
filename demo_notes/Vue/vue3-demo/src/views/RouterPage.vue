@@ -1,5 +1,5 @@
 <template>
-  <div class="about">
+  <div class="router">
     <h1>This is an router page</h1>
   </div>
 </template>

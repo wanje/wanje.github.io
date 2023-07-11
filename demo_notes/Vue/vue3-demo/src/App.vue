@@ -55,6 +55,7 @@
 
   &__nav-item {
     margin-left: 20px;
+    color: #33a06f;
   }
 }
 </style>
