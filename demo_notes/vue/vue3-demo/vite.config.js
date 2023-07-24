@@ -12,7 +12,7 @@ import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  // base: './',  // 资源基础路径，空字符串或'./'为相对路径，默认根路径'/'
+  base: './',  // 资源基础路径，空字符串或'./'为相对路径，默认根路径'/'
   // publicDir: 'public',  // 静态资源目录位置，默认`public`，此目录中的内容不会经过vite处理，打包时会直接拷贝到设置的outDir目录，且访问时路径已`/`开始
   plugins: [
     vue(),
