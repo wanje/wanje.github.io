@@ -1,6 +1,9 @@
 <script setup>
 import ReactiveApi from './ReactiveApi.vue'
 import RefApi from './RefApi.vue'
+import ComputedApi from './ComputedApi.vue'
+import CompLifecircle from './CompLifecircle.vue'
+import WatchApi from './WatchApi.vue'
 </script>
 
 <template>
@@ -12,5 +15,8 @@ import RefApi from './RefApi.vue'
     <p>大多原来挂载在组件实例 <code>this</code> 上的api（如 <code>$nextTick</code>）都有对应的组合式api下的同名api（只是去掉了开头的 <code>$</code>）</p>
     <ReactiveApi></ReactiveApi>
     <RefApi></RefApi>
+    <ComputedApi></ComputedApi>
+    <WatchApi></WatchApi>
+    <CompLifecircle></CompLifecircle>
   </section>
 </template>
