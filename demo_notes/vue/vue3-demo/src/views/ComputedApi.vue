@@ -22,6 +22,11 @@ import { computed } from 'vue';
   <div class="">
     <div>
       <h2><a target="_blank" href="../src/views/ComputedApi.vue">计算属性：computed</a></h2>
+      <p>语法1：<pre class="color-orange">const computedData = computed(() => value);</pre></p>
+      <p>语法2：<pre class="color-orange">const computedData = computed({
+        get() { return value },
+        set() {...}
+      });</pre></p>
       <p>该API返回的是一个`ref`对象，具有响应性</p>
       <div>
         <input v-model="firstName" type="text" placeholder="first name" />
