@@ -113,7 +113,7 @@ function UseEffectHook() {
     console.log('effect');
     //以下为举例，实际场景下可能没有下例这样的
     const id = setInterval(() => {
-      setCount(val => val + 1); // 在这不依赖于外部的 `count` 变量，而直接使用改变状态值时的函数参数形式来获取先关状态
+      setCount(val => val + 1); // 在这不依赖于外部的 `count` 变量，而直接使用改变状态值时的函数参数形式来获取相关状态
       //! 若换成如下依赖外部`count`的形式，则首先需要在依赖列表中添加`count`(易遗忘导致bug，一直是初始值)，然后将使得每次`count`更新都会导致这里的effect函数执行
       // setCount(count + 1);   //? 虽然在外部用`useRef`hook创建一个对某状态的引用，在effect内部使用该引用的方式来避免直接添加进依赖表的方式也可达到目的，但不到万不得已不应这样做，因为这样导致依赖难以预测，不好维护和debug
     }, 10000);
@@ -162,7 +162,7 @@ function UseCustomHook(props) {
   console.log(isInStock)
 
   useEffect(() => {
-    console.warn('mounted')
+    console.warn('mounted or updated')
   });
 
   return (
@@ -190,7 +190,7 @@ function UseContextHook() {
       color: '#fff'
     }
   };
-  const ThemeContext = React.createContext(themes.light); // 参数为初始值
+  const ThemeContext = React.createContext(themes.light); // 参数为默认初始值，其只在内部消费组件在上层组件树中未匹配到对应Provider时才会生效
 
   function Son() {
     return (
@@ -361,7 +361,7 @@ function UseRefHook() {
     return () => {
       clearInterval(timerId.current);
     };
-  });
+  }, []);
 
   return (
     <div>
@@ -503,7 +503,7 @@ function UseDebugValueHook() {
 }
 
 //* useDeferredValue（v18+）
-// 该 hook 接收一个参数值，并返回该值的新副本，将该副本推迟到其他更紧急的更新之后再更新，注意其只是演示更新值，并不能阻止紧急更新期间导致的子组件重渲染(此问题仍需用memo/useMemo)
+// 该 hook 接收一个参数值，并返回该值的新副本，将该副本推迟到其他更紧急的更新之后再更新，注意其只是延时更新值，并不能阻止紧急更新期间导致的子组件重渲染(此问题仍需用memo/useMemo)
 function UseDeferredValueHook() {
   //? 伪代码示例
   /* const query = useSearchQuery('');
@@ -596,7 +596,7 @@ function LibraryHooks() {
         <span className="color-gray">一个推荐用于读取和订阅外部数据源的hook</span>
       </p>
       <p>
-        <span className="fwb">useSyncExternalStor：</span>
+        <span className="fwb">useInsertionEffect：</span>
         <span className="color-gray">与 useEffect 相同，但它在所有 DOM 突变之前同步触发。使用它在读取 useLayoutEffect 中的布局之前将样式注入 DOM。
         该 hook 不能访问 refs，也不能安排更新，其应仅限于 css-in-js 库作者使用。</span>
       </p>

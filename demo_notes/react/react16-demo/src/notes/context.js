@@ -1,7 +1,7 @@
 import React, { Component, createContext, useContext } from 'react';
 
 // `Context`设计目的是为了共享那些对于一个组件树而言是“全局”的数据(比如跨组件共享的数据)，其能替代部分状态管理功能，但不能作为复杂状态管理的替代方案
-// `Context`使我们无需明确地通过中间组件层层向下传递数据，就能将数据深入传递进组件树，使得组件数内的所有子孙组件都能访问到该数据
+// `Context`使我们无需明确地通过中间组件层层向下传递数据，就能将数据深入传递进组件树，使得组件树内的所有子孙组件都能访问到该数据
 const themeConfig = {
   light: {
     background: '#fff',
@@ -71,7 +71,7 @@ function MiddleComp() {
 // 底层组件1
 class InsideComp1 extends Component {
   //* 底层组件上指定使用组件的静态属性`contextType`读取当前的context，该底层组件也就作为该context的消费组件(订阅者/消费者)
-  //! 该`contextType`静态属性只有class类声明的组件可使用，函数组件不可用，函数组件可以使用`useContext(MyContext)`hook钩子进行绑定和获取先关context
+  //! 该`contextType`静态属性只有class类声明的组件可使用，函数组件不可用，函数组件可以使用`useContext(MyContext)`hook钩子进行绑定和获取相关context
   //* 注意当前的context就是上面`createContext`声明的context，可以理解为将声明的context上下文绑定到当前组件的`contextType`属性上，从而关联读取到上层最近一个使用该相同context的顶层组件所Provider提供的当前数据
   //! 若当前底层组件通过该context未匹配到上层使用该相同context的Provider提供者，无法读取其数据，此时就会使用该context声明时传入的defaultValue默认值
   
