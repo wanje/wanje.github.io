@@ -23,9 +23,9 @@ import LessModule from './App.module.less';
 function App() {
   return (
       <div className="view-box">
-        <div className="css-scoped">css scroped 测试</div>
-        <div className="less-scoped">less scroped 测试 <span className="less-scoped-nest">嵌套 <b>测试</b></span></div>
-        <div className={LessModule['less-module']}>less module 测试</div>
+        <div className="inline-block css-scoped">css scroped 测试</div>
+        <div className="inline-block less-scoped">less scroped 测试 <span className="less-scoped-nest">嵌套 <b>测试</b></span></div>
+        <div className={`inline-block ${LessModule['less-module']}`}>less module 测试</div>
         <Game />
         <RouterView />
         <JsxGrammar />

@@ -37,6 +37,12 @@ export default class ErrorBoundary extends Component {
     return (
       <div>
         <h2><a target="_blank" href="../src/notes/错误边界.js">错误边界</a></h2>
+        <p>以下两个错误边界处理生命周期方法任意定义一个(或两个)，则该组件就变成一个错误边界组件，<span className="color-orange">可捕获子组件内的JS错误(自身的不行)</span>而进行降级处理</p>
+        <ol>
+          <li>getDerivedStateFromError，静态方法，在该方法内渲染错误备用UI</li>
+          <li>componentDidCatch，在该方法内打印或上报错误日志信息(错误信息更完整详细)</li>
+        </ol>
+        <p>使用示例也可查看上面 <a target="_blank" href="../src/notes/代码分割&懒加载.js">代码分割&懒加载</a></p>
         {
           // 你可以自定义降级后的 UI 并渲染
           this.state.hasError ? (<h1>出错啦！</h1>) : this.props.children

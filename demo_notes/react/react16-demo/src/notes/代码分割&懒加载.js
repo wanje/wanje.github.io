@@ -44,12 +44,15 @@ function CodeSeparateLazy() {
   return (
     <div>
       <h2><a target="_blank" href="../src/notes/代码分割&懒加载.js">代码分割&懒加载</a></h2>
-      <MyErrorBoundary> {/* 错误边界：若`Suspense`中模块加载失败(如网络问题)，它会触发一个错误。可以通过异常捕获边界技术来处理这些情况，以显示良好的用户体验并管理恢复事宜。 */}
-        {/* <Suspense>组件内渲染`React.lazy`懒加载的组件，`Suspense`组件可置于懒加载组件之上的任何位置(是祖先元素即可)，也可以一个`Suspense`组件包裹多个懒加载组件 */}
-        <Suspense fallback={<div>加载中...</div>}> {/* `fallback`属性接受任何在组件加载过程中你想展示的 React 元素 */}
-          <EventHandle />
-        </Suspense>
-      </MyErrorBoundary>
+      <div className="border pd-10">
+        <p>以下事件处理模块为懒加载导入</p>
+        <MyErrorBoundary> {/* 错误边界：若`Suspense`中模块加载失败(如网络问题)，它会触发一个错误。可以通过异常捕获边界技术来处理这些情况，以显示良好的用户体验并管理恢复事宜。 */}
+          {/* <Suspense>组件内渲染`React.lazy`懒加载的组件，`Suspense`组件可置于懒加载组件之上的任何位置(是祖先元素即可)，也可以一个`Suspense`组件包裹多个懒加载组件 */}
+          <Suspense fallback={<div>加载中...</div>}> {/* `fallback`属性接受任何在组件加载过程中你想展示的 React 元素 */}
+            <EventHandle />
+          </Suspense>
+        </MyErrorBoundary>
+      </div>
     </div>
   )
 }
