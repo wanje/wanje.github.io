@@ -13,6 +13,6 @@
 
 <style lang="scss" scoped>
 img {
-  max-width: 100%;
+  max-width: 50%;
 }
 </style>
