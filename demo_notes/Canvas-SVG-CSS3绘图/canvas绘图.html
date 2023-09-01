@@ -19,7 +19,7 @@
 <!--canvas,可减少flash、图片的应用-->
 <!--canvas的宽高最好在元素属性上设置，或JS中属性设置，用style和外部CSS控制会出问题，其他属性可以CSS设置-->
 <div id="page-cont" class="view-box" style="width: 705px;border-right: 1px solid silver;margin-left: 5px;">
-    <canvas id="myCanvas" width="700" height="600" style="border-bottom: 1px solid silver;">你的浏览器不支持canvas，请升级或更换浏览器！</canvas>
+    <canvas id="myCanvas" style="width:700px;height:600px;border-bottom: 1px solid silver;">你的浏览器不支持canvas，请升级或更换浏览器！</canvas>
     <img src="../知识点截图/canvas/canvas角度.png" title="canvas角度" width="340">
     <img src="../知识点截图/canvas/canvas之arcTo.png" title="canvas之arcTo" width="340">
     <img src="../知识点截图/canvas/canvas变换矩阵.png" title="变换矩阵" width="300">
@@ -35,16 +35,30 @@
      * DOM对象的getBoundingClientRect()方法获取对应元素的包围框的位置(值可能会是小数)和大小信息，返回的对象中除了width和height，其他left、top、right和bottom属性值都是相对于视口的左上角位置而言，即窗口原点，IE9+支持
      * canvas中的绘图状态都是叠加影响后面的所有操作的，要避免这种影响就要随时使用save()和restore()方法保存和恢复之前的绘图环境
      * 最好所有的绘图都已原点为几何中心绘制，然后再经过变换到其他位置，一方面是避免变换始终以原点为中心带来的影响，二是更有利于代码的可控和扩展
+     * 若是绘图始终围绕画布中心位置，则可以一开始就将原点平移至画布中心位置
+     * 
+     * canvas元素或DOM的width和height属性指定的宽高为画布内可见部分的坐标系宽高，其不同于CSS设置的相对于文档的视觉尺寸宽高
      * /
-    /*获取画布及绘图上下文，该两步是后续绘图的基础*/
+     * 
+    /*获取画布及绘图上下文，并修正canvas中视图的分辨率（主要针对设备像素比不一致的情况，否则在一些高分屏下看着图像较模糊）*/
+    const dpr = window.devicePixelRatio || 1; // 设备像素比
 
     // 1. 获取canvas对象；
-    var canvas = document.getElementById("myCanvas");   //也可在此时通过 canvas.width 或 canvas.height 设置画布宽高
+    var canvas = document.getElementById("myCanvas");
+    // 设置画布坐标系可见范围内宽高，根据设备像素比进行适配，将画布内的尺寸设置为实际CSS尺寸的 pdr 倍数
+    // 必须要注意的是，这里结合后面的scale共同适配了 dpr，若要用 toDataUrl 导出图像，其导出尺寸是这里设置的画布内的尺寸，而非CSS设置的尺寸
+    canvas.width = canvas.clientWidth * dpr;
+    canvas.height = canvas.clientHeight * dpr;
     // 2. 获取绘图上下文环境(画布)，并指明为"2d"
     var ctx = canvas.getContext("2d");
 
+    // 将圆心平移至画布中心
+    // ctx.translate(canvas.width / 2, canvas.height / 2);
+    // 缩放视图以匹配修正的分辨率，将画布各元素的尺寸缩放为实际CSS尺寸的 pdr 倍数（因前面整个画布坐标系进行了适配）
+    ctx.scale(dpr, dpr);
+
     console.log(ctx);   //查看ctx下的属性和方法
-    console.log(ctx.canvas,canvas);   //ctx下的canvas属性保存着当前画布元素(即所在canvas元素，其与上面使用byId方法获得的canvas元素是一样的)
+    console.log(ctx.canvas, canvas);   //ctx下的canvas属性保存着当前画布元素(即所在canvas元素，其与上面使用byId方法获得的canvas元素是一样的)
     console.log(canvas.getBoundingClientRect());   //ctx下的canvas属性保存着当前画布元素(即所在canvas元素，其与上面使用byId方法获得的canvas元素是一样的)
 
     /**==================================================== 绘制矩形 ====================================================*/
@@ -268,10 +282,10 @@
     };
 
 
-    /**============================================== 画布移动、放缩、旋转 ==============================================*/
+    /**============================================== 画布移动、放缩、旋转变换 ==============================================*/
     ctx.save(); //可在变换前保存当前绘图状态，以方便在不需要下面的变换绘图环境时，恢复到变换前的绘图环境，否则变换将影响后面的所有绘制
 
-    //绘制变形图形，以画布的坐标原点为参考中心，需在绘制前就设置，设置后将改变画布的坐标系位置
+    //! 绘制变形图形，以画布的坐标原点为参考中心，需在绘制前就设置，设置后将改变画布的坐标系位置
     ctx.translate(10,20);//移动坐标轴原点，（x轴，y轴）
     ctx.scale(0.5,0.7);//放缩，（x轴，y轴）,注意其以坐标原点为参考进行放缩，即对图形上的每个点进行坐标变换
     ctx.rotate(Math.PI/180*10);//旋转角度(幅度角度)，负值表逆时针旋转

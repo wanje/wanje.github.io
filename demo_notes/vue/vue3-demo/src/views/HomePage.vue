@@ -4,6 +4,7 @@ import RefApi from './RefApi.vue'
 import ComputedApi from './ComputedApi.vue'
 import CompLifecircle from './CompLifecircle.vue'
 import WatchApi from './WatchApi.vue'
+import CompDOMRefApi from './CompDOMRefApi.vue'
 </script>
 
 <template>
@@ -17,6 +18,7 @@ import WatchApi from './WatchApi.vue'
     <RefApi></RefApi>
     <ComputedApi></ComputedApi>
     <WatchApi></WatchApi>
+    <CompDOMRefApi></CompDOMRefApi>
     <CompLifecircle></CompLifecircle>
   </section>
 </template>

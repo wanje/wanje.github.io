@@ -22,7 +22,7 @@
   watch(() => x.value + y.value, (sum) => {
     console.log(`x + y = ${sum}`)
   });
-  // 多个来源组成的数组，回到函数也接收数组参数分别对应相应位置的新值/旧值
+  // 多个来源组成的数组，回调函数也接收数组参数分别对应相应位置的新值/旧值
   watch([x, () => y.value], ([newX, newY], [oldX, oldY]) => {
     console.log(`新x为 ${newX}，新y为 ${newY}，旧x为 ${oldX}，旧y为 ${oldY}`)
   });
@@ -76,12 +76,12 @@
 
 <template>
   <div class="">
-    <h2><a target="_blank" href="../src/views/ComputedApi.vue">侦/监听器：watch</a></h2>
+    <h2><a target="_blank" href="../src/views/WatchApi.vue">侦/监听器：watch/watchEffect</a></h2>
     <p>侦听器`watch`主要用于在被监听的响应性数据发生变化后可做一系列副作用操作，无返回值，而`computed`计算属性原则上不应该有副作用操作，只是纯粹的关联数据计算</p>
     <p>语法：<code class="color-orange">watch(watchedData, callback)</code></p>
     <p>可监听多种数据源：可以是一个 ref (包括计算属性)、一个响应式对象、一个 getter 函数、或多个数据源组成的数组</p>
     <p>语法：<code class="color-orange">watchEffect(callback)</code></p>
-    <p>自动收集 callback 中的响应式依赖，可同时依赖多个响应式数据，且对于对象数据其他非依赖属性变更不会影响回调触发</p>
+    <p>自动收集 callback 中的响应式依赖并会立即执行，可同时依赖多个响应式数据，且对于对象数据其他非依赖属性变更不会影响回调触发，其与`watch`的关系就类似计算属性与data的关系</p>
     <div>
       <button v-if="count <= 3" @click="count++">动我试试👉 {{ count }}</button>
       <span v-if="count === 3" class="color-orange">事不过三💣</span>
@@ -91,7 +91,5 @@
 </template>
 
 <style lang="scss" scoped>
-img {
-  max-width: 100%;
-}
+
 </style>
