@@ -44,6 +44,7 @@ export default defineConfig({
   //   outDir: 'dist',  // 指定打包输出路径，默认‘dist’
   //   assetsDir: 'assets',  // 打包后静态资源的存放路径（相对上面的`outDir`），默认`assets`
   //   assetsInlineLimit: 4096,  // 静态资源内联限制大小(字节)，不超过此大小的图片等静态资源将转为base64内联，默认`4096`即`4kb`
+  //   target: 'modules',  // 设置构建时的浏览器兼容目标，可以是ES版本，也可以是浏览器版本，默认`modules`，表示支持模块化的浏览器
   // },
   server: {
     // base: '',  // http请求的基础前置路径

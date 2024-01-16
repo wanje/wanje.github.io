@@ -30,7 +30,8 @@ import { computed } from 'vue';
       <p>该API返回的是一个`ref`对象，具有响应性</p>
       <div>
         <input v-model="firstName" type="text" placeholder="first name" />
-        <input v-model="lastName" type="text" placeholder="last name" />
+        <br>
+        <input class="mgtb-10 mgr-10" v-model="lastName" type="text" placeholder="last name" />
         <span>full name: </span>
         <span>{{ fullName }}</span>
       </div>

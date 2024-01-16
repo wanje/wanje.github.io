@@ -14,5 +14,9 @@
 <style lang="scss" scoped>
 img {
   max-width: 50%;
+
+  @media screen and (max-width: 750px) {
+    max-width: 100%;
+  }
 }
 </style>

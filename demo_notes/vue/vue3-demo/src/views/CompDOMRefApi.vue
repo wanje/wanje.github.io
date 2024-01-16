@@ -9,7 +9,7 @@
 
   onMounted(() => {
     console.log(input.value);
-    input.value.focus();  // 通过对应的 ref 对象来访问匹配的组件实例/元素DOM
+    // input.value.focus();  // 通过对应的 ref 对象来访问匹配的组件实例/元素DOM
   });
 
 </script>
@@ -27,7 +27,7 @@
     <div>
       <input ref="input" />
       <!-- 函数接受 ref 时，需要用动态绑定 :ref -->
-      <input :ref="getRef" />
+      <input :ref="getRef" class="mgl-10" />
     </div>
   </div>
 </template>

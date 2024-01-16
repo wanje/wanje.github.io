@@ -18,7 +18,7 @@
     <p>
       <button @click="decrement">-</button>
       <!-- 这里为只读，故未使用双向绑定 v-model -->
-      <input type="text" :value="state.counter" readonly />
+      <input class="mglr-10" type="text" :value="state.counter" readonly />
       <button @click="increment">+</button>
     </p>
   </div>

@@ -56,7 +56,7 @@
   // 上面的内容等价于下面的
   //! watchEffect 会自动跟踪回调中的响应式依赖，且是立即执行的，所以不用设置 immediate
   //! watchEffect 可跟踪回调内的多个响应式依赖，且只跟踪依赖的项，对于对象数据不会因为其他未依赖的数据变化而触发回调执行，这两者都比使用 watch 更有效
-  //! watchEffect 仅会在其同步执行期间，才追踪依赖(及依赖收集在遇到异步代码时就会停止)。故在使用异步回调时，只有在第一个 await 正常工作前访问到的属性才会被追踪。
+  //! watchEffect 仅会在其同步执行期间，才追踪依赖(即依赖收集在遇到异步代码时就会停止)。故在使用异步回调时，只有在第一个 await 正常工作前访问到的属性才会被追踪。
   //! 要在vue组件更新完后执行 watchEffect 则可使用 watchPostEffect 替代
   watchEffect(async () => {
     const res = await fetch(`https://jsonplaceholder.typicode.com/todos/${todoId.value}`);
@@ -67,10 +67,13 @@
   //! 大多都是在同步逻辑中创建侦听器，组件卸载时也会自动停止这类侦听器，而对于在异步中创建(非常少见)的侦听器就必须手动停止，以免造成内存泄漏
   // 要手动停止 watch 和 watchEffect 创建的侦听器，只需要手动调用他们返回的函数即可
   let unwatch;
-  setTimeout(() => {  // 异步创建的侦听器不会自动在组件卸载是停止
+  setTimeout(() => {  // 异步创建的侦听器不会自动在组件卸载时停止
     unwatch = watchEffect(() => {});
   }, 100);
-  unwatch && unwatch(); // 在需要的时候手动停止侦听
+
+  onUnmounted(() => {
+    unwatch && unwatch(); // 在需要的时候手动停止侦听
+  });
 
 </script>
 
