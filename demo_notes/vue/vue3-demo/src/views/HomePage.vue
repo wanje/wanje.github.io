@@ -1,10 +1,40 @@
 <script setup>
+// 导入组件时，官方不建议忽略`.vue`这类自定义文件扩展命名(可能会影响IED和类型支持)，若确实想省略，可通过配置文件中`resolve.extensions`选项自定义
 import ReactiveApi from './ReactiveApi.vue'
 import RefApi from './RefApi.vue'
 import ComputedApi from './ComputedApi.vue'
 import CompLifecircle from './CompLifecircle.vue'
 import WatchApi from './WatchApi.vue'
 import CompDOMRefApi from './CompDOMRefApi.vue'
+import CompBase from './CompBase.vue'
+
+// 不使用`<script setup>`语法糖时
+/* export default {
+  components: {
+    ReactiveApi,
+    RefApi
+  },
+  props: {
+    title: String
+  },
+  // data 选项与 setup 钩子不能同时使用，只能选择其一
+  setup(props, context) {
+    // 此处可以使用组合API
+    console.log('props对象', props)
+    console.log('上下文，包含 attrs, slots, emit, expose 等属性或方法，可解构', context);
+
+    const count = ref(0);
+    // 返回值会暴露给模板和其他的选项式 API 钩子
+    return {
+      count
+    }
+  },
+  mounted() {
+    console.log(this.count)
+  },
+  methods: {},
+  //...类似vue2中的其他选项和vue3新增可用选项(如expose)
+} */
 </script>
 
 <template>
@@ -20,5 +50,6 @@ import CompDOMRefApi from './CompDOMRefApi.vue'
     <WatchApi></WatchApi>
     <CompDOMRefApi></CompDOMRefApi>
     <CompLifecircle></CompLifecircle>
+    <CompBase></CompBase>
   </section>
 </template>

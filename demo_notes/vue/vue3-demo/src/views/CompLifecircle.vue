@@ -13,7 +13,7 @@
 
 <style lang="scss" scoped>
 img {
-  max-width: 50%;
+  max-width: 60%;
 
   @media screen and (max-width: 750px) {
     max-width: 100%;

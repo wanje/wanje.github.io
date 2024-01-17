@@ -28,6 +28,7 @@ export default defineConfig({
     }),
   ],
   resolve: {
+    // extensions: ['.js', '.jsx', '.vue'], // 导入时想要省略的扩展名列表，官方并不建议忽略.vue这类自定义文件扩展命名，默认['.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json']
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
