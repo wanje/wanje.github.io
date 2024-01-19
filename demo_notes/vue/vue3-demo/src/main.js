@@ -8,6 +8,8 @@ import router from './router'
 
 const app = createApp(App)
 
+// app.component('CompName', CompObject)  // 全局组件注册API
+
 app.use(createPinia())
 app.use(router)
 

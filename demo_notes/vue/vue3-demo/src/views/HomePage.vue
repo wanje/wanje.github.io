@@ -1,5 +1,6 @@
 <script setup>
 // 导入组件时，官方不建议忽略`.vue`这类自定义文件扩展命名(可能会影响IED和类型支持)，若确实想省略，可通过配置文件中`resolve.extensions`选项自定义
+// <script setup> 下导入即默认注册为了局部组件
 import ReactiveApi from './ReactiveApi.vue'
 import RefApi from './RefApi.vue'
 import ComputedApi from './ComputedApi.vue'
@@ -10,7 +11,7 @@ import CompBase from './CompBase.vue'
 
 // 不使用`<script setup>`语法糖时
 /* export default {
-  components: {
+  components: { // 局部组件注册
     ReactiveApi,
     RefApi
   },
@@ -33,8 +34,12 @@ import CompBase from './CompBase.vue'
     console.log(this.count)
   },
   methods: {},
-  //...类似vue2中的其他选项和vue3新增可用选项(如expose)
+  //...类似vue2中的其他选项和vue3新增可用选项(如expose/emits)
 } */
+
+function test() {
+  console.log('a-event')
+}
 </script>
 
 <template>
@@ -50,6 +55,6 @@ import CompBase from './CompBase.vue'
     <WatchApi></WatchApi>
     <CompDOMRefApi></CompDOMRefApi>
     <CompLifecircle></CompLifecircle>
-    <CompBase></CompBase>
+    <CompBase @a-event="test"></CompBase>
   </section>
 </template>
