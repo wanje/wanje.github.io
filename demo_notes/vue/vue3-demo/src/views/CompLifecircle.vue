@@ -1,5 +1,8 @@
 <script setup>
-  
+  const isMini = ref(true);
+  function toggleMini() {
+    isMini.value = !isMini.value;
+  }
 </script>
 
 <template>
@@ -14,16 +17,28 @@
       <code class="color-orange">onActivated()</code>会在激活时调用(组件挂载时也会被调用)，<code class="color-orange">onDeactivated()</code>
       会在失活时调用(组件卸载时也会被调用)，另外这两个钩子不仅适用于 <code class="">&lt;KeepAlive></code> 缓存的根组件，也适用于缓存树中的所有后代组件
     </p>
-    <img src="@/assets/lifecycle.png" alt="生命周期图" />
+    <img
+      src="@/assets/lifecycle.png"
+      alt="生命周期图"
+      title="生命周期图：点我切换大小图"
+      :class="{ 'mini': isMini }"
+      @click="toggleMini"
+    />
   </div>
 </template>
 
 <style lang="scss" scoped>
 img {
   max-width: 60%;
+  transition: all 0.2s;
+  cursor: zoom-out;
 
   @media screen and (max-width: 750px) {
     max-width: 100%;
+  }
+  &.mini {
+    max-width: 50px;
+    cursor: zoom-in;
   }
 }
 </style>

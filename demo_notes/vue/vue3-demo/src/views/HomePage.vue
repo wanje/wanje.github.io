@@ -38,7 +38,13 @@ import CompBase from './CompBase.vue'
 } */
 
 function test() {
-  console.log('a-event')
+  console.log('a-event');
+  alert('抛出事件成功')
+}
+
+const modelData = ref(0);
+function updateModel() {
+  modelData.value++
 }
 </script>
 
@@ -55,6 +61,11 @@ function test() {
     <WatchApi></WatchApi>
     <CompDOMRefApi></CompDOMRefApi>
     <CompLifecircle></CompLifecircle>
-    <CompBase @a-event="test"></CompBase>
+    <CompBase v-model="modelData" @a-event="test">
+      <!-- vue3中具名插槽都需要通过 template 元素来使用（vue2中可以只是使用作用域插槽或有多个内容时才用 template 元素） -->
+      <template #model-out>
+        <button class="mgl-10" @click="updateModel">父组件外部updateModel</button>
+      </template>
+    </CompBase>
   </section>
 </template>
