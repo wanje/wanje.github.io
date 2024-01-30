@@ -8,6 +8,7 @@ import CompLifecircle from './CompLifecircle.vue'
 import WatchApi from './WatchApi.vue'
 import CompDOMRefApi from './CompDOMRefApi.vue'
 import CompBase from './CompBase.vue'
+import FallthroughAttrs from './FallthroughAttrs.vue'
 
 // 不使用`<script setup>`语法糖时
 /* export default {
@@ -43,8 +44,12 @@ function test() {
 }
 
 const modelData = ref(0);
-function updateModel() {
-  modelData.value++
+const modelData2 = ref('');
+const modelData3 = ref('');
+function updateModel(index) {
+  switch (index) {
+    case 1: modelData.value++; break;
+  }
 }
 </script>
 
@@ -61,11 +66,17 @@ function updateModel() {
     <WatchApi></WatchApi>
     <CompDOMRefApi></CompDOMRefApi>
     <CompLifecircle></CompLifecircle>
-    <CompBase v-model="modelData" @a-event="test">
+    <CompBase v-model="modelData" v-model:vm2="modelData2" v-model:vm3.upper="modelData3" @a-event="test">
       <!-- vue3中具名插槽都需要通过 template 元素来使用（vue2中可以只是使用作用域插槽或有多个内容时才用 template 元素） -->
       <template #model-out>
-        <button class="mgl-10" @click="updateModel">父组件外部updateModel</button>
+        <button class="mgl-10" @click="updateModel(1)">父组件外部updateModel</button>
       </template>
+      <span>model2：</span>
+      <input type="text" v-model="modelData2" />
+      <br>
+      <span>model3：</span>
+      <input type="text" v-model="modelData3" />
     </CompBase>
+    <FallthroughAttrs></FallthroughAttrs>
   </section>
 </template>
