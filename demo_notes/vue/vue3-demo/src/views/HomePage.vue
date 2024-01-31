@@ -9,6 +9,8 @@ import WatchApi from './WatchApi.vue'
 import CompDOMRefApi from './CompDOMRefApi.vue'
 import CompBase from './CompBase.vue'
 import FallthroughAttrs from './FallthroughAttrs.vue'
+import SlotsApi from './SlotsApi.vue'
+import ProvideInject from './ProvideInject.vue'
 
 // 不使用`<script setup>`语法糖时
 /* export default {
@@ -77,6 +79,8 @@ function updateModel(index) {
       <span>model3：</span>
       <input type="text" v-model="modelData3" />
     </CompBase>
-    <FallthroughAttrs></FallthroughAttrs>
+    <FallthroughAttrs theme="dark" class="color-default" style="background: none;" custom-attr="测试" @otherEvent="() => {}"></FallthroughAttrs>
+    <SlotsApi></SlotsApi>
+    <ProvideInject></ProvideInject>
   </section>
 </template>

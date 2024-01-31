@@ -1,7 +1,17 @@
 <script setup>
+  // defineOptions() 方法(v3.3+)用于在 <script setup> 下设置一些无需或没有宏定义的组件选项
+  defineOptions({
+    // name: 'OtherCompName', // 设置组件名，<script setup>下默认为该组件的.vue文件名
+    // inheritAttrs: false, // 设置组件不自动继承外部额外 attribute，默认为true
+    customOptions: {
+      cust: '自定义选项'
+    }
+  });
+
+
   /** defineProps() 方法声明组件 props，可传入的值同选项式API下props选项(注意参数不能访问外部任何变量)，其返回一个对象，通过该对象访问相关props */
   // const props = defineProps(['num', 'prop2']);
-  const props = defineProps({
+  const props = defineProps({ // 若不需要在JS中访问这些props甚至可以不接受其返回的对象，而在template中直接使用propName访问即可
     num: Number,
     prop2: {
       type: Number,
@@ -38,7 +48,7 @@
 
 
   // 定义组件自己的 v-model 双向数据绑定（底层实现逻辑关系与 vue2 中 prop 的`.sync`修饰符的应用逻辑非常类似：声明一个`propName`，然后通过触发`update:propName`事件来更新对应的数据）
-  /** defineModel() 方法（v3.4+支持推荐）定义一个双向数据流，其是一个便利宏，底层机制是封装了一个名为 modelValue 的 prop（本地ref的值与其同步）和一个名为 update:modelValue 的事件（当本地 ref 的值发生变更时触发） */
+  /** defineModel() 方法（v3.4+支持推荐）定义一个双向数据流，其是一个便利宏，底层机制是封装了一个名为 modelValue 的 prop（本地ref的值与其同步）和一个名为 update:modelValue 的事件（当本地 ref 的值发生变更时触发），还有一个 modelModifiers 的 prop 记录对应的修饰符情况 */
   // const model = defineModel(); // 返回一个ref对象
   const model = defineModel({ // 由于该方法底层也是声明的一个prop，所以可以传入适用于prop的相关选项
     // required: true,
@@ -71,7 +81,7 @@
   }
   console.log('model3', model3, modifiers3);
   // <ChildComp v-model="modelData" v-model:vm2="modelData2" v-model:vm3.upper="modelData3" />
-  /** 在v3.4之前的版本中，声明 v-model 的方式需要显式声明属性和更新该属性的特殊事件名，需要修饰符的还要声明一个对应的修饰符接收prop */
+  /** 在v3.4之前的版本中，声明 v-model 的方式需要显式声明属性和更新该属性的特殊事件名，需要修饰符的还要声明一个对应的修饰符接收prop，v3.4+中实际也做了这些步骤，只是是由 defineModel() 方法内部去做而简化了用户编写 */
   /*
   // ChildComp 组件内声明（modelValue是一个特殊prop名，故使用时不用在v-model参数中指明）
   // const props = defineProps(['modelValue', 'vm2']);
@@ -105,6 +115,7 @@
   <div class="comp-base">
     <h2><a target="_blank" href="../src/views/CompBase.vue">组件基础</a></h2>
     <h2><a target="_blank" href="../src/views/FallthroughAttrs.vue">组件基础</a></h2>
+    <p><code>defineOptions()</code> 方法(v3.3+)用于在 &lt;script setup> 下设置一些无需或没有宏定义的组件选项(从而无需像多个style标签一样再加一个script标签代码块来设置选项)， 如 name、inheritAttrs、customOptions 等</p>
     <p><code>defineProps()</code> 方法声明组件props，可传入的值同选项式API下props选项，并返回一个存储相关props的对象，<span class="color-red">注意声明时传入的参数不能访问 <code>&lt;script setup></code> 中定义的任何其他变量</span></p>
     <p><code>defineEmits()</code> 方法声明组件事件列表，可传入一组自定义事件名(可小驼峰或烤串式命名混用，均可解析)或对象形式(可用于事件校验)，并返回一个等同于 <code class="color-orange">$emit</code> 的函数，用于对外抛出事件，
       <span class="color-red">该宏方法只能在顶级作用域使用，不能在子函数中使用，该限制也同样适用于其他宏方法（defineXXX），</span>
@@ -112,11 +123,16 @@
       这里两处提到的`emit`都可以是其他名字，其取决于接收返回值的自定义变量的实际取名
     </p>
     <p><code>defineExpose()</code> 方法显式导出可被父组件访问的当前组件内的数据或方法(参数为对象形式)，否则默认都是私有的不可被外部访问</p>
-    <p><code>defineOptions()</code> 方法(v3.3+)用于在 &lt;script setup> 下设置一些无需或没有宏定义的组件选项</p>
     <p><code>defineModel()</code> 方法声明对外可使用 v-model 绑定的双向数据props，其底层实现逻辑关系表现与 vue2 中 prop 的`.sync`修饰符的应用逻辑非常类似：声明一个`propName`，然后通过触发`update:propName`事件来更新对应的数据，
     有几种使用方式，可使用默认参数，也可指定参数和应用修饰符</p>
-    <p>初始数：<span>{{ props.num || 0 }}</span></p>
-    <p>内部数：<span>{{ data.num }}</span></p>
+    <p class="color-orange">在 <code>&lt;template></code> 模板中使用传入的prop以下两种访问都可以，
+      <br>1、直接通过 <code>defineProps(['propName'])</code> 中定义的 <code>propName</code> 来访问，模板中会自行解构；
+      <br>2、通过 <code>const props = defineProps(['propName'])</code> 返回的props对象下对应属性名 <code>props.propName</code> 来访问（在 setup JS 中则只能通过该方式访问）
+    </p>
+    <p>传入prop：
+      <br>直接propName访问：<span>{{ prop2 }}</span>，
+      <br>通过返回对象props.propName访问：<span>{{ props.prop2 }}</span></p>
+    <p>内部ref：<span>{{ data.num }}</span></p>
     <button @click="$emit('a-event')">$emit 抛出事件</button>
     <button @click="emit('a-event')" class="mgl-10">emit 抛出事件</button>
     <div>
