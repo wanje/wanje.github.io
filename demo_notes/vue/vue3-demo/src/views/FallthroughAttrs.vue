@@ -1,4 +1,6 @@
 <script setup>
+import { inject } from 'vue';
+
   // defineOptions() 方法(v3.3+)用于在 <script setup> 下设置一些无需或没有宏定义的组件选项
   defineOptions({
     inheritAttrs: false // 若不想要一个组件自动地继承 attribute，可设置该
@@ -9,6 +11,17 @@
   // useAttrs() 方法返回一个对象，其中包含所有外部透传的attrs和事件监听（属性名将以原始形态存在，不会转换大小写和驼峰，而事件将以`on${eventName}`的形式保存）
   const attrs = useAttrs();
   console.log('透传Attrs', attrs);
+
+  // inject() 注入祖先组件provide的数据
+  const fromUp1 = inject('p1');
+  const fromUpRef = inject('pRef');
+  const fromUpx = inject('px', '这是默认值，祖先组件没有provide px这项数据才会出现');
+  // 不是把参数2函数本身当做默认值，而是其返回值，所以需要设置参数3为true（虽然也可以参数二可以写成调用形式就无需参数3，但这样会使得不管是否用到默认值函数必然会执行，而使用参数3只会在默认值生效时才执行）
+  const fromUpx2 = inject('px2', () => {
+    console.log('inject fromUpx2 默认值运行了，只会初始化时执行，不会因内部使用了响应式数据而更新');
+    if (fromUpRef.value === 'ref') return '条件1下的默认值';
+    return '因inject的响应式数据值此时不是 ref，所以按条件我被设为了默认值';
+  }, true);
 </script>
 
 <template>
@@ -30,6 +43,14 @@
       透传入的属性名将以原始形态存在 <code>$attrs</code> 中，不会转换大小写和驼峰，而事件将转换为 <code>on</code> 开头再加事件名的小驼峰key形式保存（使用 <code>v-bind</code> 全量绑定 <code>$attrs</code> 时事件也会一并解析绑定）</p>
     <p><code>useAttrs()</code> 钩子返回一个对象，其中包含所有外部透传的attrs和事件监听，以便在 setup JS 中访问相关数据</p>
     <p class="color-red">注意，虽然获取到的 attrs 对象总是反映为最新的透传 attributes，但它并不是响应式的，不能通过侦听器去监听它的变化，若需要响应性，可以使用 prop，或使用 <code>onUpdated()</code> 生命周期钩子在每次更新时结合最新的 attrs 执行副作用</p>
+
+    <div>
+      inject 祖先组件 provide 的数据👇🏻<br>
+      常规数据：{{ fromUp1 }} <br>
+      响应式数据：{{ fromUpRef }} <button @click="fromUpRef = '我被后代组件更改了'">修改</button><br>
+      默认值？：{{ fromUpx }} <br>
+      函数默认值？：{{ fromUpx2 }} <br>
+    </div>
   </div>
 </template>
 

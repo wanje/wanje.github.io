@@ -114,7 +114,6 @@
 <template>
   <div class="comp-base">
     <h2><a target="_blank" href="../src/views/CompBase.vue">组件基础</a></h2>
-    <h2><a target="_blank" href="../src/views/FallthroughAttrs.vue">组件基础</a></h2>
     <p><code>defineOptions()</code> 方法(v3.3+)用于在 &lt;script setup> 下设置一些无需或没有宏定义的组件选项(从而无需像多个style标签一样再加一个script标签代码块来设置选项)， 如 name、inheritAttrs、customOptions 等</p>
     <p><code>defineProps()</code> 方法声明组件props，可传入的值同选项式API下props选项，并返回一个存储相关props的对象，<span class="color-red">注意声明时传入的参数不能访问 <code>&lt;script setup></code> 中定义的任何其他变量</span></p>
     <p><code>defineEmits()</code> 方法声明组件事件列表，可传入一组自定义事件名(可小驼峰或烤串式命名混用，均可解析)或对象形式(可用于事件校验)，并返回一个等同于 <code class="color-orange">$emit</code> 的函数，用于对外抛出事件，

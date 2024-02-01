@@ -79,8 +79,9 @@ function updateModel(index) {
       <span>model3：</span>
       <input type="text" v-model="modelData3" />
     </CompBase>
-    <FallthroughAttrs theme="dark" class="color-default" style="background: none;" custom-attr="测试" @otherEvent="() => {}"></FallthroughAttrs>
     <SlotsApi></SlotsApi>
-    <ProvideInject></ProvideInject>
+    <ProvideInject>
+      <FallthroughAttrs theme="dark" class="color-default" style="background: none;" custom-attr="测试" @otherEvent="() => {}"></FallthroughAttrs>
+    </ProvideInject>
   </section>
 </template>
