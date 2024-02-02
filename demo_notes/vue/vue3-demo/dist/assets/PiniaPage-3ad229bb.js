@@ -1,0 +1,1 @@
+import{_ as e,o as s,c as a,a as c}from"./index-5cde01f6.js";const n={},o={class:"pinia"},t=c("h1",null,"This is an pinia page",-1),i=[t];function _(r,d){return s(),a("div",o,i)}const p=e(n,[["render",_]]);export{p as default};
