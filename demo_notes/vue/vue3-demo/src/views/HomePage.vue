@@ -12,6 +12,8 @@ import FallthroughAttrs from './FallthroughAttrs.vue'
 import SlotsApi from './SlotsApi.vue'
 import ProvideInject from './ProvideInject.vue'
 import AsyncComp from './AsyncComp.vue'
+import ComposableFn from './ComposableFn.vue'
+import CustDirective from './CustDirective.vue'
 
 // 不使用`<script setup>`语法糖时
 /* export default {
@@ -85,5 +87,7 @@ function updateModel(index) {
       <FallthroughAttrs theme="dark" class="color-default" style="background: none;" custom-attr="测试" @otherEvent="() => {}"></FallthroughAttrs>
     </ProvideInject>
     <AsyncComp></AsyncComp>
+    <ComposableFn></ComposableFn>
+    <CustDirective></CustDirective>
   </section>
 </template>

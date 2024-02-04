@@ -27,7 +27,9 @@
 <template>
   <div>
     <h2><a target="_blank" href="../src/views/RefApi.vue">响应式：ref</a></h2>
-    <p>该API可用于 <span class="color-orange">所有数据类型</span>，且 <span class="color-orange">具有深层响应性</span>（即用于引用类数据时所有后代属性都具有响应性）</p>
+    <p>该API可用于 <span class="color-orange">所有数据类型</span>，且 <span class="color-orange">具有深层响应性</span>（即用于引用类数据时所有后代属性都具有响应性），
+      <span class="color-red">注意，该笔记后续所有内容提到的 ref 响应式数据不仅仅指使用 <code>ref()</code> 创建的数据，而是包括所有形式产生的响应式数据的总称</span>
+    </p>
     <p>当一个`ref`值作为`reactive`对象内的属性时(可更深层)，<span class="color-orange">JS访问对应属性时</span>`ref`会自动解包，但原始`ref`还是要用`.value`访问，
       这里提到的是对象内，<span class="color-orange">如果是数组或Map这种类数组，则不会自动解包</span>，访问时仍要通过`.value`，
       <span class="color-orange">另外注意在html模板语法中(即template中插值时)，只有最外层会被解包，内部不会解包，即使是对象的直接子属性也不会，</span>
