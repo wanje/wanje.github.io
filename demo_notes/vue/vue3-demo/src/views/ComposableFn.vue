@@ -7,7 +7,7 @@
 
 <template>
   <div ref="el" class="">
-    <h2><a target="_blank" href="../src/views/ComposableFn.vue">组合式函数</a></h2>
+    <h2><a target="_blank" href="../src/views/useFn.js">组合式函数</a></h2>
     <p>鼠标坐标：{{ x }}, {{ y }}</p>
     <p>组合式函数(Composables)是一个利用 Vue 的组合式 API 来封装和复用有状态逻辑的函数，就像 React 中的 hooks 一样，注意这里是有状态逻辑，对于无状态逻辑的公共函数我们通常称为工具函数
       （即内部状态不会因时间空间变化而变化，内部只会处理传入的指定输入），<span class="color-red">所以组合函数都尽量在顶层作用域调用，某些请情况下也可以在像 onMounted() 这样的生命周期钩子中调用</span>，
