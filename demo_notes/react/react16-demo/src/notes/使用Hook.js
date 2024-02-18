@@ -46,6 +46,7 @@ function UseStateHook(props) {
   }); */
 
   //! 惰性初始 state（指需要经过一些计算才得出初始状态值，且计算过程不依赖自身前一个状态），同函数式更新，也是传入一个函数，只是无需接收前一个状态值，此时该函数只会在初始渲染中执行一次，后续重渲染时会被忽略
+  //! 因初始化函数只会在组件初始渲染时执行一次，故若初始化需要依赖外部传入的 prop 时要么保证该组件初始渲染时相关 prop 已具备最新值，要么在 useEffect 中更新这里与 prop 有关的值
   /* const [oneState, setOneState] = useState(() => {
     // do something
     const obj = {

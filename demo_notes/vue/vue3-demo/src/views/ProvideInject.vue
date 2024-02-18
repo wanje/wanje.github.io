@@ -14,7 +14,7 @@
 <template>
   <slot></slot>
   <div class="">
-    <h2><a target="_blank" href="../src/views/ProvideInject.vue">依赖注入 provide/inject</a></h2>
+    <h2><a target="_blank" href="../src/views/ProvideInject.vue">依赖注入：provide/inject</a></h2>
     <p>
       <span class="color-red">目的是解决深层嵌套组件需要用到跨层级祖先组件的部分数据时，避免通过逐级透传props的方式来处理的问题（且虽然可以但不适合用全局状态管理来处理时），</span>
       由一个祖先组件作为依赖提供者来向所有后代组件提供<code>（provide）</code>部分可能会被后代组件依赖/用到的数据，然后任何后代组件都可以根据需要将祖先组件提供的部分或全部数据注入<code>（inject）</code>到自己的作用域来使用这些数据，
