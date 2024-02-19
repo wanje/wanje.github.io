@@ -66,6 +66,8 @@ function updateModel(index) {
     <p>vue3中创建应用实例是通过 <code>createApp()</code>方法，最后用 <code>mount()</code>挂载到容器上，而不是vue2中的`new Vue()`，因此可以创建多个实例，互相之间都是独立的，此后的全局组件、指令等都直接在该实例上注册，从而可以用于在常规页面中多个局部位置单独使用vue。</p>
     <p>注册全局组件 <code>app.component('name', 组件对象)</code></p>
     <p>注册全局指令 <code>app.directive('name', 指令对象或函数)</code></p>
+    <p>从应用层提供内部所有组件都可注入消费的数据 <code>app.provide('key', 'value')</code></p>
+    <p>插件安装 <code>app.use(带安装函数install的插件对象或插件就是一个安装函数, 可选的选项对象)</code></p>
     <p>大多原来挂载在组件实例 <code>this</code> 上的api（如 <code>$nextTick</code>）都有对应的组合式api下的同名api（只是去掉了开头的 <code>$</code>）</p>
     <ReactiveApi></ReactiveApi>
     <RefApi></RefApi>
