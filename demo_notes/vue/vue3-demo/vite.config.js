@@ -75,7 +75,7 @@ export default defineConfig({
     }
   },
   define: {
-    // enable hydration mismatch details in production build
+    // 启用/禁用生产环境构建下激活 (hydration) 不匹配的详细警告。启用会在打包结果中包含更多代码，因此建议仅在调试时启用此功能
     __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: true
   }
 })

@@ -119,6 +119,8 @@
 
 
     /**================================================= 绘制路径(线条) =================================================*/
+    //! 该笔记中目前所有提到的图形声明都是在ctx上下文中通过属性命令式设置的，不像常规JS变量可以存储复用，而现代浏览器下ctx也支持根据传入的Path2D路径声明变量来绘制图形
+    // 所有的图形实际都可以通过路径表示，可利用原生 Path2D 类(其甚至可以使用SVG的路径参数d)来声明一个路径保存在变量中来复用，其用法见：https://developer.mozilla.org/zh-CN/docs/Web/API/Path2D/Path2D
     ctx.save();
     // 1. 开始一个路径；
     ctx.beginPath();
@@ -397,8 +399,11 @@
 //    ctx.clip();
 
     /**====== 点击检测 ======*/
-    //isPointInPath(x,y)方法检测(x,y)坐标点是否在当前路径区域内，返回布尔值；注意是当前路径，且对fillRect和strokeRect无效(因为它们不是路径，是直接绘图，可使用先定义rect再fill或stroke的形式来绘制，此时isPointInPath就有效)
+    //isPointInPath([path],x,y)方法检测(x,y)坐标点是否在当前路径或指定的路径区域内，返回布尔值；
+    //不指定路径时就默认为当前路径(最近的路径声明)，且对fillRect和strokeRect无效(因为它们不是路径，是直接绘图，可使用先定义rect再fill或stroke的形式来绘制，此时isPointInPath就有效)
     ctx.isPointInPath(100,200);
+    // 通过原生 Path2D 类声明的一个路径，其用法见：https://developer.mozilla.org/zh-CN/docs/Web/API/Path2D/Path2D
+    ctx.isPointInPath(new Path2D().rect(10, 10, 100, 100), 100,200);  // 检测指定点是否在指定路径区域内
 
     /**====== 保存下载文件 ======*/
     //在canvas中绘出的图片只是canvas标签而已，并非是真正的图片，是不能右键另存为的，我们可以利用canvas.toDataURL()这个方法把canvas绘制的图形生成一幅图片，生成图片后，就能对图片进行相应的操作了
