@@ -22,7 +22,7 @@ app.config.errorHandler = (err, instance, info) => {
 }
 
 // app.use(installObject | installFunction, options)  // 插件安装
-app.use(createPinia())
+app.use(createPinia())  // 创建一个pinia根实例(也可以像router一样将其单独放到一个文件中)，并与应用实例进行关联
 app.use(router)
 
 app.mount('#app')
