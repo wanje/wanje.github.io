@@ -62,6 +62,7 @@ function updateModel(index) {
 
 <template>
   <section>
+    <h2 class="mgt-0"><a href="javascript:document.querySelector('#others').scrollIntoView();">跳转到其他及易混淆内容</a></h2>
     <h2 class="mgt-0"><a target="_blank" href="../src/main.js">创建应用：createApp</a></h2>
     <p>vue3中创建应用实例是通过 <code>createApp()</code>方法，最后用 <code>mount()</code>挂载到容器上，而不是vue2中的`new Vue()`，因此可以创建多个实例，互相之间都是独立的，此后的全局组件、指令等都直接在该实例上注册，从而可以用于在常规页面中多个局部位置单独使用vue。</p>
     <p>注册全局组件 <code>app.component('name', 组件对象)</code></p>
@@ -95,5 +96,10 @@ function updateModel(index) {
     <CustDirective></CustDirective>
     <TeleportComp></TeleportComp>
     <SuspenseComp></SuspenseComp>
+    <div>
+      <h2 id="others" class="mgt-0">其他及易混淆内容</h2>
+      <p><code>toRef()</code> 可以将值、ref 或 getter 函数规范化为 ref，即其将前面三种表示值的情况可以统一转换为一个 ref 的形式返回（普通纸用ref包装后返回、ref值原样返回、getter时可通过`.value`方式访问但实际还是调用的getter），使得采用一样的`.value`访问方式。</p>
+      <p><code>toRefs()</code> 可以将一个响应式对象转换为一个普通对象，这个普通对象的每个属性都是指向源对象相应属性的 ref，每个单独的 ref 都是使用 toRef() 创建的，使得可以解构该对象的属性可仍然保持响应性。</p>
+    </div>
   </section>
 </template>

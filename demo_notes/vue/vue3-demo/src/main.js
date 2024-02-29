@@ -1,9 +1,9 @@
 import { createApp } from 'vue'
-import { createPinia } from 'pinia'
 
 import './styles/style.scss'
 
 import App from './App.vue'
+import pinia from './stores'
 import router from './router'
 
 const app = createApp(App)
@@ -22,7 +22,7 @@ app.config.errorHandler = (err, instance, info) => {
 }
 
 // app.use(installObject | installFunction, options)  // 插件安装
-app.use(createPinia())  // 创建一个pinia根实例(也可以像router一样将其单独放到一个文件中)，并与应用实例进行关联
+app.use(pinia)  // 通过一个Pinia根实例（含有install安装函数）安装Pinia
 app.use(router)
 
 app.mount('#app')
