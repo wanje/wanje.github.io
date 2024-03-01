@@ -18,11 +18,11 @@ const app = createApp(App)
 app.config.errorHandler = (err, instance, info) => {
   // 接收的三个参数分别为：错误对象、触发该错误的组件实例、说明错误来源类型的字符串(生产环境下为一个映射代码)
   // 可向追踪服务报告错误
-  console.log('app errorHandler', err, instance, info);
+  console.error('app errorHandler', err, instance, info);
 }
 
 // app.use(installObject | installFunction, options)  // 插件安装
-app.use(pinia)  // 通过一个Pinia根实例（含有install安装函数）安装Pinia
+app.use(pinia)  // 通过一个Pinia根实例（含有install安装函数）安装Pinia，此时Pinia会在内部将pinia实例注入到应用app中
 app.use(router)
 
 app.mount('#app')

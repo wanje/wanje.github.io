@@ -55,7 +55,7 @@
   // 回调内部仍然依赖受监听对象的值这种情况可使用 watchEffect 替代更方便
   watch(todoId, async (newVal) => {
     console.log('回调内部仍然会用到受监听对象的值', newVal);
-    const res = await fetch(`https://jsonplaceholder.typicode.com/todos/${todoId.value}`);
+    const res = await fetch(`../package.json?id=${todoId.value}`);
     resData.value = await res.json();
   }, { immediate: true });
   // 上面的内容等价于下面的
@@ -64,7 +64,7 @@
   //! watchEffect 仅会在其同步执行期间，才追踪依赖(即依赖收集在遇到异步代码时就会停止)。故在使用异步回调时，只有在第一个 await 正常工作前访问到的属性才会被追踪。
   //! 要在vue组件更新完后执行 watchEffect 则可使用 watchPostEffect 替代
   watchEffect(async () => {
-    const res = await fetch(`https://jsonplaceholder.typicode.com/todos/${todoId.value}`);
+    const res = await fetch(`../package.json?id=${todoId.value}`);
     resData.value = await res.json();
   });
   //! watch 与 watchEffect 有各自较适合的使用场景，两者的关系就像“一般响应式数据”(watch)和“计算属性”(watchEffect)的关系
@@ -84,12 +84,34 @@
 
   //! 注册副作用清理回调：副作用函数默认接收的一个函数参数onCleanup用于注册清理回调，而该onCleanup函数的接收的参数就是我们具体要执行的清除副作用的函数
   // 其应用场景是当监听器副作用函数中存在网络请求或定时器等异步操作时，若当前异步操作还未完成，而监听器就被停止了或是依赖项值发生变化又触发新一轮副作用回调执行，此时就应该清除或取消上一轮未完成的异步操作
-  function doAsyncWork() {/* do sth async, return response & cancel */}
+  function doAsyncWork(halfSecond) {
+    /* do sth async */
+    return new Promise((resolve, reject) => {
+      const id = setTimeout(() => {
+        console.log('这里表示哟一个异步操作执行了');
+        if (Math.random() > 0.3) {
+          resolve({
+            data: 7,
+            tId: id
+          })
+        } else {
+          reject({
+            data: new Error('操作失败反馈'),
+            tId: id
+          })
+        }
+      }, halfSecond * 500);
+    })
+  }
+  const dataCp = ref();
   watchEffect(async (onCleanup) => {
-    const { response, cancel } = doAsyncWork(todoId.value);
+    const { data, tId } = await doAsyncWork(todoId.value);
     // 调用onCleanup(cancel)后，`cancel` 就会在 `todoId` 更改触发新一轮副作用回调或停止监听时调用，以便取消之前未完成的请求
-    onCleanup(cancel)
-    data.value = await response
+    onCleanup(() => {
+      clearTimeout(tId)
+    })
+    dataCp.value = data;
+    console.log('dataCp：', dataCp.value);
   });
 
 </script>
