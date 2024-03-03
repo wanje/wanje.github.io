@@ -62,7 +62,8 @@ export const useCounterStore = defineStore('counter', () => {
   return { count, double, increment }
 })
 
-/** 全局监听 State（区分于每个Store中单独订阅） */
+console.log(pinia.state)
+/** 全局监听 State（区分于每个Store中单独订阅），这里因为 pinia.state 本身是响应式的，所以无需使用getter形式 */
 watch(pinia.state, (state) => {
   // 变化后的统一操作，例如每当状态发生变化时，将整个 state 持久化到本地存储
   console.log('pinia根实例监听全局状态变化：', state, '字符化：', JSON.stringify(state));

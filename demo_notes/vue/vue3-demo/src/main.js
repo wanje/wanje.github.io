@@ -21,8 +21,13 @@ app.config.errorHandler = (err, instance, info) => {
   console.error('app errorHandler', err, instance, info);
 }
 
-// app.use(installObject | installFunction, options)  // 插件安装
-app.use(pinia)  // 通过一个Pinia根实例（含有install安装函数）安装Pinia，此时Pinia会在内部将pinia实例注入到应用app中
+//* app.use(installObject | installFunction, options) 插件安装
+
+// 通过一个Pinia根实例（含有install安装函数）安装Pinia，此时Pinia会在内部将pinia实例注入到应用app中
+app.use(pinia)
+// 该步在安装VueRouter的同时会将router根实例注入到应用app下的每个组件实例中，
+//! 使得每个组件内仍然可以像vue2中那样通过`this.$router`和`this.$route`访问路由器和当前路由对象
+//!（这两个 $ 属性在template模板中都可访问，但script脚本中仅限选项式API组件下访问，组合式API组件可通过`useRouter`和`useRoute`两个API来获取）
 app.use(router)
 
 app.mount('#app')
