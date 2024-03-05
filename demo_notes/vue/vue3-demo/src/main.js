@@ -12,7 +12,7 @@ const app = createApp(App)
 
 // app.directive('name', object | function)  // 全局指令注册API
 
-// app.provide('key', '来自应用层provide的数据')  // 应用层提供依赖，可被该应用实例下所有组件inject注入访问
+app.provide('globalKey', '来自应用层provide的数据')  // 应用层提供依赖，可被该应用实例下所有组件inject注入访问
 
 // 应用级错误处理
 app.config.errorHandler = (err, instance, info) => {
