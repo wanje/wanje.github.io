@@ -37,7 +37,7 @@ export default {
     <p><code>useRouter()</code> 用于组合式下获取 router 路由器实例，等同于选项式组件和template模板下的 <code>$router</code></p>
     <p><code>useRoute()</code> 用于组合式下获取 route 当前路由对象，等同于选项式组件和template模板下的 <code>$route</code></p>
     <p><code>useLink()</code> 用于复用 <code>RouterLink</code> 组件的内部行为来自定义链接组件，它接收一个类似`RouterLink`所有`prop`的响应式对象，
-      并暴露底层属性和方法来构建你自己的`RouterLink`组件或生成自定义链接<span class="color-red">（另外注意在 <code>RouterLink</code> 的 <code>v-slot</code> 中可以访问与`useLink`组合式函数返回对象相同的属性）</span>：
+      并暴露底层属性和方法来构建你自己的`RouterLink`组件或生成自定义链接<span class="color-red">（另外注意在 <code>RouterLink</code> 的 <code>v-slot</code> 中可以访问与`useLink`组合式函数返回的相同内容）</span>：
     </p>
     <img src="@/assets/useLink.jpg" alt="useLink" class="vt" />
     <p><code>onBeforeRouteEnter()</code> 组件内前置导航守卫钩子的组合式API</p>

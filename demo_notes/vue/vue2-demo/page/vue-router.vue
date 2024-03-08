@@ -25,15 +25,28 @@
         <!-- event 属性设置可以触发该链接导航的事件，默认为‘click’，多个时可使用数组，如：event="['click','dblclick']" -->
         <router-link to="/foo" event="focus">to foo</router-link>
 
+        <!-- v3.1+新增作用域插槽，可用于自定义link组件 -->
+        <router-link to="/foo" custom v-slot="{ href, route, navigate, isActive, isExactActive }">
+          <li :class="[isActive && 'router-link-active', isExactActive && 'router-link-exact-active']">
+            <a :href="href" @click="navigate">{{ route.fullPath }}</a>
+          </li>
+        </router-link>
+
 
 
         <!-- 路由出口--视图组件 router-view  —>
+        <!-- 若一个组件中存在多个视图组件，则在配置路由视图组件设置中要使用 components 复数形式 -->
         <!-- 路由匹配到的组件将渲染在这里 -->
         <router-view></router-view>
         <!-- 命名视图，若像上面这样没有设置名字则默认为 default -->
         <router-view name="personal"></router-view>
-        <!-- 若一个组件中存在多个视图组件，则在配置路由视图组件设置中要使用 components 复数形式 -->
-
+        <!-- v4+新增作用域插槽，可用于路由组件渲染的中间层处理，如缓存组件（若去掉`keep-alive`这一层则完全等价于不带插槽的`<router-view></router-view>`） -->
+        <router-view v-slot="{ Component }">
+          <keep-alive>
+            <component :is="Component" />
+          </keep-alive>
+        </router-view>
+        
     </div>
 </template>
 
