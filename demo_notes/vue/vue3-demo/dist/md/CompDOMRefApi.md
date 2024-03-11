@@ -1,3 +1,4 @@
+```html
 <script setup>
   import CompBase from '@/views/CompBase.vue'
 
@@ -46,3 +47,4 @@
 <style lang="scss" scoped>
 
 </style>
+```

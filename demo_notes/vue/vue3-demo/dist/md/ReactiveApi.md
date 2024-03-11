@@ -1,3 +1,4 @@
+```html
 <script setup>
   const state = reactive({ counter: 1 }); // 具有深层响应性，即所有后代属性都具有响应性
   // state = 1;  // 不能替换整个对象(即使上面采用 let 声明)，因这样 state 变量就失去了上面响应代理对象的引用关系
@@ -29,3 +30,4 @@ input {
   text-align: center;
 }
 </style>
+```

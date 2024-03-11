@@ -1,3 +1,4 @@
+```html
 <script setup>
   // defineOptions() 方法(v3.3+)用于在 <script setup> 下设置一些无需或没有宏定义的组件选项
   defineOptions({
@@ -158,3 +159,5 @@
 <style lang="scss" scoped>
 
 </style>
+
+```

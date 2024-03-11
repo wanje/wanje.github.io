@@ -1,3 +1,4 @@
+```html
 <script setup>
 import { computed } from 'vue';
 
@@ -44,3 +45,4 @@ import { computed } from 'vue';
 <style lang="scss" scoped>
 
 </style>
+```

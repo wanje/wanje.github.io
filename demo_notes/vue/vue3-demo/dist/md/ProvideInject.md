@@ -1,3 +1,4 @@
+```html
 <script setup>
   // provide(key, value) 祖先组件向其后代组件提供它们可能会用到的数据
   provide('p1', '这是祖先组件provide的值1');
@@ -42,3 +43,5 @@
 <style lang="scss" scoped>
 
 </style>
+
+```

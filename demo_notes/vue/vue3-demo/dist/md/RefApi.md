@@ -1,3 +1,4 @@
+```html
 <script setup>
   // 实际将传入的值都包装成了一个对象，使得常规数据类型也能进行响应代理，注意其具有深层响应性
   const counter = ref(1); // 可用于所有数据类型，在JS中要通过`.value`去访问和修改其值(包括用于对象时)，而html中会自动解包故无需通过`.value`访问
@@ -54,3 +55,4 @@ input {
   text-align: center;
 }
 </style>
+```

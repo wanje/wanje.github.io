@@ -1,3 +1,4 @@
+```html
 <script setup>
   const count = ref(0);
   const x = ref(0);
@@ -135,3 +136,4 @@
 <style lang="scss" scoped>
 
 </style>
+```

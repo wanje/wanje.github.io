@@ -1,3 +1,4 @@
+```html
 <script setup>
 import { inject } from 'vue';
 
@@ -57,3 +58,5 @@ import { inject } from 'vue';
 <style lang="scss" scoped>
 
 </style>
+
+```

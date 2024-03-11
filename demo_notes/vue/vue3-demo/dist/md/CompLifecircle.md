@@ -1,3 +1,4 @@
+```html
 <script setup>
   const isMini = ref(true);
   function toggleMini() {
@@ -62,3 +63,4 @@ img {
   }
 }
 </style>
+```

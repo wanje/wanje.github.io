@@ -9,6 +9,7 @@ import AutoImport from 'unplugin-auto-import/vite'  // https://github.com/antfu/
 // 以下为针对 ElementPlus 组件库的自动导入
 import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
+import { vue2md } from './vite.plugin.js';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -26,6 +27,7 @@ export default defineConfig({
       // dirs: ['src/components'], // 可自动查找导入并注册相关自定义组件的目录(相对路径，默认`src/components`目录，类似nuxt.js中自定导入注册该目录下组件)
       resolvers: [ElementPlusResolver()],
     }),
+    vue2md()
   ],
   resolve: {
     // extensions: ['.js', '.jsx', '.vue'], // 导入时想要省略的扩展名列表，官方并不建议忽略.vue这类自定义文件扩展命名，默认['.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json']

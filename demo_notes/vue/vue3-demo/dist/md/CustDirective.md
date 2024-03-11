@@ -1,3 +1,4 @@
+```html
 <script setup>
   // 这里只是demo演示pinia使用需要
   import { useCounterStore } from '@/stores'
@@ -33,3 +34,5 @@
 <style lang="scss" scoped>
 
 </style>
+
+```
