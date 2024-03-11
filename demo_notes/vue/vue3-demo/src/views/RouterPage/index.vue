@@ -29,6 +29,7 @@ export default {
 <template>
   <div class="router">
     <h2><a target="_blank" href="../src/router/index.js">路由 Vue-Router</a></h2>
+    <p>v4+版本相比v3版本从使用方面来说主要变化是新增了组合式API用法（同时也保留了选项式用法）以配合Vue3的setup组合式开发，故大多用法都与在 <a target="_blank" href="../../vue2-demo/page/vue-router.md">Vue2中使用方式</a> 一样。</p>
     <p><code>createRouter(configObj)</code> 创建路由器实例，参数configObj与vue2中使用基本无异，只是原`mode`选项换成了 <code>history</code>，
       且其值也不是`hash`和`history`两个字符串之一，而是通过 <code>createWebHashHistory()</code> 和 <code>createWebHistory()</code> 两个方法返回的对应模式下的相关操作实现对象
     </p>

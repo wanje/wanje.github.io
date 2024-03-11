@@ -1,53 +1,54 @@
+```html
 <template>
-    <div id="app">
+  <div id="app">
 
-        <!-- 使用 router-link 组件来导航. —>
-        <!-- 通过传入 `to` 属性指定链接. -->
-        <!-- <router-link> 默认会被渲染成一个 `<a>` 标签，使用 tag 属性可以指定为其他标签(内部可加也可不加 a 标签)，不加 a 标签时其仍能监听标签点击触发导航 -->
-        <router-link to="/foo">to Foo</router-link>     <!-- 等同 this.$router.push('/foo') -->
-        <router-link to="/bar" replace>to Bar</router-link>     <!-- 等同 this.$router.replace('/bar') -->
-        <router-link to="/home" tag="li">
-            <a>to Home</a>      <!-- 里面的 a 标签会自动获得link上正确的 href，而激活时的css类名会设置到外层 li 上 -->
-        </router-link>
+      <!-- 使用 router-link 组件来导航. —>
+      <!-- 通过传入 `to` 属性指定链接. -->
+      <!-- <router-link> 默认会被渲染成一个 `<a>` 标签，使用 tag 属性可以指定为其他标签(内部可加也可不加 a 标签)，不加 a 标签时其仍能监听标签点击触发导航 -->
+      <router-link to="/foo">to Foo</router-link>     <!-- 等同 this.$router.push('/foo') -->
+      <router-link to="/bar" replace>to Bar</router-link>     <!-- 等同 this.$router.replace('/bar') -->
+      <router-link to="/home" tag="li">
+          <a>to Home</a>      <!-- 里面的 a 标签会自动获得link上正确的 href，而激活时的css类名会设置到外层 li 上 -->
+      </router-link>
 
-        <!-- append 属性表示在当前路径后追加路径片段：以当前路径为基路径(即以当前路径的下一级为起始)，在其后追加 to 参数中的路径，而 push 方法就是以当前级为起始，两者相差一级 -->
-        <!-- 如，假设当前路径为‘/home’，以下链接都将定位到‘/home/index’，以当前路径的子级为其实相对位置，注意若是以‘/’开头则直接是根路径下开始 -->
-        <router-link to="index" append>to foo</router-link>
-        <router-link to="./index" append>to foo</router-link>
+      <!-- append 属性表示在当前路径后追加路径片段：以当前路径为基路径(即以当前路径的下一级为起始)，在其后追加 to 参数中的路径，而 push 方法就是以当前级为起始，两者相差一级 -->
+      <!-- 如，假设当前路径为‘/home’，以下链接都将定位到‘/home/index’，以当前路径的子级为其实相对位置，注意若是以‘/’开头则直接是根路径下开始 -->
+      <router-link to="index" append>to foo</router-link>
+      <router-link to="./index" append>to foo</router-link>
 
-        <!-- active-class 属性设置链接激活时(选中时，并不是点击时)使用的 CSS 类名，默认为"router-link-active"。默认值也可通过路由的构造选项 linkActiveClass 来全局配置 -->
-        <router-link to="/foo" active-class="className">to foo</router-link>
-        <!-- exact 属性设置是否为全匹配时(即该路径就是当前页面路径，而不只是当前路径匹配到的一条上级记录)才给该链接添加激活 CSS 类名，默认为false。因为一个路由可能匹配到多个记录 -->
-        <router-link to="/foo" exact>to foo</router-link>   <!-- 只能当前路径为‘/foo’时才能被激活，而‘/foo/index’虽然也匹配到它了但不予添加激活类 -->
-        <!-- exact-active-class 属性设置链接被精确匹配(可能匹配到多个路由记录，但最精确的只有一条)时应激活的 CSS 类名，默认为"router-link-exact-active"。默认值也可通过路由的构造选项 linkExactActiveClass 来全局配置 -->
-        <router-link to="/foo" exact-active-class="className">to foo</router-link>
+      <!-- active-class 属性设置链接激活时(选中时，并不是点击时)使用的 CSS 类名，默认为"router-link-active"。默认值也可通过路由的构造选项 linkActiveClass 来全局配置 -->
+      <router-link to="/foo" active-class="className">to foo</router-link>
+      <!-- exact 属性设置是否为全匹配时(即该路径就是当前页面路径，而不只是当前路径匹配到的一条上级记录)才给该链接添加激活 CSS 类名，默认为false。因为一个路由可能匹配到多个记录 -->
+      <router-link to="/foo" exact>to foo</router-link>   <!-- 只能当前路径为‘/foo’时才能被激活，而‘/foo/index’虽然也匹配到它了但不予添加激活类 -->
+      <!-- exact-active-class 属性设置链接被精确匹配(可能匹配到多个路由记录，但最精确的只有一条)时应激活的 CSS 类名，默认为"router-link-exact-active"。默认值也可通过路由的构造选项 linkExactActiveClass 来全局配置 -->
+      <router-link to="/foo" exact-active-class="className">to foo</router-link>
 
-        <!-- event 属性设置可以触发该链接导航的事件，默认为‘click’，多个时可使用数组，如：event="['click','dblclick']" -->
-        <router-link to="/foo" event="focus">to foo</router-link>
+      <!-- event 属性设置可以触发该链接导航的事件，默认为‘click’，多个时可使用数组，如：event="['click','dblclick']" -->
+      <router-link to="/foo" event="focus">to foo</router-link>
 
-        <!-- v3.1+新增作用域插槽，可用于自定义link组件 -->
-        <router-link to="/foo" custom v-slot="{ href, route, navigate, isActive, isExactActive }">
-          <li :class="[isActive && 'router-link-active', isExactActive && 'router-link-exact-active']">
-            <a :href="href" @click="navigate">{{ route.fullPath }}</a>
-          </li>
-        </router-link>
+      <!-- v3.1+新增作用域插槽，可用于自定义link组件 -->
+      <router-link to="/foo" custom v-slot="{ href, route, navigate, isActive, isExactActive }">
+        <li :class="[isActive && 'router-link-active', isExactActive && 'router-link-exact-active']">
+          <a :href="href" @click="navigate">{{ route.fullPath }}</a>
+        </li>
+      </router-link>
 
 
 
-        <!-- 路由出口--视图组件 router-view  —>
-        <!-- 若一个组件中存在多个视图组件，则在配置路由视图组件设置中要使用 components 复数形式 -->
-        <!-- 路由匹配到的组件将渲染在这里 -->
-        <router-view></router-view>
-        <!-- 命名视图，若像上面这样没有设置名字则默认为 default -->
-        <router-view name="personal"></router-view>
-        <!-- v4+新增作用域插槽，可用于路由组件渲染的中间层处理，如缓存组件（若去掉`keep-alive`这一层则完全等价于不带插槽的`<router-view></router-view>`） -->
-        <router-view v-slot="{ Component }">
-          <keep-alive>
-            <component :is="Component" />
-          </keep-alive>
-        </router-view>
-        
-    </div>
+      <!-- 路由出口--视图组件 router-view  —>
+      <!-- 若一个组件中存在多个视图组件，则在配置路由视图组件设置中要使用 components 复数形式 -->
+      <!-- 路由匹配到的组件将渲染在这里 -->
+      <router-view></router-view>
+      <!-- 命名视图，若像上面这样没有设置名字则默认为 default -->
+      <router-view name="personal"></router-view>
+      <!-- v4+新增作用域插槽，可用于路由组件渲染的中间层处理，如缓存组件（若去掉`keep-alive`这一层则完全等价于不带插槽的`<router-view></router-view>`） -->
+      <router-view v-slot="{ Component }">
+        <keep-alive>
+          <component :is="Component" />
+        </keep-alive>
+      </router-view>
+      
+  </div>
 </template>
 
 <script>
@@ -109,7 +110,7 @@
            * 这时对应上面路径的参数关系将是：$route.params --> { username: 'evan', post_id: 123 }
            * */
         path: '/user/:id',
-//                path: '/user/:id*',  //这里占位符`:id`后的星号`*`表示匹配所有，否则若后面是`/`符号分隔的内容就会被拆开(并不想被拆开的情况下很有用)，如：/user/evan/list/detail --> $route.params.id==='evan/list/detail'
+        // path: '/user/:id*',  //这里占位符`:id`后的星号`*`表示匹配所有，否则若后面是`/`符号分隔的内容就会被拆开(并不想被拆开的情况下很有用)，如：/user/evan/list/detail --> $route.params.id==='evan/list/detail'
         component: () => import ('../view/esview/home/home.vue')
             /*当使用像上面这样的路由参数时，在两个导航路径间只是参数发生变化时，组件实例会被复用，而不是销毁重新创建一个，
              * 例如使用上面的路由定义从 /user/foo 导航到 /user/bar，使用的都是home.vue这个组件，两个导航地址切换只是参数变化了，
@@ -431,12 +432,5 @@
     }
   };
 
-
-
-
-
-
-
-
-
 </script>
+```
