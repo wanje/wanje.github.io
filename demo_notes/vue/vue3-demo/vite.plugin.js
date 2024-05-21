@@ -6,11 +6,11 @@ import fastGlob from 'fast-glob';
 
 export function vue2md() {
   return {
-    name: 'copy-and-insert',
+    name: 'vue2md',
     apply: 'build',
-    async writeBundle() {
+    async writeBundle() { // 使用该钩子的目的是等待脚手架清空了dist目录后再将相关vue文件转为md文件，避免自行处理历史文件的问题
       const files = await fastGlob('./src/**/*.vue', { ignore: ['**/node_modules'] });
-      console.log('files:', files);
+      // console.log('files:', files);
       const targetDir = './dist/md';
       // if (fs.existsSync(targetDir)) await fs.rm(targetDir, { recursive: true });
       await fs.mkdir(targetDir, { recursive: true });

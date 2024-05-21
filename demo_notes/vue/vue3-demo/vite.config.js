@@ -44,10 +44,12 @@ export default defineConfig({
     }
   },
   // build: {
+  //   target: 'es2015',  // 构建产物的浏览器兼容目标，最低支持`es2015`，默认为`modules`，即原生支持ESM的浏览器，具体可查看兼容性描述：https://cn.vitejs.dev/guide/build.html#browser-compatibility
   //   outDir: 'dist',  // 指定打包输出路径，默认‘dist’
   //   assetsDir: 'assets',  // 打包后静态资源的存放路径（相对上面的`outDir`），默认`assets`
   //   assetsInlineLimit: 4096,  // 静态资源内联限制大小(字节)，不超过此大小的图片等静态资源将转为base64内联，默认`4096`即`4kb`
   //   target: 'modules',  // 设置构建时的浏览器兼容目标，可以是ES版本，也可以是浏览器版本，默认`modules`，表示支持模块化的浏览器
+  //   cssTarget: "chrome61", //防止 vite 将 rgba() 颜色转化为 #RGBA 十六进制符号的形式  (要兼容的场景是安卓微信中的webview时,因其不支持CSS中的#RGBA十六进制颜色符号)
   // },
   server: {
     // base: '',  // http请求的基础前置路径
