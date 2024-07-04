@@ -15,11 +15,6 @@
       因每一个调用组合函数的实例会创建其独有的组合函数内相关局部状态的拷贝，故多处复用互不影响，<span class="color-orange">且组合函数内也可以嵌套其他组合函数</span>，
       一般都将组合函数提取到一个单独的外部JS文件中。
     </p>
-    <p><code>toValue(pram)</code> 方法是v3.3+提供的一个API，其作用是将传入的参数规范化为值，以便处理较多参数为响应式/非响应式/getter函数混用的取值场景：<br>
-      1、若参数 pram 是一个<span class="color-orange">ref响应式数据</span>，它会返回该ref的值；<br>
-      2、若函数 pram 是一个<span class="color-orange">getter(即有返回值的函数)</span>，则会调用该函数并返回其返回值；<br>
-      3、若参数 pram 是一个非以上两种情况的其他值，则会原样返回该参数
-    </p>
     <p>关于组合式函数的一些<span class="color-red">约定和最佳实践</span>：<br>
       1、组合式<span class="color-orange">函数名以`use`开头</span>的小驼峰式命名；<br>
       2、<span class="color-orange">使用 toValue() 处理参数</span>，以提高兼容性；<br>

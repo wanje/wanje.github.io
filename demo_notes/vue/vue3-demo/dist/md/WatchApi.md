@@ -6,7 +6,7 @@
   const todoId = ref(1);
   const resData = ref(null);
 
-  /** watch，会返回一个用于停止监听的方法 */
+  //* watch，会返回一个用于停止监听的方法
   //! 可监听多种数据源：可以是一个 ref (包括计算属性)、一个响应式对象、一个 getter 函数、或多个数据源组成的数组
   // 直接监听一个 ref/reactive 响应式对象
   watch(count, (newVal, oldVal, onCleanup) => {
@@ -35,24 +35,25 @@
 
   //! 注意，不能像选项式API中那样直接监听响应式对象的属性值，需要写成getter函数的形式
   const obj = reactive({ count: 0, someObj: {} })
-  //! 错误写法，不能直接监听属性
+  //!! 错误写法，不能直接监听属性
   watch(obj.count, (count) => { console.log(count) });
   // 正确写法，需要写成getter形式，类似监听匿名计算属性
   watch(() => obj.count, (count) => { console.log(count) });
 
   // 注意，当直接监听一个响应式对象时，默认是深度监听的，但若是 getter 函数返回的对象时，只有对象被整个替换式才会触发回调，
   // getter 返回的对象若仅是改变了内部属性而还是同一个引用时并不会触发回调，但可以在第三个配置对象参数中设置 deep 为 true 强制转为深度监听
-  watch(() => obj.someObj, (newVal, oldVal) => {
-    // 注意：默认`newVal` 此处和 `oldVal` 是相等的，除非 state.someObj 被整个替换了
-
+  watch(() => obj.someObj, (newVal, oldVal, onCleanup) => {
+    // 注意：默认 `newVal` 此处和 `oldVal` 是相等的，除非 state.someObj 被整个替换了
+    console.log(newVal === oldVal)
   }, {
     deep: true,  // 设置深度监听可强制转换，但因谨慎使用，因为强制转为深度监听肯定会有一定性能浪费
     immediate: true,   // 初始时立即执行一次回调，默认 false 只在初始化之后监听对象有更新才执行回调
-    flush: 'post'   // 使回调在vue组件更新后调用以访问最新DOM，默认情况是在组件更新前就调用回调
+    flush: 'post',   // 使回调在vue组件更新后调用以访问最新DOM，默认`pre`是在组件更新前就调用回调，设为`sync`则会在响应式依赖变动后立即调用
+    once: false,  // 默认 false，表示是否侦听回调只执行一次，只有就停止侦听
   });
 
 
-  /** watchEffect */
+  //* watchEffect
   // 回调内部仍然依赖受监听对象的值这种情况可使用 watchEffect 替代更方便
   watch(todoId, async (newVal) => {
     console.log('回调内部仍然会用到受监听对象的值', newVal);
@@ -63,7 +64,8 @@
   //! watchEffect 会自动跟踪回调中的响应式依赖，且是立即执行的，所以不用设置 immediate
   //! watchEffect 可跟踪回调内的多个响应式依赖，且只跟踪依赖的项，对于对象数据不会因为其他未依赖的数据变化而触发回调执行，这两者都比使用 watch 更有效
   //! watchEffect 仅会在其同步执行期间，才追踪依赖(即依赖收集在遇到异步代码时就会停止)。故在使用异步回调时，只有在第一个 await 正常工作前访问到的属性才会被追踪。
-  //! 要在vue组件更新完后执行 watchEffect 则可使用 watchPostEffect 替代
+  //! 侦听器默认将在组件渲染前执行，若要在vue组件更新完后执行 watchEffect 则可使用 watchPostEffect 替代，
+  //! 若要在响应式依赖变化时就立即触发侦听器则可用 watchSyncEffect 替代，但应谨慎使用该API，因其可能导致一些性能和数据一致性问题
   watchEffect(async () => {
     const res = await fetch(`../package.json?id=${todoId.value}`);
     resData.value = await res.json();
@@ -124,12 +126,13 @@
     <p>语法：<code class="color-orange">watch(watchedData, callback)</code></p>
     <p>可监听多种数据源：可以是一个 ref (包括计算属性)、一个响应式对象、一个 getter 函数、或多个数据源组成的数组</p>
     <p>语法：<code class="color-orange">watchEffect(callback)</code></p>
-    <p>自动收集 callback 中的响应式依赖并会立即执行，可同时依赖多个响应式数据，且对于对象数据其他非依赖属性变更不会影响回调触发，其与`watch`的关系就类似计算属性与data的关系</p>
+    <p>自动收集 callback 中的响应式依赖<span class="color-red">并会立即执行</span>，可同时依赖多个响应式数据，且对于对象数据其他非依赖属性变更不会影响回调触发，其与`watch`的关系就类似计算属性与data的关系</p>
     <div>
       <button v-if="count <= 3" @click="count++">动我试试👉 {{ count }}</button>
       <span v-if="count === 3" class="color-orange">事不过三💣</span>
       <span v-if="count > 3" class="color-red">原地爆炸💥</span>
     </div>
+    <p>与 <code>computed()</code> 一样，在开发模式下也可以向 <code>watch/watchEffect</code> 尾部传入一个包含了 <code>onTrack</code> 和 <code>onTrigger</code> 两个回调函数的对象参数，用于开发模式下调试。</p>
   </div>
 </template>
 

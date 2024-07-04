@@ -5,7 +5,8 @@
 
   // 在模板中启用 v-focus
   const vFocus = {
-    mounted: (el) => el.focus()
+    // mounted: (el) => el.focus()
+    mounted: (el) => el.blur()
   };
 </script>
 
@@ -16,7 +17,7 @@
       在 <code>&lt;script setup></code> 中，<span class="color-orange">任何以 v 开头的小驼峰命名的变量都被当作一个自定义指令，</span>
       选项式API下与vue2一样通过`directives`选项注册局部指令，全局指令则通过 <code>app.directive()</code> 方法注册（选项式和全局注册名无需以`v`开头）
     </p>
-    <p>自动聚焦指令：<input type="text" v-focus /> <span class="color-gray">这是一个来自Pinia的全局状态值：{{ counterStore.count }}</span></p>
+    <p>自动聚焦指令(体验问题这里改成了失焦)：<input type="text" v-focus /> <span class="color-gray">这是一个来自Pinia的全局状态值：{{ counterStore.count }}</span></p>
     <p>对象全量钩子(都可选)，钩子参数中除了`el`外其他都是只读的，不能更改，若需要在不同钩子建共享信息，可通过元素原生的dataset attribute来实现，下面的变量名 myDirective 若非用作值的传递，则应以`v`开头：</p>
     <div>
       <img src="@/assets/customDirective.jpg" alt="customDirective" height="440" class="vt" />

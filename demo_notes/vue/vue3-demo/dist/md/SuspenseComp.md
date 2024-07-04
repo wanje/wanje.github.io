@@ -30,10 +30,14 @@
       <code>fallback</code> 事件在 #fallback 插槽的内容展示时触发；
     </p>
     <p>错误处理：<code>&lt;Suspense></code> 组件自身目前还不提供错误处理，可通过使用 <code>errorCaptured</code> 选项或者 <code>onErrorCaptured()</code> 钩子，在使用到 &lt;Suspense> 的父组件中捕获和处理异步错误</p>
-    <img src="@/assets/suspense1.jpg" alt="defineAsyncComponent" width="380" class="block" />
+    <img src="@/assets/suspense1.jpg" alt="fallback回退" width="380" class="block" />
     <p>与其他组件结合使用，应注意嵌套关系</p>
-    <img src="@/assets/suspense2.jpg" alt="defineAsyncComponent" width="400" class="block" />
+    <img src="@/assets/suspense2.jpg" alt="与路由过渡缓存组件嵌套" width="400" class="block" />
     <p class="color-orange">另 Vue Router 使用动态导入<code>() => import('...')</code> 对懒加载组件进行了内置支持，这与异步组件不同，目前他们不会触发 <code>&lt;Suspense></code>，但这些路由视图组件内仍然可以有异步组件作为后代，而这些组件可以照常触发 <code>&lt;Suspense></code></p>
+    当与多个异步组件嵌套使用时：以下代码若没有内层 <code>Suspense</code>，则 <code>DynamicAsyncInner</code> 在被解析前会呈现为一个空节点（而非展示之前的节点或回退插槽），
+    并且这里设置了 <code>suspensible</code> 属性，使内部 <code>Suspense</code> 仅充当依赖项解析和修补的另一个边界，而将所有异步依赖项处理都交给父级 <code>Suspense</code>（包括发出的事件），
+    若未设置该属性则意味着这个内部 <code>Suspense</code> 将会有自己的回退插槽，若内外两个动态组件同时被修改，内部 <code>Suspense</code> 就可能出现空节点和多个修补周期。
+    <img src="@/assets/suspense3.jpg" alt="用于多个异步组件嵌套" width="350" class="block" />
   </div>
 </template>
 

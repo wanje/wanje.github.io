@@ -17,6 +17,8 @@ import ComposableFn from './ComposableFn.vue'
 import CustDirective from './CustDirective.vue'
 import TeleportComp from './TeleportComp.vue'
 import SuspenseComp from './SuspenseComp.vue'
+import UtilsApi from './UtilsApi.vue'
+import OtherApi from './OtherApi.vue'
 
 // 不使用`<script setup>`语法糖时
 /* export default {
@@ -97,11 +99,8 @@ function updateModel(index) {
     <CustDirective></CustDirective>
     <TeleportComp></TeleportComp>
     <SuspenseComp></SuspenseComp>
-    <div>
-      <h2 id="others" class="mgt-0">其他及易混淆内容</h2>
-      <p><code>toRef()</code> 可以将值、ref 或 getter 函数规范化为 ref，即其将前面三种表示值的情况可以统一转换为一个 ref 的形式返回（普通纸用ref包装后返回、ref值原样返回、getter时可通过`.value`方式访问但实际还是调用的getter），使得采用一样的`.value`访问方式。</p>
-      <p><code>toRefs()</code> 可以将一个响应式对象转换为一个普通对象，这个普通对象的每个属性都是指向源对象相应属性的 ref，每个单独的 ref 都是使用 toRef() 创建的，使得可以解构该对象的属性可仍然保持响应性。</p>
-    </div>
+    <UtilsApi></UtilsApi>
+    <OtherApi></OtherApi>
   </section>
 </template>
 
