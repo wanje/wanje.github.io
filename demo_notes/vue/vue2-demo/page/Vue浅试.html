@@ -13,7 +13,7 @@
         li {margin-bottom: 5px;}
         #app>ol>li {line-height: 1.6; margin-bottom: 1em;}
         #app p {margin: 0;}
-        a {text-decoration: none;}
+        a:not(:hover) {text-decoration: none;}
         b {color: #ff0000; font-weight: normal;}
         ul,ol { padding-left: 30px;}
         .pre-code,
@@ -34,9 +34,12 @@
         .font-bold { font-weight: bold;}
         .height-2em { height: 2em; line-height: 2;}
         .vt {vertical-align: top;}
+        .nav-top {position: sticky;top: 0;font-size: 16px;font-weight: bold;}
+        .nav-top a {color: #42b983; margin-right: 25px;}
     </style>
 </head>
 <body>
+    <nav class="nav-top"><a href="./vue-router.md" target="_blank">vue-router</a><a href="./Vuex.md" target="_blank">Vuex</a></nav>
     <ul>
         <li>在vue-cli生成基于webpack模板的项目包时，在项目目录下执行 <code>npm run dev</code> 提示 sh: webpack-dev-server: command not found，
             因webpack版本不同导致一些文件已替换，项目下缺少 node_modules 包，于是在项目文件夹下执行 <code>npm install</code> 安装这些依赖包可见项目下生成node_modules包，
@@ -308,7 +311,7 @@
         </ol>
     </div>
     <div id="id1"></div>
-    <script type="text/javascript" src="../../js/jquery-1.11.3.min.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="../../../js/jquery-1.11.3.min.js" charset="UTF-8"></script>
     <script type="text/javascript" src="../js/vue-test.js" charset="UTF-8"></script>
 </body>
 </html>

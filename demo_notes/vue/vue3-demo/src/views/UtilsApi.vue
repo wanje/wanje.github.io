@@ -1,9 +1,5 @@
 <script setup>
-  const data1 = reactive();
-  const data = readonly(data1);
-  onMounted(() => {
-    console.log('isReadonly', isReadonly('1'))
-  });
+  
 </script>
 
 <template>

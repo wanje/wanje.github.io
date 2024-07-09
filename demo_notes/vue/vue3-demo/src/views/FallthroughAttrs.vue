@@ -44,7 +44,8 @@ import { inject } from 'vue';
     <p><code>useAttrs()</code> 钩子返回一个对象，其中包含所有外部透传的attrs和事件监听，以便在 setup JS 中访问相关数据</p>
     <p class="color-red">注意，虽然获取到的 attrs 对象总是反映为最新的透传 attributes，但它并不是响应式的，不能通过侦听器去监听它的变化，若需要响应性，可以使用 prop，或使用 <code>onUpdated()</code> 生命周期钩子在每次更新时结合最新的 attrs 执行副作用</p>
 
-    <div>
+    <div class="mgt-15">
+      <p class="color-orange">这里是依赖注入 inject 的测试部分</p>
       inject 祖先组件 provide 的数据👇🏻<br>
       常规数据：{{ fromUp1 }} <br>
       响应式数据：{{ fromUpRef }} <button @click="fromUpRef = '我被后代组件更改了'">修改</button><br>

@@ -51,6 +51,9 @@ export default {
       在<span class="color-orange">组件内`beforeRouteEnter`守卫中还可以返回一个函数（只有该守卫下有此用法）</span>，表示继续当前导航的同时可以在该函数回调中访问其默认接收的当前组件实例
       （因该组件内导航守卫触发时组件实例还未创建，无法像其他组件内守卫通过`this`获取当前组件实例）
     </p>
+    <p><span class="color-orange">动态路由匹配</span>除了常规的路径url片段匹配外(即路径中两个`/`之间部分，<code>/users/:username/posts/:postId</code>)，还可以通过自定义的路径参数正则表达式<a class="color-green" target="_blank" href="https://router.vuejs.org/zh/guide/essentials/route-matching-syntax.html">匹配任意路径</a>
+      (<span class="color-orange">在路径参数后面的括号中加入正则表达式</span>，无需像JS中使用`//`包裹)，<code>/user-:afterUser(.*)</code> 将匹配所有以`/user-`开头的路由，并将匹配数据放在`route.params.afterUser`下
+    </p>
     <div class="router-nest">
       <RouterView></RouterView>
     </div>

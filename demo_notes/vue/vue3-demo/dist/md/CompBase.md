@@ -124,11 +124,12 @@
     </p>
     <p><code>defineExpose()</code> 方法显式导出可被父组件访问的当前组件内的数据或方法(参数为对象形式)，否则默认都是私有的不可被外部访问</p>
     <p><code>defineModel()</code> 方法声明对外可使用 v-model 绑定的双向数据props，其底层实现逻辑关系表现与 vue2 中 prop 的`.sync`修饰符的应用逻辑非常类似：声明一个`propName`，然后通过触发`update:propName`事件来更新对应的数据，
-    有几种使用方式，可使用默认参数，也可指定参数和应用修饰符</p>
+    有几种使用方式，可使用默认参数(modelValue/@update:modelValue)，也可指定参数和应用修饰符</p>
     <p class="color-orange">在 <code>&lt;template></code> 模板中使用传入的prop以下两种访问都可以，
       <br>1、直接通过 <code>defineProps(['propName'])</code> 中定义的 <code>propName</code> 来访问，模板中会自行解构；
       <br>2、通过 <code>const props = defineProps(['propName'])</code> 返回的props对象下对应属性名 <code>props.propName</code> 来访问（在 setup JS 中则只能通过该方式访问）
     </p>
+    <p><code>useSlots()</code> 返回插槽对象（结果同 <code>$slots</code>）</p>
     <p>传入prop：
       <br>直接propName访问：<span>{{ prop2 }}</span>，
       <br>通过返回对象props.propName访问：<span>{{ props.prop2 }}</span></p>
