@@ -6,9 +6,14 @@ import vueJsx from '@vitejs/plugin-vue-jsx'
 
 // 自动导入组件/工具库的API，使无需手动在头部import并注册即可用（似乎只在.vue文件中有效）
 import AutoImport from 'unplugin-auto-import/vite'  // https://github.com/antfu/unplugin-auto-import
-// 以下为针对 ElementPlus 组件库的自动导入
-import Components from 'unplugin-vue-components/vite'
+// 以下为针对 ElementPlus 组件库的自动导入注册
+import Components from 'unplugin-vue-components/vite' // 自动注册
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
+// 针对 ElementPlus 中 SVG 图标的自动导入
+//!! 实测发现 ElementPlusResolver 中已包含图标的引入，以`el-icon-`或`ElIcon`开头即可使用，故若需要引入 Iconify 中的其他图标集合再使用下面的配置
+// import Icons from 'unplugin-icons/vite'
+// import IconsResolver from 'unplugin-icons/resolver'
+
 import { vue2md } from './vite.plugin.js';
 
 // https://vitejs.dev/config/
@@ -21,12 +26,30 @@ export default defineConfig({
     AutoImport({
       // imports选项用于注册要自动导入的库，配置方法可查看插件文档，这里直接设置的字符串值是针对插件内presets预设的库（虽为预设，只是预设解析，并非预设使用，要使用仍需显式指明）
       imports: ['vue', 'vue-router', 'pinia'],  // 底层依赖的 unimport 库已内置了大部分常用库，可查看 https://github.com/unjs/unimport/blob/main/src/presets/index.ts
-      resolvers: [ElementPlusResolver()],
+      resolvers: [
+        ElementPlusResolver(),
+        // IconsResolver({ //!! 注意，图标使用时的实际icon组件名是由三部分组成的(以便用于自动追踪来源)：{prefix}-{collection}-{icon}
+        //   prefix: false,  // 不使用前缀，默认为`i`
+        // })
+      ],
+      eslintrc: { // 该配置项用于解决ESLint报错自动导入的组件未定义问题
+        enabled: false, // 1、改为true用于生成eslint配置；2、生成后改回false，避免重复生成消耗（或直接移除此处 eslintrc 配置项）
+        // filepath: './.eslintrc-auto-import.json', // 生成的配置文件即路径(可自定义，然后将生成的文件添加到.eslintrc.cjs配置文件中)，这里为默认值
+        // globalsPropValue: true  // 作为全局属性可在所有文件中使用，默认true
+      }
     }),
     Components({
       // dirs: ['src/components'], // 可自动查找导入并注册相关自定义组件的目录(相对路径，默认`src/components`目录，类似nuxt.js中自定导入注册该目录下组件)
-      resolvers: [ElementPlusResolver()],
+      resolvers: [
+        ElementPlusResolver(),
+        // IconsResolver({
+        //   enabledCollections: ['ep']  // 图标集id，可选，默认支持 Iconify 中的所有集合
+        // })
+      ],
     }),
+    // Icons({
+    //   autoInstall: true
+    // }),
     vue2md()
   ],
   resolve: {
