@@ -1,16 +1,15 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
+// import { createRouter, createWebHistory } from 'vue-router'
 import { inject } from 'vue';
 import HomePage from '../views/HomePage.vue'
 
-const hashHistory = createWebHashHistory();
-console.log('createWebHashHistory()', hashHistory)
 //* 通过 createRouter() 方法创建路由实例，组件中用到 $router 或 useRouter() 与这里返回的 router 实例完全一样
 //! 路由实例化参数中的路由配置表与vue2中使用方式一样
 const router = createRouter({
   //! 通过 createWebHashHistory() 或 createWebHistory() 方法声明要使用的路由模式是 hash 模式还是浏览器原生 history 模式，该两个方法返回了对相关模式的实现
   //! 另有 memory 模式由 createMemoryHistory() 方法声明，但因其不会有历史记录故几乎不会使用
-  // history: createWebHistory(import.meta.env.BASE_URL),
-  history: hashHistory,
+  // history: createWebHistory(import.meta.env.BASE_URL), //!! 若使用 prerender，需要使用history模式
+  history: createWebHashHistory(),
   //! 以下 strict、sensitive 两个配置项也可以单独应用于单个路由，以针对性设置
   // strict: true, // 是否全局启用严格匹配，默认为 false，即忽略路径最后是否有反斜杠`/`，严格模式下要求不带斜杠才能匹配
   // sensitive: true,  // 是否全局启用大小写敏感，默认 false，即路径匹配不区分大小写，否则要区分

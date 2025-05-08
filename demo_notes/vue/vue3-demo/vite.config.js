@@ -24,6 +24,7 @@ export default defineConfig({
     vue(),
     vueJsx(),
     AutoImport({
+      // https://github.com/unplugin/unplugin-auto-import
       // imports选项用于注册要自动导入的库，配置方法可查看插件文档，这里直接设置的字符串值是针对插件内presets预设的库（虽为预设，只是预设解析，并非预设使用，要使用仍需显式指明）
       imports: ['vue', 'vue-router', 'pinia'],  // 底层依赖的 unimport 库已内置了大部分常用库，可查看 https://github.com/unjs/unimport/blob/main/src/presets/index.ts
       resolvers: [
@@ -32,13 +33,16 @@ export default defineConfig({
         //   prefix: false,  // 不使用前缀，默认为`i`
         // })
       ],
+      dts: false, // 由于我们没使用TS，就无需为这些自动导入得到API生成类型声明文件（默认会自动生成）
       eslintrc: { // 该配置项用于解决ESLint报错自动导入的组件未定义问题
         enabled: false, // 1、改为true用于生成eslint配置；2、生成后改回false，避免重复生成消耗（或直接移除此处 eslintrc 配置项）
-        // filepath: './.eslintrc-auto-import.json', // 生成的配置文件即路径(可自定义，然后将生成的文件添加到.eslintrc.cjs配置文件中)，这里为默认值
+        // filepath: './.eslintrc-auto-import.json', // 生成的配置文件即路径(可自定义，然后将生成的文件添加到.eslintrc.cjs配置文件中)，这里为默认值，在ESM模式下ESLint9+中import导入JSON文件的语法与Node版本等有关系，则可以设置为生成JS文件而不是JSON文件
         // globalsPropValue: true  // 作为全局属性可在所有文件中使用，默认true
       }
     }),
     Components({
+      // https://github.com/unplugin/unplugin-vue-components
+      dts: false, // 同上
       // dirs: ['src/components'], // 可自动查找导入并注册相关自定义组件的目录(相对路径，默认`src/components`目录，类似nuxt.js中自定导入注册该目录下组件)
       resolvers: [
         ElementPlusResolver(),
@@ -50,7 +54,7 @@ export default defineConfig({
     // Icons({
     //   autoInstall: true
     // }),
-    vue2md()
+    vue2md(),
   ],
   resolve: {
     // extensions: ['.js', '.jsx', '.vue'], // 导入时想要省略的扩展名列表，官方并不建议忽略.vue这类自定义文件扩展命名，默认['.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json']

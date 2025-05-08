@@ -2,7 +2,7 @@
 
 import fs from 'fs/promises';
 import path from 'path';
-import fastGlob from 'fast-glob';
+import fastGlob from 'fast-glob'; // 用于文件路径匹配快速查找
 
 export function vue2md() {
   return {
